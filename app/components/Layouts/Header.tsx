@@ -47,7 +47,7 @@ export default function Header() {
   return (
     <>
       <header
-        className="fixed top-0 w-full z-50 transition-colors duration-300"
+        className="fixed top-0 w-full z-100 transition-colors duration-300"
         style={{
           background: scrolled
             ? "linear-gradient(to top, rgba(0,0,0,0.8) 100%)"
@@ -87,7 +87,7 @@ export default function Header() {
               {mainCategories.map((cat) => (
                 <div key={cat.slug} className="relative flex flex-col gap-3 group">
                   <a
-                    href={"/sach/" + cat.slug}
+                    href={"/" + cat.slug}
                     className={`py-2 px-3 font-bold transition-colors hover-font ${isActive(cat) ? "text-emerald-400" : ""
                       }`}
                   >
@@ -112,12 +112,13 @@ export default function Header() {
                         {cat.subCategories.map((sub) => (
                           <a
                             key={sub.slug}
-                            href={"/" + sub.slug}
+                            href={`/${cat.slug}/${sub.slug}`}
                             className={`block px-4 py-2 text-white hover:bg-white/30 rounded-xl font-bold ${currentPath === "/" + sub.slug ? "text-emerald-400" : ""
                               }`}
                           >
                             {sub.name}
                           </a>
+
                         ))}
                       </div>
 

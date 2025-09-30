@@ -5,10 +5,14 @@ import Splide from "@splidejs/splide";
 import "@splidejs/splide/css";
 import "@splidejs/splide/css/skyblue";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
+
+//==================[ COMPONENT ]====================
 import Button from "~/components/Buttons/Button";
 import Section from "~/components/Section";
 import CardCategory from "~/components/Cards/CardCategory";
 import CardRanking from "~/components/Cards/CardRanking";
+import Slider3Images from "~/components/Slider/slider-3image";
+import BookSlider from "~/components/Slider/BookSlider";
 
 interface Book {
   id: number;
@@ -85,7 +89,7 @@ export default function CategoryPage() {
     splide.mount();
     return splide;
   };
-  
+
   useEffect(() => {
     if (projects.length > 0) {
       const splide = initSplide(".splide-desktop", (newIndex) => {
@@ -101,7 +105,7 @@ export default function CategoryPage() {
   const currentBook = projects[currentIndex];
 
   const images = [
-    "/Images/Slides/Pages/1.jpg",
+    // "/Images/Slides/Pages/1.jpg",
     "/Images/Slides/Pages/2.png",
     "/Images/Slides/Pages/3.png",
     "/Images/Slides/Pages/4.png",
@@ -116,11 +120,16 @@ export default function CategoryPage() {
 
   return (
     <>
-      <div className="bg-sec1 h-full !mx-auto py-[5rem] text-white">
+      <div className="bg-sec1 h-full !mx-auto py-[7rem] text-white"
+        style={{
+          backgroundImage: currentBook ? `url(${currentBook.cover})` : undefined,
+          backgroundColor: "rgba(0,0,0,0.6)",
+          backgroundBlendMode: "darken",
+        }}>
         <div className="container !mx-auto flex  items-center justify-center w-full">
           <div className="basis-3/5 flex flex-col gap-3">
-            <span className=" flex items-center gap-5" >
-              <label htmlFor="subCategory" className="block text-7xl mb-2 font-semibold">
+            <span className=" flex items-center gap-5 pr-5" >
+              <label htmlFor="subCategory" className="block text-6xl  mb-2 font-semibold">
                 {currentCategory.name}
               </label>
               {currentCategory.subCategories ? (
@@ -128,7 +137,7 @@ export default function CategoryPage() {
                   <select
                     id="subCategory"
                     className="px-5 py-3 bg-white/20 backdrop-blur-md border border-white/30 
-                  rounded-md text-white focus:outline-none focus:ring-1 focus:ring-emerald-700"
+                      rounded-md text-white focus:outline-none focus:ring-1 focus:ring-emerald-700"
                     defaultValue=""
                   >
                     <option value="">Tất cả danh mục</option>
@@ -168,32 +177,17 @@ export default function CategoryPage() {
                 </div>
               )}
             </div>
-
-
           </div>
           <span className="basis-2/5 ">
-            <div className="splide splide-desktop relative z-10">
-              <div className="splide__track">
-                <ul className="splide__list">
-                  {projects.map((ebook, index) => (
-                    <li key={index} className="splide__slide h-full">
-                      <img
-                        src={ebook.cover}
-                        alt={`Slide ${index}`}
-                        className="rounded-xl shadow-lg h-full w-full object-cover"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <BookSlider projects={projects} onSlideChange={setCurrentIndex} />
           </span>
 
         </div>
-
       </div>
+
       <main className="container !mx-auto">
         <Section title="Mới nhất" books={projects} />
+
         <div className="mt-5">
           <h1 className="text-3xl">Một số thể loại</h1>
           <div className="!mx-auto grid md:grid-cols-4 grid-cols-2 gap-5 py-2">
@@ -228,24 +222,16 @@ export default function CategoryPage() {
           </div>
         </div>
 
-        <div className="mt-5">
+        <div className="mt-5 flex flex-col gap-5">
           <h1 className="text-3xl">Một số thể loại</h1>
-          <div className="splide splide-desktop hidden lg:block relative rounded-lg overflow-hidden">
-            <div className="splide__track">
-              <ul className="splide__list">
-                {images.map((img, index) => (
-                  <li key={index} className="splide__slide">
-                    <img
-                      src={img}
-                      alt="Slide"
-                      className="w-full min-h-[30rem] object-cover rounded-lg"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <Slider3Images images={images} />
         </div>
+
+        <Section title="Truyện - Tiểu thuyết " books={projects} />
+
+        <Section title="Trinh thám - Kinh dị " books={projects} />
+
+
       </main>
 
     </>

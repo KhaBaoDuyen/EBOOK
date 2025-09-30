@@ -12,7 +12,7 @@ import CardBook from "./CardBook";
  */
 const CardRankings = ({ number = null, cover="", title="", author="", status = "", description = "", link = "#" }) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 w-[18%] hover:z-99">
       <div className="relative group max-w-min">
         <CardBook cover={cover} title={title} author={author} status={status} description={description} link={link} />
         {number !== null && (
