@@ -1,0 +1,155 @@
+[{
+    "name": "Sách điện tử",
+    "slug": "sach-dien-tu",
+    "icon": "faTabletAlt",
+    "subCategories": [{
+        "name": "Tiểu thuyết",
+        "slug": "tieu-thuyet",
+        "icon": "faBookOpen"
+      },
+      {
+        "name": "Khoa học viễn tưởng",
+        "slug": "khoa-hoc-vien-tuong",
+        "icon": "faRocket"
+      },
+      {
+        "name": "Tâm lý",
+        "slug": "tam-ly",
+        "icon": "faBrain"
+      },
+      {
+        "name": "Kỹ năng sống",
+        "slug": "ky-nang-song",
+        "icon": "faLightbulb"
+      },
+      {
+        "name": "Học ngoại ngữ",
+        "slug": "hoc-ngoai-ngu",
+        "icon": "faLanguage"
+      },
+      {
+        "name": "Kinh tế",
+        "slug": "kinh-te",
+        "icon": "faChartLine"
+      },
+      {
+        "name": "Lịch sử",
+        "slug": "lich-su",
+        "icon": "faLandmark"
+      },
+      {
+        "name": "Văn học cổ điển",
+        "slug": "van-hoc-co-dien",
+        "icon": "faFeatherAlt"
+      },
+      {
+        "name": "Truyện tranh",
+        "slug": "truyen-tranh",
+        "icon": "faComic"
+      },
+      {
+        "name": "Sách thiếu nhi",
+        "slug": "sach-thieu-nhi",
+        "icon": "faChild"
+      },
+      {
+        "name": "Sách khoa học",
+        "slug": "sach-khoa-hoc",
+        "icon": "faFlask"
+      },
+      {
+        "name": "Sách tự truyện",
+        "slug": "sach-tu-truyen",
+        "icon": "faUserEdit"
+      },
+      {
+        "name": "Sách giáo dục",
+        "slug": "sach-giao-duc",
+        "icon": "faChalkboardTeacher"
+      },
+      {
+        "name": "Sách sức khỏe",
+        "slug": "sach-suc-khoe",
+        "icon": "faHeartbeat"
+      },
+      {
+        "name": "Sách nghệ thuật",
+        "slug": "sach-nghe-thuat",
+        "icon": "faPalette"
+      }
+    ]
+  },
+  {
+    "name": "Sách hội viên",
+    "slug": "sach-hoi-vien",
+    "icon": "faUsers",
+    "subCategories": [{
+        "name": "Tiểu thuyết",
+        "slug": "tieu-thuyet",
+        "icon": "faBookOpen"
+      },
+      {
+        "name": "Kỹ năng",
+        "slug": "ky-nang",
+        "icon": "faLightbulb"
+      }
+    ]
+  },
+  {
+    "name": "Sách nói",
+    "slug": "sach-noi",
+    "icon": "faHeadphones",
+    "subCategories": [{
+        "name": "Truyện audio",
+        "slug": "truyen-audio",
+        "icon": "faVolumeUp"
+      },
+      {
+        "name": "Podcast học tập",
+        "slug": "podcast-hoc-tap",
+        "icon": "faPodcast"
+      }
+    ]
+  },
+  {
+    "name": "Sách hiệu sồi",
+    "slug": "sach-hieu-soi",
+    "icon": "faHeadphones",
+    "subCategories": [{
+        "name": "Hiện đại",
+        "slug": "truyen-audio",
+        "icon": "faVolumeUp"
+      },
+      {
+        "name": "Cổ đại",
+        "slug": "podcast-hoc-tap",
+        "icon": "faPodcast"
+      },
+      {
+        "name": "Huyền nhuyễn",
+        "slug": "truyen-audio",
+        "icon": "faVolumeUp"
+      },
+      {
+        "name": "Đam mỹ",
+        "slug": "podcast-hoc-tap",
+        "icon": "faPodcast"
+      }
+    ]
+  },
+  {
+    "name": "Sách truyện tranh",
+    "slug": "sach-truyen-tranh",
+    "icon": "faHeadphones"
+  },
+  {
+    "name": "Sách miễn phí",
+    "slug": "sach-mien-phi",
+    "icon": "faHeadphones"
+  },
+  {
+    "name": "Sách tóm tắt",
+    "slug": "sach-tom-tat",
+    "icon": "faHeadphones"
+  }
+]

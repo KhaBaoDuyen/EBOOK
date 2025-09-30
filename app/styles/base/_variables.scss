@@ -1,0 +1,28 @@
+$primary-dark : #010101;
+$primary-light : #f4f4f4;
+$secondary-color : #ffffff;
+
+// $font-family: 'Inter', sans-serif; 
+$font-family: 'Netflix Sans', sans-serif;
+$primary-color: #15B088;
+$primary-color-hover: #14a17e;
+
+
+:root {
+  --bg: #{$primary-dark};
+  --bg-section: #{$secondary-color};
+  --font-family: #{$font-family};
+  --mouse:#{$primary-light};
+  --primary:#{$primary-color};
+  --primary-hover:#{$primary-color-hover};
+  --text-light: white;
+}
+
+[data-theme="light"] {
+  --bg: #{$primary-light};
+  --text: #080f1f;
+  --surface: #{$secondary-color};
+  --font-family: #{$font-family};
+  --mouse:#{$primary-dark};
+
+}

@@ -1,0 +1,25 @@
+ 
+
+  .book-location {
+      font-size: 0.875rem;
+      color: #ccc;
+      margin-bottom: 0.5rem;
+  }
+ 
+ // cardRaking
+ .label-rank {
+  z-index: 10;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+  background: linear-gradient(180deg,#fff 16.82%,hsla(0,0%,100%,.06) 96.58%);
+    background-clip: border-box;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: .6px #fff;
+}
+
+.bg-rank-1 {
+  background: linear-gradient(180deg,rgba(255,55,95,0),rgba(255,55,95,.66));
+}

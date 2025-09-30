@@ -9,6 +9,9 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import "./styles/main.scss";
+import Header from "./components/Layouts/Header";
+import Footer from "./components/Layouts/Footer";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,8 +45,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
-}
+  return (
+    <>
+      <Header />
+      <div className="!w-full py-5 !mx-auto md:p-0 p-3">
+        <Outlet />
+      </div>
+      <Footer />
+    </>)
+};
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";

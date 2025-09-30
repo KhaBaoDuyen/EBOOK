@@ -1,0 +1,19 @@
+.bg-sec1 {
+    background-image: url(../../../public/Images/Main/bg-banner-book.5607941.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+.bg-sec1::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(10px); 
+  background-color: rgba(0, 0, 0, 0.3); 
+  z-index: 1;
+}
+
+.bg-sec1 > * {
+  position: relative;
+  z-index: 2;  
+}

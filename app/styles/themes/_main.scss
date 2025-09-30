@@ -1,0 +1,37 @@
+body{
+    background-color:#121214 !important;
+    color: var(--text-light);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;    
+}
+
+
+.bg-pri{
+    background-color: var(--bg);
+}
+
+.custom-width{
+    width: max-content;
+     min-width: fit-content; 
+}
+
+.border-r{
+    border-right: 1px solid rgba(102, 102, 102, 0.479) !important;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; 
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;   
+}
+
+ 

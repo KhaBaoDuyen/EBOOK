@@ -1,0 +1,26 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+li,
+button,
+input,
+textarea {
+    font-family:  var(--font-family);
+    color:white ;
+    word-break: break-word !important;
+    font-weight: bold;
+}
+
+.hover-font:hover{
+    color: var(--primary);
+}
+
+.font-pri{
+    color: var(--primary);
+}
