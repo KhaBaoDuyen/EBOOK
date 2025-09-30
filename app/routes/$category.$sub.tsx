@@ -112,16 +112,16 @@ export default function SubCategoryPage() {
                 <p className="italic text-gray-400"></p>
               )}
             </span>
-            <h1>Khám phá thế giới sách Waka với hơn 3500+ Sách điện tử, Sách nói và Truyện tranh</h1>
+            <h1 className="!font-bold">Khám phá thế giới sách Waka với hơn 3500+ Sách điện tử, Sách nói và Truyện tranh</h1>
 
             <div className="flex flex-col gap-5">
-              <span className="  bg-white/20 p-2 w-max rounded-lg rounded-bl-none">
+              <span className="  bg-white/20 p-2 !font-bold w-max rounded-lg rounded-bl-none">
                 SMARTBOOK ĐỀ XUẤT
               </span>
               {currentBook && (
                 <div className="space-y-3">
                   <h1 className="text-3xl font-bold">{currentBook.title}</h1>
-                  <p className="text-gray-300 line-clamp-5">{currentBook.description}</p>
+                  <p className="text-gray-300 line-clamp-5 w-[80%]">{currentBook.description}</p>
 
                   <Button
                     text="Đọc sách"
@@ -144,7 +144,7 @@ export default function SubCategoryPage() {
         <Section title="Mới nhất" books={categores} />
 
         <section>
-          <h1>Tất cả</h1>
+          <h1 className="text-xl !font-bold">Tất cả các sách</h1>
 
           <div className="flex flex-wrap w-full gap-5 p-5">
             {categores.map((book, i) => (

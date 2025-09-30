@@ -32,6 +32,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Thư viện Ebook</title>
+        <link rel="icon" href="/Images/Main/iconUrl.png" />
         <Meta />
         <Links />
       </head>
@@ -41,6 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+
   );
 }
 

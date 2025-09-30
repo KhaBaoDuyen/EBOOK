@@ -24,7 +24,7 @@ const CardRankings = ({ number = null, cover="", title="", author="", status = "
           </div>
         )}
       </div>
-      <p className="line-clamp-2">{title}</p>
+      <p className="line-clamp-2 font-bold">{title}</p>
     </div>
   );
 };

@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import categoriesData from "../../../public/data/categories.json";
+import { FaSearch } from "react-icons/fa";
+
+//=============[ COMPORNENT ]===================
 import Button from "../Buttons/Button";
 import ButtonBorder from "../Buttons/Button-Border";
-import { FaSearch } from "react-icons/fa";
+import Authentication from "../Authentication";
+
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -11,6 +15,8 @@ export default function Header() {
   const [currentPath, setCurrentPath] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMoreOpen, setShowMoreOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [mode, setMode] = useState("login");
 
   const navigate = useNavigate();
 
@@ -155,7 +161,7 @@ export default function Header() {
                   <a
                     href="#"
                     className="py-2 px-3 text-white/90 font-bold transition-colors hover-font"
-                    onClick={(e) => e.preventDefault()} // Giữ nguyên không cho nhảy trang
+                    onClick={(e) => e.preventDefault()}
                   >
                     Xem thêm
                   </a>
@@ -191,7 +197,10 @@ export default function Header() {
                 <input
                   type="text"
                   placeholder="Tìm kiếm sách, tác giả..."
-                  className="absolute right-12 w-0 opacity-0 px-0 py-2 rounded-xl bg-pri text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:w-64 focus:px-4 focus:opacity-100 transition-all duration-300 group-hover:w-64 group-hover:opacity-100 group-hover:px-4"
+                  className="absolute right-12 w-0 opacity-0 px-0 py-2 rounded-xl bg-pri text-white
+                   placeholder-gray-400 border border-gray-600 focus:outline-none 
+                   focus:w-64 focus:px-4 focus:opacity-100 transition-all duration-300 
+                   group-hover:w-64 group-hover:opacity-100 group-hover:px-4 focus:ring-emerald-600"
                 />
                 <button className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-emerald-500 transition-colors duration-300">
                   <FaSearch className="w-5 h-5 text-white" />
@@ -200,14 +209,23 @@ export default function Header() {
 
               <div className="hidden lg:block">
                 <span className="flex items-center space-x-3">
-                  <ButtonBorder text="Đăng ký" href="/dang-ky" />
-                  <Button text="Đăng nhập" href="/dang-nhap" />
+                  <ButtonBorder
+                    text="Đăng ký"
+                    onClick={() => { setMode("register"); setIsOpen(true); }}
+                  />
+                  <Button
+                    text="Đăng nhập"
+                    onClick={() => { setMode("login"); setIsOpen(true); }}
+                  />
                 </span>
+
               </div>
             </div>
           </div>
         </div>
       </header>
+
+
 
       <div
         className={`lg:hidden z-[100] bg-[#121214] fixed top-0 left-0 w-[70%] min-h-screen 
@@ -284,6 +302,12 @@ export default function Header() {
           onClick={() => setMobileMenuOpen(false)}
         ></div>
       )}
+
+      <Authentication
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        mode={mode}
+      />
     </>
   );
 }
