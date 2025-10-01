@@ -12,7 +12,6 @@ button,
 input,
 textarea {
     font-family:  var(--font-family);
-    color:white ;
     word-break: break-word !important;
  }
 
@@ -22,4 +21,11 @@ textarea {
 
 .font-pri{
     color: var(--primary);
+}
+
+.bg-pri{
+    background-color: var(--primary) !important;
+    &:hover{
+           background-color: var(--primary-hover); 
+    }
 }
