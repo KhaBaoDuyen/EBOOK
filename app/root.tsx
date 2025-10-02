@@ -50,12 +50,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <>
-      <Header />
-      <div className="!w-full py-5 !mx-auto md:p-0 p-3">
+       <div className="!w-full py-5 !mx-auto md:p-0 p-3">
         <Outlet />
       </div>
-      <Footer />
-    </>)
+     </>)
 };
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
