@@ -1,0 +1,17 @@
+import mongoose, { Schema, Model } from "mongoose";
+import type { ICategory } from "../interfaces/category.interface";
+
+const categorySchema = new Schema<ICategory>(
+  {
+    name: { type: String, required: true },
+    slug: { type: String, required: true },
+    parentId: { type: mongoose.Schema.Types.ObjectId, ref: "Category", default: null },
+  },
+  { timestamps: true }
+);
+
+const Category: Model<ICategory> =
+  mongoose.models.Category || mongoose.model<ICategory>("Category", categorySchema);
+
+export default Category;
+

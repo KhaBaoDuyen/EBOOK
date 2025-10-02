@@ -1,112 +1,92 @@
 [
   {
-    "id": 1,
     "title": "Mưa đỏ",
-    "author": "Chu Lai",
+    "slug": "mua-do",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/41753.jpg?v=1&w=350&h=510",
-    "status": "Hội viên",
     "description": "Tiểu thuyết nổi tiếng của Chu Lai, tái hiện khốc liệt chiến tranh và tình yêu đầy bi thương, chan chứa chất sử thi.",
-    "link": "/ebook/mua-do-chu-lai-bnpKrW.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "tieu-thuyet"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Văn học",
+    "filePath": "/uploads/mua-do.pdf"
   },
   {
-    "id": 2,
     "title": "Tiểu yêu tinh của Bạc gia",
-    "author": "Clara Wynne",
+    "slug": "tieu-yeu-tinh-cua-bac-gia",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/53041.jpg?v=1&w=350&h=510",
-    "status": "Hội viên",
     "description": "Một câu chuyện ngôn tình hiện đại, xoay quanh cô gái nhỏ bé nhưng mạnh mẽ chinh phục trái tim chàng trai kiêu ngạo.",
-    "link": "/ebook/tieu-yeu-tinh-cua-bac-gia-thap-nhat-bX8ZDW.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "tieu-thuyet"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Trẻ",
+    "filePath": "/uploads/tieu-yeu-tinh.pdf"
   },
   {
-    "id": 3,
     "title": "Cô vợ nhỏ của ngài Phó",
-    "author": "Clara Wynne",
+    "slug": "co-vo-nho-cua-ngai-pho",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/51961.jpg?v=1&w=350&h=510",
-    "status": "Hội viên",
     "description": "Một mối tình đầy thử thách, nơi cô vợ nhỏ phải đối mặt với sự lạnh lùng nhưng cũng ấm áp bất ngờ từ ngài Phó quyền thế.",
-    "link": "/ebook/co-vo-nho-cua-ngai-pho-ly-bat-ngon-b68KOW.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "tieu-thuyet"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Kim Đồng",
+    "filePath": "/uploads/co-vo-nho.pdf"
   },
   {
-    "id": 4,
     "title": "Siêu cấp cưng chiều",
-    "author": "Clara Wynne",
+    "slug": "sieu-cap-cung-chieu",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/0/30688.jpg?v=3&w=350&h=510",
-    "status": "Hội viên",
     "description": "Ngọt ngào và lãng mạn, câu chuyện kể về tình yêu được cưng chiều đến mức khiến ai cũng phải ghen tị.",
-    "link": "/ebook/sieu-cap-cung-chieu-man-tay-bD3R7W.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "tieu-thuyet"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Lao Động",
+    "filePath": "/uploads/sieu-cap.pdf"
   },
   {
-    "id": 5,
     "title": "Bảo bối của ngài Tống",
-    "author": "Clara Wynne",
+    "slug": "bao-boi-cua-ngai-tong",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/48955.jpg?v=1&w=350&h=510",
-    "status": "Hội viên",
     "description": "Một hành trình tình cảm ngọt ngào, nơi cô gái bình thường trở thành 'bảo bối' độc nhất trong lòng ngài Tống.",
-    "link": "/ebook/bao-boi-cua-ngai-tong-dai-mong-so-tinh-a-b3adrW.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "tieu-thuyet"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Phụ Nữ",
+    "filePath": "/uploads/bao-boi.pdf"
   },
   {
-    "id": 6,
     "title": "Lấy chàng kỹ sư",
-    "author": "Wynne",
+    "slug": "lay-chang-ky-su",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/51649.jpg?v=1&w=350&h=510",
-    "status": "Hội viên",
     "description": "Câu chuyện lãng mạn, chân thật về hôn nhân, nơi một chàng kỹ sư giản dị lại mang đến hạnh phúc bất ngờ.",
-    "link": "/ebook/lay-chang-ky-su-duc-am-bat-vong-bNjaZW.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "ky-nang"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Thanh Niên",
+    "filePath": "/uploads/lay-chang-ky-su.pdf"
   },
   {
-    "id": 7,
     "title": "Yêu đúng cách, hạnh phúc đúng người",
-    "author": "Clara Wynne",
+    "slug": "yeu-dung-cach-hanh-phuc-dung-nguoi",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/52642.jpg?v=2&w=350&h=510",
-    "status": "79.000đ",
     "description": "Một cẩm nang tình yêu hiện đại, giúp bạn tìm ra cách yêu đúng đắn để đạt được hạnh phúc thật sự bên người xứng đáng.",
-    "link": "/ebook/yeu-dung-cach-hanh-phuc-dung-nguoi-clara-wynne-brdXDW.html",
-    "category": "sach-dien-tu",
-    "subCategory": "tam-ly"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Văn hóa",
+    "filePath": "/uploads/yeu-dung-cach.pdf"
   },
   {
-    "id": 8,
     "title": "Cưng chiều cô vợ quân nhân",
-    "author": "Huỳnh Hạ",
+    "slug": "cung-chieu-co-vo-quan-nhan",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/0/23697.jpg?v=2&w=350&h=510",
-    "status": "Hội viên",
     "description": "Một câu chuyện đầy cảm xúc về tình yêu kiên định và sự hy sinh của người quân nhân dành cho người vợ bé nhỏ.",
-    "link": "/ebook/cung-chieu-co-vo-quan-nhan-huynh-ha-bnad1W.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "tieu-thuyet"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Chính trị Quốc gia",
+    "filePath": "/uploads/cung-chieu.pdf"
   },
   {
-    "id": 9,
     "title": "Tính cách con người",
-    "author": "Happy An",
+    "slug": "tinh-cach-con-nguoi",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/53002.jpg?v=1&w=350&h=510",
-    "status": "79.000đ",
     "description": "Sách phân tích tâm lý, khám phá những khía cạnh đặc trưng của tính cách con người và cách ứng xử trong xã hội.",
-    "link": "/ebook/tinh-cach-con-nguoi-happy-an-bYmzMW.html",
-    "category": "sach-dien-tu",
-    "subCategory": "tam-ly"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Tâm Lý",
+    "filePath": "/uploads/tinh-cach-con-nguoi.pdf"
   },
   {
-    "id": 10,
     "title": "Thiếu soái, chào anh!",
-    "author": "Ngông Trời Xu Lông",
+    "slug": "thieu-soai-chao-anh",
     "cover": "https://307a0e78.vws.vegacdn.vn/view/v2/image/img.book/0/0/1/49357.jpg?v=1&w=350&h=510",
-    "status": "Hội viên",
     "description": "Một tiểu thuyết ngôn tình quân nhân, nơi tình yêu và trách nhiệm đan xen tạo nên câu chuyện lãng mạn mà mạnh mẽ.",
-    "link": "/ebook/thieu-soai-chao-anh-ngong-troi-xu-long-bvLn0W.html",
-    "category": "sach-hoi-vien",
-    "subCategory": "tieu-thuyet"
+    "releaseDate": "2024-01-01",
+    "publisher": "NXB Quân đội",
+    "filePath": "/uploads/thieu-soai.pdf"
   }
 ]
