@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FcGoogle } from "react-icons/fc";
 
-import Button from "./Buttons/Button";
+import Button from "./users/Buttons/Button";
 
 const Authentication = ({ isOpen, onClose, mode = "login" }) => {
     if (!isOpen) return null;

@@ -7,12 +7,12 @@ import "@splidejs/splide/css/skyblue";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 //==================[ COMPONENT ]====================
-import Button from "~/components/Buttons/Button";
-import Section from "~/components/Section";
-import CardCategory from "~/components/Cards/CardCategory";
-import CardRanking from "~/components/Cards/CardRanking";
-import Slider3Images from "~/components/Slider/slider-3image";
-import BookSlider from "~/components/Slider/BookSlider";
+import Button from "~/components/users/Buttons/Button";
+import Section from "~/components/users/Section";
+import CardCategory from "~/components/users/Cards/CardCategory";
+import CardRanking from "~/components/users/Cards/CardRanking";
+import Slider3Images from "~/components/users/Slider/slider-3image";
+import BookSlider from "~/components/users/Slider/BookSlider";
 
 interface Book {
   id: number;

@@ -10,8 +10,8 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import "./styles/main.scss";
-import Header from "./components/Layouts/Header";
-import Footer from "./components/Layouts/Footer";
+import Header from "./components/users/Layouts/Header";
+import Footer from "./components/users/Layouts/Footer";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

@@ -6,11 +6,11 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 import React, { useEffect } from "react";
-import CardRanking from "../components/Cards/CardRanking";
-import CardCategory from "../components/Cards/CardCategory";
-import Slider from "../components/Slider";
+import CardRanking from "../components/users/Cards/CardRanking";
+import CardCategory from "../components/users/Cards/CardCategory";
+import Slider from "../components/users/Slider";
 import books from "../../public/data/listBook.json";
-import Section from "../components/Section";
+import Section from "../components/users/Section";
 
 
 const HomePage = () => {

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import categoriesData from "../../../public/data/categories.json";
+import categoriesData from "../../../../public/data/categories.json";
 import { FaSearch } from "react-icons/fa";
 
 //=============[ COMPORNENT ]===================
 import Button from "../Buttons/Button";
 import ButtonBorder from "../Buttons/Button-Border";
-import Authentication from "../Authentication";
+import Authentication from "../../Authentication";
 
 
 export default function Header() {

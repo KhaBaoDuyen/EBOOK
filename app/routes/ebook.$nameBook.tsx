@@ -1,9 +1,9 @@
-import Button from "../components/Buttons/Button";
+import Button from "../components/users/Buttons/Button";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import books from "../../public/data/listBook.json";
 
-import Section from "../components/Section";
+import Section from "../components/users/Section";
 
 export default function Ebook() {
     const [isExpanded, setIsExpanded] = useState(false);

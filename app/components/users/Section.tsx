@@ -1,4 +1,4 @@
-import CardRanking from "../components/Cards/CardRanking";
+import CardRanking from "./Cards/CardRanking";
 
 const Section = ({ title, books }) => (
   <div className="!mx-auto py-2">
