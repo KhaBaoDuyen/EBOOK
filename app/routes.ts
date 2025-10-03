@@ -13,7 +13,10 @@ export default [
 
     // --- admin routes ---
     route("/admin", "routes/admin/_layout.tsx", [
-        index("routes/admin/index.tsx"),                 // /admin
-        route("users", "routes/admin/users.tsx"),        // /admin/users
+        index("routes/admin/index.tsx"),                
+        route("users", "routes/admin/users.tsx"),        
     ]),
+
+      // --- api routes ---
+    route("/api/tai-khoan/tat-ca", "routes/api/tai-khoan/tat-ca.tsx"),
 ] satisfies RouteConfig;

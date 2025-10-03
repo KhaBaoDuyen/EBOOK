@@ -1,19 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-
 import {
-  Package,
-  Calendar,
+  LayoutDashboard,
+  Users,
+  BookOpen,
+  Tags,
+  FolderTree,
   ChevronDown,
-  LayoutGrid,
   MoreHorizontal,
-  List,
-  FileText,
-  PieChart,
-  PlugZap,
-  Table,
-  UserCircle,
 } from "lucide-react";
+
 
 import { useSidebar } from "../../../context/SidebarContext";
 import SidebarWidget from "../layout/SidebarWidget";
@@ -25,70 +21,15 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  {
-    icon: <LayoutGrid size={20} />,
-    name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
-  },
-  {
-    icon: <Calendar size={20} />,
-    name: "Calendar",
-    path: "/calendar",
-  },
-  {
-    icon: <UserCircle size={20} />,
-    name: "User Profile",
-    path: "/profile",
-  },
-  {
-    name: "Forms",
-    icon: <List size={20} />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <Table size={20} />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  },
-  {
-    name: "Pages",
-    icon: <FileText size={20} />,
-    subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
-    ],
-  },
+  { icon: <LayoutDashboard size={20} />, name: "Bảng điều khiển", path: "/admin" },
+  { icon: <Users size={20} />, name: "Tài khoản", path: "/admin/users" },
+  { icon: <BookOpen size={20} />, name: "Sách", path: "/admin/books" },
+  { icon: <Tags size={20} />, name: "Loại sách", path: "/admin/categories" },
+  { icon: <FolderTree size={20} />, name: "Thư mục", path: "/admin/folders" },
 ];
 
 const othersItems: NavItem[] = [
-  {
-    icon: <PieChart size={20} />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
-  },
-  {
-    icon: <Package size={20} />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
-  {
-    icon: <PlugZap size={20} />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
-    ],
-  },
+
 ];
 
 
@@ -297,26 +238,37 @@ const AppSidebar: React.FC = () => {
             <>
               <img
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/Images/Main/logo-light.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={200}
+                height={50}
+                style={{
+                  filter: "drop-shadow(0 0 6px rgba(0,0,0,0.5))"
+                }}
               />
+
               <img
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/Images/Main/logo-light.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={200}
+                height={50}
+                style={{
+                  filter: "drop-shadow(0 0 6px rgba(0,0,0,0.5))"
+                }}
               />
             </>
           ) : (
             <img
-              src="/images/logo/logo-icon.svg"
+              src="/Images/Main/logo-light.png"
               alt="Logo"
-              width={32}
-              height={32}
+              width={200}
+              height={50}
+              style={{
+                filter: "drop-shadow(0 0 6px rgba(0,0,0,0.5))"
+              }}
             />
+
           )}
         </Link>
       </div>
@@ -331,7 +283,7 @@ const AppSidebar: React.FC = () => {
                   }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
+                  "Quản lý"
                 ) : (
                   <MoreHorizontal className="size-6" />
                 )}
@@ -346,7 +298,7 @@ const AppSidebar: React.FC = () => {
                   }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
+                  "Khác"
                 ) : (
                   <MoreHorizontal className="size-6" />
                 )}
