@@ -5,7 +5,7 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse
-} from "/build/_shared/chunk-ACJCLCRR.js";
+} from "/build/_shared/chunk-GEZD77NU.js";
 import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
@@ -23,7 +23,7 @@ import {
 var app_default = "/build/_assets/app-H237OKSG.css?url";
 
 // app/styles/tailwind.css?url
-var tailwind_default = "/build/_assets/tailwind-3DBYKPW2.css?url";
+var tailwind_default = "/build/_assets/tailwind-VDLD5IR3.css?url";
 
 // app/styles/main.css?url
 var main_default = "/build/_assets/main-FW3ANPFV.css?url";
@@ -194,4 +194,4 @@ export {
   App as default,
   links
 };
-//# sourceMappingURL=/build/root-EX3R2ZOS.js.map
+//# sourceMappingURL=/build/root-ISX6DGED.js.map

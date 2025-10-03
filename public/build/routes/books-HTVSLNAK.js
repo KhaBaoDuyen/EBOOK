@@ -1,6 +1,6 @@
 import {
   useLoaderData
-} from "/build/_shared/chunk-ACJCLCRR.js";
+} from "/build/_shared/chunk-GEZD77NU.js";
 import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
@@ -92,4 +92,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   BooksPage as default
 };
-//# sourceMappingURL=/build/routes/books-55VWVM2L.js.map
+//# sourceMappingURL=/build/routes/books-HTVSLNAK.js.map

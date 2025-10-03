@@ -6,7 +6,7 @@ import {
 } from "/build/_shared/chunk-665M7QN7.js";
 import {
   useParams
-} from "/build/_shared/chunk-ACJCLCRR.js";
+} from "/build/_shared/chunk-GEZD77NU.js";
 import "/build/_shared/chunk-U4FRFQSK.js";
 import "/build/_shared/chunk-ZHSF7LRE.js";
 import {
@@ -246,4 +246,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   SubCategoryPage as default
 };
-//# sourceMappingURL=/build/routes/$category.$sub-3D4GMDPH.js.map
+//# sourceMappingURL=/build/routes/$category.$sub-WPIJQN3T.js.map
