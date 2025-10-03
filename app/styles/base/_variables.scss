@@ -19,7 +19,7 @@ $primary-color-hover: #14a17e;
 }
 
 [data-theme="light"] {
-  --bg: #{$primary-light};
+  --bg: #{$primary-dark};
   --text: #080f1f;
   --surface: #{$secondary-color};
   --font-family: #{$font-family};

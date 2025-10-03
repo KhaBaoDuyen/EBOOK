@@ -1,9 +1,7 @@
-import { useParams } from "react-router";
+import { useParams } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import categories from "../../public/data/categories.json";
 import Splide from "@splidejs/splide";
-import "@splidejs/splide/css";
-import "@splidejs/splide/css/skyblue";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 //==================[ COMPONENT ]====================
@@ -15,16 +13,17 @@ import Slider3Images from "~/components/users/Slider/slider-3image";
 import BookSlider from "~/components/users/Slider/BookSlider";
 
 interface Book {
-  id: number;
-  title: string;
-  author: string;
-  cover: string;
-  status: string;
-  description: string;
-  link: string;
-  category: string;
+  id?: number;
+  title?: string;
+  author?: string;
+  cover?: string;
+  status?: number;
+  description?: string;
+  slug?: string;
+  category?: string;
   subCategory?: string;
 }
+
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
 
@@ -37,8 +36,8 @@ export default function CategoryPage() {
       </div>
     );
   }
-  // ---------------[ LAY SAN PHAM RANDOW GAN NHAT ]------------
 
+  // ---------------[ LẤY SẢN PHẨM RANDOM GẦN NHẤT ]------------
   const [projects, setProjects] = useState<Book[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -51,13 +50,14 @@ export default function CategoryPage() {
       })
       .catch((err) => console.error(err));
   }, []);
-  // ---------------[ LAY SAN PHAM ]------------
-  const [categores, setCaregory] = useState<any[]>([]);
+
+  // ---------------[ LẤY TOÀN BỘ SẢN PHẨM ]------------
+  const [categores, setCaregory] = useState<Book[]>([]);
 
   const fetchProjects = () => {
     fetch("/data/listBook.json")
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: Book[]) => {
         setCaregory(data);
       })
       .catch((err) => console.error(err));
@@ -66,7 +66,6 @@ export default function CategoryPage() {
   useEffect(() => {
     fetchProjects();
   }, []);
-
 
   //----------------[ SLIDER ]-------------------
   const initSplide = (selector: string, onMove: (newIndex: number) => void) => {
@@ -105,7 +104,6 @@ export default function CategoryPage() {
   const currentBook = projects[currentIndex];
 
   const images = [
-    // "/Images/Slides/Pages/1.jpg",
     "/Images/Slides/Pages/2.png",
     "/Images/Slides/Pages/3.png",
     "/Images/Slides/Pages/4.png",
@@ -117,23 +115,29 @@ export default function CategoryPage() {
     "/Images/Slides/Pages/10.png",
   ];
 
-
   return (
     <>
-      <div className="bg-sec1 h-full !mx-auto py-[7rem] text-white"
+      <div
+        className="bg-sec1 h-full !mx-auto py-[7rem] text-white"
         style={{
-          backgroundImage: currentBook ? `url(${currentBook.cover})` : undefined,
+          backgroundImage: currentBook?.cover
+            ? `url(${currentBook.cover})`
+            : undefined,
           backgroundColor: "rgba(0,0,0,0.6)",
           backgroundBlendMode: "darken",
-        }}>
-        <div className="container !mx-auto flex  items-center justify-center w-full">
+        }}
+      >
+        <div className="container !mx-auto flex items-center justify-center w-full">
           <div className="basis-3/5 flex flex-col gap-3">
-            <span className=" flex items-center gap-5 pr-5" >
-              <label htmlFor="subCategory" className="block text-6xl  mb-2 font-semibold">
-                {currentCategory.name}
+            <span className="flex items-center gap-5 pr-5">
+              <label
+                htmlFor="subCategory"
+                className="block text-6xl mb-2 font-semibold"
+              >
+                {String(currentCategory.name)}
               </label>
               {currentCategory.subCategories ? (
-                <div className=" text-white">
+                <div className="text-white">
                   <select
                     id="subCategory"
                     className="px-5 py-3 bg-white/20 backdrop-blur-md border border-white/30 
@@ -144,33 +148,39 @@ export default function CategoryPage() {
                     {currentCategory.subCategories.map((sub) => (
                       <option
                         key={sub.slug}
-                        value={sub.slug}
+                        value={String(sub.slug)}
                         className="bg-black/80 p-5 text-white"
                       >
-                        {sub.name}
+                        {String(sub.name)}
                       </option>
                     ))}
                   </select>
-
                 </div>
               ) : (
                 <p className="italic text-gray-400"></p>
               )}
             </span>
-            <h1 className="!font-bold">Khám phá thế giới sách Waka với hơn 3500+ Sách điện tử, Sách nói và Truyện tranh</h1>
+            <h1 className="!font-bold">
+              Khám phá thế giới sách Waka với hơn 3500+ Sách điện tử, Sách nói
+              và Truyện tranh
+            </h1>
 
             <div className="flex flex-col gap-5">
-              <span className="  bg-white/20 p-2 !font-bold w-max rounded-lg rounded-bl-none">
+              <span className="bg-white/20 p-2 !font-bold w-max rounded-lg rounded-bl-none">
                 SMARTBOOK ĐỀ XUẤT
               </span>
               {currentBook && (
                 <div className="space-y-3">
-                  <h1 className="text-3xl font-bold">{currentBook.title}</h1>
-                  <p className="text-gray-300 !w-[80%] line-clamp-5">{currentBook.description}</p>
+                  <h1 className="text-3xl font-bold">
+                    {String(currentBook.title)}
+                  </h1>
+                  <p className="text-gray-300 !w-[80%] line-clamp-5">
+                    {String(currentBook.description || "")}
+                  </p>
                   <Button
                     text="Đọc sách"
                     icon={faBook}
-                    href={currentBook.link}
+                    href={currentBook.slug || "#"}
                     iconPosition="left"
                   />
                 </div>
@@ -180,7 +190,6 @@ export default function CategoryPage() {
           <span className="basis-2/5 ">
             <BookSlider projects={projects} onSlideChange={setCurrentIndex} />
           </span>
-
         </div>
       </div>
 
@@ -194,10 +203,9 @@ export default function CategoryPage() {
               <CardCategory
                 key={i}
                 cover={book.cover}
-                title={book.title}
-                author={book.author}
-                link={book.link}
-                subCategory={book.subCategory}
+                title={String(book.title || "")}
+                author={String(book.author || "")}
+                description={String(book.description || "")}
               />
             ))}
           </div>
@@ -211,11 +219,11 @@ export default function CategoryPage() {
                 key={i}
                 number={i + 1}
                 cover={book.cover}
-                title={book.title}
-                author={book.author}
+                title={String(book.title || "")}
+                author={String(book.author || "")}
                 status={book.status}
-                description={book.description}
-                link={book.link}
+                description={String(book.description || "")}
+                slug={book.slug || "#"}
               />
             ))}
           </div>
@@ -227,13 +235,8 @@ export default function CategoryPage() {
         </div>
 
         <Section title="Truyện - Tiểu thuyết " books={projects} />
-
         <Section title="Trinh thám - Kinh dị " books={projects} />
-
-
       </main>
-
     </>
-
   );
 }

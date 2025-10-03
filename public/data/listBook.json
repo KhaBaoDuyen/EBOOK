@@ -6,7 +6,9 @@
     "description": "Tiểu thuyết nổi tiếng của Chu Lai, tái hiện khốc liệt chiến tranh và tình yêu đầy bi thương, chan chứa chất sử thi.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Văn học",
-    "filePath": "/uploads/mua-do.pdf"
+    "filePath": "/uploads/mua-do.pdf",
+    "author": "Chu Lai",
+    "status": 1
   },
   {
     "title": "Tiểu yêu tinh của Bạc gia",
@@ -15,7 +17,9 @@
     "description": "Một câu chuyện ngôn tình hiện đại, xoay quanh cô gái nhỏ bé nhưng mạnh mẽ chinh phục trái tim chàng trai kiêu ngạo.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Trẻ",
-    "filePath": "/uploads/tieu-yeu-tinh.pdf"
+    "filePath": "/uploads/tieu-yeu-tinh.pdf",
+    "author": "Tác giả A",
+    "status": 1
   },
   {
     "title": "Cô vợ nhỏ của ngài Phó",
@@ -24,7 +28,9 @@
     "description": "Một mối tình đầy thử thách, nơi cô vợ nhỏ phải đối mặt với sự lạnh lùng nhưng cũng ấm áp bất ngờ từ ngài Phó quyền thế.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Kim Đồng",
-    "filePath": "/uploads/co-vo-nho.pdf"
+    "filePath": "/uploads/co-vo-nho.pdf",
+    "author": "Tác giả B",
+    "status": 1
   },
   {
     "title": "Siêu cấp cưng chiều",
@@ -33,7 +39,9 @@
     "description": "Ngọt ngào và lãng mạn, câu chuyện kể về tình yêu được cưng chiều đến mức khiến ai cũng phải ghen tị.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Lao Động",
-    "filePath": "/uploads/sieu-cap.pdf"
+    "filePath": "/uploads/sieu-cap.pdf",
+    "author": "Tác giả C",
+    "status": 1
   },
   {
     "title": "Bảo bối của ngài Tống",
@@ -42,7 +50,9 @@
     "description": "Một hành trình tình cảm ngọt ngào, nơi cô gái bình thường trở thành 'bảo bối' độc nhất trong lòng ngài Tống.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Phụ Nữ",
-    "filePath": "/uploads/bao-boi.pdf"
+    "filePath": "/uploads/bao-boi.pdf",
+    "author": "Tác giả D",
+    "status": 1
   },
   {
     "title": "Lấy chàng kỹ sư",
@@ -51,7 +61,9 @@
     "description": "Câu chuyện lãng mạn, chân thật về hôn nhân, nơi một chàng kỹ sư giản dị lại mang đến hạnh phúc bất ngờ.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Thanh Niên",
-    "filePath": "/uploads/lay-chang-ky-su.pdf"
+    "filePath": "/uploads/lay-chang-ky-su.pdf",
+    "author": "Tác giả E",
+    "status": 1
   },
   {
     "title": "Yêu đúng cách, hạnh phúc đúng người",
@@ -60,7 +72,9 @@
     "description": "Một cẩm nang tình yêu hiện đại, giúp bạn tìm ra cách yêu đúng đắn để đạt được hạnh phúc thật sự bên người xứng đáng.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Văn hóa",
-    "filePath": "/uploads/yeu-dung-cach.pdf"
+    "filePath": "/uploads/yeu-dung-cach.pdf",
+    "author": "Tác giả F",
+    "status": 1
   },
   {
     "title": "Cưng chiều cô vợ quân nhân",
@@ -69,7 +83,9 @@
     "description": "Một câu chuyện đầy cảm xúc về tình yêu kiên định và sự hy sinh của người quân nhân dành cho người vợ bé nhỏ.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Chính trị Quốc gia",
-    "filePath": "/uploads/cung-chieu.pdf"
+    "filePath": "/uploads/cung-chieu.pdf",
+    "author": "Tác giả G",
+    "status": 1
   },
   {
     "title": "Tính cách con người",
@@ -78,7 +94,9 @@
     "description": "Sách phân tích tâm lý, khám phá những khía cạnh đặc trưng của tính cách con người và cách ứng xử trong xã hội.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Tâm Lý",
-    "filePath": "/uploads/tinh-cach-con-nguoi.pdf"
+    "filePath": "/uploads/tinh-cach-con-nguoi.pdf",
+    "author": "Tác giả H",
+    "status": 1
   },
   {
     "title": "Thiếu soái, chào anh!",
@@ -87,6 +105,8 @@
     "description": "Một tiểu thuyết ngôn tình quân nhân, nơi tình yêu và trách nhiệm đan xen tạo nên câu chuyện lãng mạn mà mạnh mẽ.",
     "releaseDate": "2024-01-01",
     "publisher": "NXB Quân đội",
-    "filePath": "/uploads/thieu-soai.pdf"
+    "filePath": "/uploads/thieu-soai.pdf",
+    "author": "Tác giả I",
+    "status": 1
   }
 ]

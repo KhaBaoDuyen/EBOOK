@@ -1,11 +1,11 @@
-@import "./base/variables";
-@import "./base/font";
-@import "./themes/main";
+@use "./base/variables";
+@use "./base/font";
+@use "./themes/main";
 
-@import "./components/Buttons/Button.scss";
-@import "./components/Cards/CardBook.scss";
+@use "./components/Buttons/Button.scss";
+@use "./components/Cards/CardBook.scss";
 
-@import "./pages/page";
-@import "./pages/category.scss";
+@use "./pages/page";
+@use "./pages/category.scss";
 
  

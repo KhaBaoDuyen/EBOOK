@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { useLoaderData } from "react-router";
+import { useLoaderData } from "@remix-run/react";
 import db from "~/utils/db.server";
 import Book from "~/models/book.server";
 

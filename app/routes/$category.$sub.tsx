@@ -1,9 +1,7 @@
-import { useParams } from "react-router";
+import { useParams } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import categories from "../../public/data/categories.json";
 import Splide from "@splidejs/splide";
-import "@splidejs/splide/css";
-import "@splidejs/splide/css/skyblue";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 //==================[ COMPONENT ]====================
@@ -77,7 +75,7 @@ export default function SubCategoryPage() {
     <>
       <div className="bg-sec1 h-full !mx-auto py-[7rem] text-white"
         style={{
-          backgroundImage: currentBook ? `url(${currentBook.cover})` : undefined,
+          backgroundImage: currentBook ? `url(${currentBook?.cover})` : undefined,
           backgroundColor: "rgba(0,0,0,0.6)",
           backgroundBlendMode: "darken",
         }}>
@@ -120,13 +118,13 @@ export default function SubCategoryPage() {
               </span>
               {currentBook && (
                 <div className="space-y-3">
-                  <h1 className="text-3xl font-bold">{currentBook.title}</h1>
-                  <p className="text-gray-300 line-clamp-5 w-[80%]">{currentBook.description}</p>
+                  <h1 className="text-3xl font-bold">{currentBook?.title}</h1>
+                  <p className="text-gray-300 line-clamp-5 w-[80%]">{currentBook?.description}</p>
 
                   <Button
                     text="Đọc sách"
                     icon={faBook}
-                    href={currentBook.link}
+                    href={currentBook?.link}
                     iconPosition="left"
                   />
                 </div>

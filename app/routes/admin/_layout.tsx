@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet } from "@remix-run/react";
 import { SidebarProvider, useSidebar } from "~/context/SidebarContext";
 import { ThemeProvider } from "~/context/ThemeContext";
 import AppSidebar from "~/components/admin/layout/AppSidebar";

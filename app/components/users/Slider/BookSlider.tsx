@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Splide from "@splidejs/splide";
-import "@splidejs/splide/css";
 
 type Project = {
-  cover: string;
+  cover?: string;
   title?: string;
   author?: string;
 };
@@ -14,8 +13,14 @@ type BookSliderProps = {
 };
 
 export default function BookSlider({ projects, onSlideChange }: BookSliderProps) {
+  const splideRef = useRef<Splide | null>(null);
+
   useEffect(() => {
     if (projects.length > 0) {
+       if (splideRef.current) {
+        splideRef.current.destroy();
+      }
+
       const splide = new Splide(".splide-desktop", {
         type: "loop",
         perPage: 1,
@@ -29,12 +34,11 @@ export default function BookSlider({ projects, onSlideChange }: BookSliderProps)
       });
 
       splide.on("moved", (newIndex: number) => {
-        if (onSlideChange) {
-          onSlideChange(newIndex); // báo cho cha index mới
-        }
+        onSlideChange?.(newIndex);
       });
 
       splide.mount();
+      splideRef.current = splide;
 
       return () => {
         splide.destroy();
@@ -50,9 +54,15 @@ export default function BookSlider({ projects, onSlideChange }: BookSliderProps)
             <li key={index} className="splide__slide h-100">
               <img
                 src={ebook.cover}
-                alt={`Slide ${index}`}
+                alt={ebook.title ?? `Slide ${index}`}
                 className="rounded-xl shadow-lg h-100 w-full object-cover"
               />
+              {(ebook.title || ebook.author) && (
+                <div className="absolute bottom-4 left-4 text-white drop-shadow">
+                  {ebook.title && <h3 className="font-bold">{ebook.title}</h3>}
+                  {ebook.author && <p className="text-sm">{ebook.author}</p>}
+                </div>
+              )}
             </li>
           ))}
         </ul>

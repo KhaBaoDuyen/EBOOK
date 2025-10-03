@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@import "@splidejs/splide/dist/css/splide.min.css";
+@import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
+
+/* import "@splidejs/react-splide/css";
+import "@splidejs/splide/dist/css/splide.min.css"; */

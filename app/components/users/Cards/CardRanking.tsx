@@ -1,20 +1,39 @@
 import React from "react";
 import CardBook from "./CardBook";
 
+type CardRankingsProps = {
+  number?: number | null;
+  cover?: string;
+  title?: string;
+  author?: string;
+  status?: number ;
+  description?: string;
+  slug?: string;  
+};
+
 /**
- * @param {number | null} number - Thứ hạng (có thể null)
- * @param {string} cover - Link ảnh bìa
- * @param {string} title - Tên sách
- * @param {string} author - Tên tác giả
- * @param {string} status - Trạng thái
- * @param {string} description - Mô tả
- * @param {string} link  - Link chi tiết
+ * CardRankings hiển thị sách trong bảng xếp hạng
  */
-const CardRankings = ({ number = null, cover="", title="", author="", status = "", description = "", link = "#" }) => {
+const CardRankings: React.FC<CardRankingsProps> = ({
+  number = null,
+  cover = "",
+  title = "",
+  author = "",
+  status = 1,
+  description = "",
+  slug = "#",
+}) => {
   return (
     <div className="flex flex-col gap-3 w-[18%] hover:z-99">
       <div className="relative group max-w-min">
-        <CardBook cover={cover} title={title} author={author} status={status} description={description} link={link} />
+        <CardBook
+          cover={cover}
+          title={title}
+          author={author}
+          status={status}
+          description={description}
+          link={`/ebook/${slug}`} 
+        />
         {number !== null && (
           <div
             className="absolute rounded-xl bottom-0 left-0 transition duration-300

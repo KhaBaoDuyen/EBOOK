@@ -1,6 +1,4 @@
 import Splide from "@splidejs/splide";
-import "@splidejs/splide/css";
-import "@splidejs/splide/css/skyblue";
 import { useState, useEffect } from "react";
 
 const Slider = () => {

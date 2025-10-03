@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "@remix-run/react";
 import categoriesData from "../../../../public/data/categories.json";
 import { FaSearch } from "react-icons/fa";
 
