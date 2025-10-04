@@ -1,5 +1,5 @@
 import type React from "react";
-import { Link } from "react-router";
+import { Link } from "@remix-run/react";
 
 interface DropdownItemProps {
   tag?: "a" | "button";

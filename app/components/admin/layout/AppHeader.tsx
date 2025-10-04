@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Link } from "react-router";
+import { Link, useLocation } from "@remix-run/react";
 import { useSidebar } from "../../../context/SidebarContext";
 import { ThemeToggleButton } from "../common/ThemeToggleButton";
 import NotificationDropdown from "../header/NotificationDropdown";
