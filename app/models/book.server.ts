@@ -11,9 +11,15 @@ const bookSchema = new Schema<IBook>(
     publisher: { type: String, required: true },
     filePath: { type: String, required: true },
     mimeType: { type: String },
-    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+    status: { type: Number, enum: [1, 0], default: 1 },
+    categories: [{
+       type: Schema.Types.ObjectId,
+       ref: "Category" 
+    }]
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+  }
 );
 
 const Book: Model<IBook> =

@@ -12,6 +12,10 @@ import appCss from "./app.css?url";
 import tailwindCss from "./styles/tailwind.css?url";
 import mainCss from "./styles/main.css?url";
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { vi } from "date-fns/locale"; 
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -49,7 +53,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
  export default function App() {
-  return <Outlet />;
+  return (
+     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={vi}>
+          <Outlet />
+    </LocalizationProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

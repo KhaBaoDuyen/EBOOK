@@ -1,5 +1,5 @@
 import db from "../app/utils/db.server";
-import Category from "../app/models/categories.server";
+import Category from "../app/models/category.server";
 import { readFileSync } from "fs";
 import path from "path";
 

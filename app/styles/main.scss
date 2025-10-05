@@ -1,6 +1,8 @@
 @use "./base/variables";
 @use "./base/font";
 @use "./themes/main";
+@use "./themes/admin.scss";
+
 
 @use "./components/Buttons/Button.scss";
 @use "./components/Cards/CardBook.scss";

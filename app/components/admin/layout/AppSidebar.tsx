@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "@remix-run/react";  
+import { Link, useLocation } from "@remix-run/react";
 import {
   LayoutDashboard,
   Users,
@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 
 import { useSidebar } from "../../../context/SidebarContext";
-import SidebarWidget from "../layout/SidebarWidget";
 
 type NavItem = {
   name: string;
@@ -22,7 +21,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { icon: <LayoutDashboard size={20} />, name: "Bảng điều khiển", path: "/admin" },
-  { icon: <Users size={20} />, name: "Tài khoản", path: "/admin/users" },
+  { icon: <Users size={20} />, name: "Tài khoản", path: "/admin/user" },
   { icon: <BookOpen size={20} />, name: "Sách", path: "/admin/books" },
   { icon: <Tags size={20} />, name: "Loại sách", path: "/admin/categories" },
   { icon: <FolderTree size={20} />, name: "Thư mục", path: "/admin/folders" },
@@ -32,7 +31,7 @@ const othersItems: NavItem[] = [];
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
-  const location = useLocation(); // ✅ Giờ context hợp lệ trong Remix
+  const location = useLocation();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -93,20 +92,17 @@ const AppSidebar: React.FC = () => {
           {nav.subItems ? (
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
-              className={`menu-item group ${
-                openSubmenu?.type === menuType && openSubmenu?.index === index
+              className={`menu-item group ${openSubmenu?.type === menuType && openSubmenu?.index === index
                   ? "menu-item-active"
                   : "menu-item-inactive"
-              } cursor-pointer ${
-                !isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"
-              }`}
+                } cursor-pointer ${!isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"
+                }`}
             >
               <span
-                className={`menu-item-icon-size ${
-                  openSubmenu?.type === menuType && openSubmenu?.index === index
+                className={`menu-item-icon-size ${openSubmenu?.type === menuType && openSubmenu?.index === index
                     ? "menu-item-icon-active"
                     : "menu-item-icon-inactive"
-                }`}
+                  }`}
               >
                 {nav.icon}
               </span>
@@ -115,11 +111,10 @@ const AppSidebar: React.FC = () => {
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDown
-                  className={`ml-auto w-5 h-5 transition-transform duration-200 ${
-                    openSubmenu?.type === menuType && openSubmenu?.index === index
+                  className={`ml-auto w-5 h-5 transition-transform duration-200 ${openSubmenu?.type === menuType && openSubmenu?.index === index
                       ? "rotate-180 text-brand-500"
                       : ""
-                  }`}
+                    }`}
                 />
               )}
             </button>
@@ -127,16 +122,14 @@ const AppSidebar: React.FC = () => {
             nav.path && (
               <Link
                 to={nav.path}
-                className={`menu-item group ${
-                  isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-                }`}
+                className={`menu-item group ${isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
+                  }`}
               >
                 <span
-                  className={`menu-item-icon-size ${
-                    isActive(nav.path)
+                  className={`menu-item-icon-size ${isActive(nav.path)
                       ? "menu-item-icon-active"
                       : "menu-item-icon-inactive"
-                  }`}
+                    }`}
                 >
                   {nav.icon}
                 </span>
@@ -164,32 +157,29 @@ const AppSidebar: React.FC = () => {
                   <li key={subItem.name}>
                     <Link
                       to={subItem.path}
-                      className={`menu-dropdown-item ${
-                        isActive(subItem.path)
+                      className={`menu-dropdown-item ${isActive(subItem.path)
                           ? "menu-dropdown-item-active"
                           : "menu-dropdown-item-inactive"
-                      }`}
+                        }`}
                     >
                       {subItem.name}
                       <span className="flex items-center gap-1 ml-auto">
                         {subItem.new && (
                           <span
-                            className={`ml-auto ${
-                              isActive(subItem.path)
+                            className={`ml-auto ${isActive(subItem.path)
                                 ? "menu-dropdown-badge-active"
                                 : "menu-dropdown-badge-inactive"
-                            } menu-dropdown-badge`}
+                              } menu-dropdown-badge`}
                           >
                             new
                           </span>
                         )}
                         {subItem.pro && (
                           <span
-                            className={`ml-auto ${
-                              isActive(subItem.path)
+                            className={`ml-auto ${isActive(subItem.path)
                                 ? "menu-dropdown-badge-active"
                                 : "menu-dropdown-badge-inactive"
-                            } menu-dropdown-badge`}
+                              } menu-dropdown-badge`}
                           >
                             pro
                           </span>
@@ -208,22 +198,26 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
-        ${isExpanded || isMobileOpen
+      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 left-0 px-5 
+    !bg-white dark:!bg-[#111827] 
+    text-gray-900 dark:text-gray-100
+    border-r border-gray-200 dark:border-gray-800
+    h-screen transition-all duration-300 ease-in-out z-50
+    ${isExpanded || isMobileOpen
           ? "w-[290px]"
           : isHovered
-          ? "w-[290px]"
-          : "w-[90px]"
+            ? "w-[290px]"
+            : "w-[90px]"
         }
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0`}
+    ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
+    lg:translate-x-0`}
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+
       <div
-        className={`py-8 flex ${
-          !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-        }`}
+        className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+          }`}
       >
         <Link to="/">
           <img
@@ -240,9 +234,8 @@ const AppSidebar: React.FC = () => {
           <div className="flex flex-col gap-4">
             <div>
               <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-                }`}
+                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+                  }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
                   "Quản lý"
@@ -254,9 +247,8 @@ const AppSidebar: React.FC = () => {
             </div>
             <div>
               <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-                }`}
+                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+                  }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
                   "Khác"
@@ -268,7 +260,6 @@ const AppSidebar: React.FC = () => {
             </div>
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
       </div>
     </aside>
   );
