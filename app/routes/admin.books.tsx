@@ -26,6 +26,8 @@ export default function Book() {
             setLoading(true);
             const data = await getAllBook();
             setBooks(data.data);
+            console.log("data book=>", books);
+            
         } catch (err) {
             console.log("Lỗi khi lấy dữ liệu", err);
         } finally {
@@ -103,7 +105,7 @@ export default function Book() {
                                     <td className="p-3">
                                         {book.categories.map((cat) => cat.name).join(", ")}
                                     </td>
-                                    <td className="p-3">{book.author}</td>
+                                    <td className="p-3">{book.authorId?.name}</td>
                                     <td className="p-3">
                                         {book.status === 1 ? (
                                             <span className="rounded bg-green-100 dark:bg-green-900 px-2 py-1 text-xs text-green-700 dark:text-green-300">

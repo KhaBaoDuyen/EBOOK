@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -23,10 +23,13 @@ import type { IBook } from "~/interfaces/book.interface";
 
 import CustomTextField from "../../text/CustomTextField";
 import CustomDatePicker from "~/components/text/DatePicker";
+import CustomComboBox from "../../text/BoxGroup";
 
 import { getAllCategory } from "~/services/category.service";
+import { getAllAuthor } from "~/services/author.service"
 
 import { toSlug } from "~/utils/toSlug";
+import { log } from "console";
 
 
 interface BookFormProps {
@@ -37,7 +40,8 @@ interface BookFormProps {
 export default function BookForm({ initialData, onSubmit }: BookFormProps) {
   const [title, setTitle] = useState(initialData?.title || "");
   const [slug, setSlug] = useState("");
-  const [author, setAuthor] = useState(initialData?.author || "");
+  const [authors, setAuthors] = React.useState<any[]>([]);
+  const [selectedAuthor, setSelectedAuthor] = React.useState<any>(null);
   const [publisher, setPublisher] = useState(initialData?.publisher || "");
   const [releaseDate, setReleaseDate] = useState<Date | null>(
     initialData?.releaseDate || null
@@ -53,13 +57,14 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [fileBook, setFileBook] = useState<File | null>(null);
 
+  useEffect(() => {
+    category();
+    getAuthors();
+  }, [])
 
   //------[ HAM SU LY LAY DU LIEU DANH MUC ]------------
   const [checked, setChecked] = useState<{ [key: string]: boolean }>({});
 
-  useEffect(() => {
-    category();
-  }, [])
 
   const category = async () => {
     try {
@@ -114,6 +119,17 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
       setPreview(URL.createObjectURL(image));
     }
   }
+  //---------------[ HAm LAY TAC GIA ]---------------------
+
+  const getAuthors = async () => {
+    try {
+      const author = await getAllAuthor();
+      setAuthors(author.data);
+    } catch (err) {
+      console.log("loi khi lay tac gia", err)
+    }
+  }
+
   return (
     <div className="text-white p-6 rounded-md">
       <div className="flex gap-5">
@@ -127,10 +143,14 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
               <p className="pt-2">Đường dẫn: {slug || "Duong-dan-sach"}</p>
             </div>
             <div>
-              <CustomTextField value={author}
-                label="Tác giả"
-                onChange={(e) => setAuthor(e.target.value)}
-                required />
+
+              <CustomComboBox
+                label="Chọn tác giả"
+                options={authors}
+                value={selectedAuthor}
+                getOptionLabel={(a: any) => a.name}
+                onChange={(value) => setSelectedAuthor(value)}
+              />
             </div>
           </div>
 
@@ -264,8 +284,8 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
         <aside className="basis-[30%] p-5 bg-[#1F2937] border border-gray-500 shadow-gray-700 flex rounded-md flex-col justify-start items-center space-y-6">
           <div className="w-full flex flex-col gap-3 text-center">
             <label className="block mb-2 text-sm font-medium">Ảnh bìa sách</label>
-            <img src={preview ||"/Images/Slides/mobile/4276.png"} alt="" 
-            className="w-[100%] h-auto hover:border-white border-1 rounded-md"/>
+            <img src={preview || "/Images/Slides/mobile/4276.png"} alt=""
+              className="w-[100%] h-auto hover:border-white border-1 rounded-md" />
             <input
               type="file"
               accept="image/*"

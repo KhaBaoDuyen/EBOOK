@@ -5,7 +5,7 @@ export interface IBook {
   title: string;
   slug: string;
   cover?: string;
-  author:string;
+  authorId:Types.ObjectId;
   description: string;
   releaseDate?: Date;
   publisher: string;

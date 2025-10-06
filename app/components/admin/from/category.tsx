@@ -80,15 +80,9 @@ export default function CategogyForm({ initialData, onSubmit }: CatFormProps) {
                             label="Tên loại"
                             onChange={handleToSlugs}
                             required />
-
-
                     </div>
                     <div className="grid grid-cols-1 gap-4">
-
-                        <CustomTextField value={slug || "Duong-dan-sach"}
-                            label="Dường dẫn"
-                            onChange={handleToSlugs}
-                            required />
+                        <h1>Đường dẫn: {slug || "Ten url the loai"}</h1>
                     </div>
                     <div className="grid grid-cols-1 gap-4">
                         <h1>Danh mục</h1>
