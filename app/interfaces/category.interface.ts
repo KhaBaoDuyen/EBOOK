@@ -5,6 +5,7 @@ export interface ICategory {
   name: string;
   slug: string;
   parentId?: Types.ObjectId | null;
+  status?:number,
   createdAt?: Date;
   updatedAt?: Date;
 }

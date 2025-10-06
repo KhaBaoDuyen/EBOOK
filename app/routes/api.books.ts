@@ -12,7 +12,6 @@ export async function loader() {
       data: books,
     });
   } catch (err: any) {
-    console.error("🔥 Lỗi khi lấy books:", err);
     return json(
       {
         status: 500,

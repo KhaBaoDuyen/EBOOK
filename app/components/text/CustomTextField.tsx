@@ -10,22 +10,22 @@ const CustomTextField: React.FC<TextFieldProps> = (props) => {
       sx={{
         "& .MuiOutlinedInput-root": {
           color: "white",
-          backgroundColor: "#1F2937", // nền xám nhẹ
+          backgroundColor: "#1F2937",  
           "& fieldset": {
-            borderColor: "#aaa", // viền xám trắng
+            borderColor: "#aaa",  
           },
           "&:hover fieldset": {
             borderColor: "#fff",
           },
           "&.Mui-focused fieldset": {
-            borderColor: "#4ade80", // xanh lá khi focus
+            borderColor: "#4ade80",  
           },
         },
         "& .MuiInputLabel-root": {
-          color: "#ccc", // label xám trắng
+          color: "#ccc",  
         },
         "& .MuiInputLabel-root.Mui-focused": {
-          color: "#4ade80", // label xanh khi focus
+          color: "#4ade80", 
         },
       }}
     />

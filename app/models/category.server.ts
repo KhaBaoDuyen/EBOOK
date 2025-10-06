@@ -7,7 +7,7 @@ const categorySchema = new Schema<ICategory>(
     slug: { type: String, required: true },
     parentId: { type: Schema.Types.ObjectId, ref: "Category" }
   },
-  { timestamps: true }
+  { timestamps: true, collection:"categories" }
 );
 
 const Category: Model<ICategory> = 
