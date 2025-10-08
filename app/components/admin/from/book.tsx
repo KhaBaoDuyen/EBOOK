@@ -30,11 +30,13 @@ import { getAllAuthor } from "~/services/author.service"
 
 import { toSlug } from "~/utils/toSlug";
 import { log } from "console";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 
 interface BookFormProps {
   initialData?: Partial<IBook>;
-  onSubmit: (data: IBook) => void;
+  onSubmit: (formData: FormData) => void;
 }
 
 export default function BookForm({ initialData, onSubmit }: BookFormProps) {
@@ -56,6 +58,12 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
   const [cover, setCover] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [fileBook, setFileBook] = useState<File | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IBook>();
 
   useEffect(() => {
     category();
@@ -130,16 +138,37 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
     }
   }
 
+  //------------------[ THEM DU LIEU ]----------------
+  const Submit: SubmitHandler<IBook> = (data) => {
+    const selectedCategories = Object.keys(checked).filter((id) => checked[id]);
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("slug", slug);
+    formData.append("description", description);
+    formData.append("publisher", publisher);
+    formData.append("releaseDate", releaseDate ? releaseDate.toISOString() : "");
+    formData.append("authorId", selectedAuthor?._id || "");
+    formData.append("status", status.toString());
+    formData.append("categories", JSON.stringify(selectedCategories));
+    if (cover) formData.append("cover", cover);
+    if (fileBook) formData.append("filePath", fileBook);
+
+    onSubmit(formData);
+  };
+
   return (
     <div className="text-white p-6 rounded-md">
-      <div className="flex gap-5">
+      <form className="flex gap-5"
+        onSubmit={handleSubmit(Submit)}
+        encType="multipart/form-data">
         <div className="basis-[70%] p-5 border border-gray-500 rounded-md w-full bg-[#1F2937] space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <CustomTextField value={title}
                 label="Tên sách"
                 onChange={handleToSlugs}
-                required />
+              />
               <p className="pt-2">Đường dẫn: {slug || "Duong-dan-sach"}</p>
             </div>
             <div>
@@ -150,7 +179,10 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
                 value={selectedAuthor}
                 getOptionLabel={(a: any) => a.name}
                 onChange={(value) => setSelectedAuthor(value)}
+
               />
+
+
             </div>
           </div>
 
@@ -310,7 +342,7 @@ export default function BookForm({ initialData, onSubmit }: BookFormProps) {
             )}
           </div>
         </aside>
-      </div>
+      </form>
     </div>
 
   );

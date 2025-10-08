@@ -14,7 +14,8 @@ import mainCss from "./styles/main.css?url";
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { vi } from "date-fns/locale"; 
+import { vi } from "date-fns/locale";
+import { Toaster } from "react-hot-toast";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,15 +48,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          }}
+        />
+
       </body>
     </html>
   );
 }
 
- export default function App() {
+export default function App() {
   return (
-     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={vi}>
-          <Outlet />
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={vi}>
+      <Outlet />
     </LocalizationProvider>
   );
 }

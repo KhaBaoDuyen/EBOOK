@@ -11,6 +11,9 @@ import CardCategory from "~/components/users/Cards/CardCategory";
 import CardRanking from "~/components/users/Cards/CardRanking";
 import Slider3Images from "~/components/users/Slider/slider-3image";
 import BookSlider from "~/components/users/Slider/BookSlider";
+import { useLoaderData } from "@remix-run/react";
+import type { IBook } from "~/interfaces/book.interface";
+import type { ICategory } from "~/interfaces/category.interface";
 
 interface Book {
   id?: number;
@@ -24,10 +27,19 @@ interface Book {
   subCategory?: string;
 }
 
+interface LoaderData {
+  parentCategory: ICategory | null;
+  subCategories: ICategory[];
+  books: IBook[];
+}
+
+
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
 
   const currentCategory = categories.find((cat) => cat.slug === category);
+
+
 
   if (!currentCategory) {
     return (

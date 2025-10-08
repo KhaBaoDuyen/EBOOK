@@ -8,3 +8,8 @@ export async function getAllBook() {
   }
   return await res.json();
 }
+
+export async function getBookBySlug(slug: string) {
+  const res = await fetch(`/api/books/${slug}`);
+  return await res.json();
+}

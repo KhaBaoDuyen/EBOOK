@@ -7,14 +7,24 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-import React from "react";
+import React, { useState } from "react";
 import CardRanking from "../components/users/Cards/CardRanking";
 import CardCategory from "../components/users/Cards/CardCategory";
 import Slider from "../components/users/Slider";
 import books from "../../public/data/listBook.json";
 import Section from "../components/users/Section";
 
+import type{ IBook } from "~/interfaces/book.interface";
+
 const HomePage = () => {
+  
+  // const [books, setBooks] = useState<IBook>();
+  
+  // const getBookByCategory = async () =>{
+
+  // }
+
+
   return (
     <main className="relative !w-full">
       <Slider />

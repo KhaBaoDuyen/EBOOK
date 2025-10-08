@@ -61,7 +61,7 @@ export default function Book() {
         <div className="p-6">
             <span className="flex items-center justify-between">
                 <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-gray-100"> Quản lý Sách </h1>
-                <ButtonCustom variant="contained" href="/admin/book/tao-sach">
+                <ButtonCustom variant="contained" href="/admin/book/create">
                     Thêm sách +
                 </ButtonCustom>
             </span>
@@ -99,11 +99,12 @@ export default function Book() {
                                 >
                                     <td className="p-3">{startIndex + i + 1}</td>
                                     <td className="p-3">
-                                        <img src={book.cover} className="rounded-md" alt="anh bia" />
+                                        <img src={book.cover || `/uploads/bannerBook/`+ book.cover} className="rounded-md" alt="anh bia" />
                                     </td>
                                     <td className="p-3 line-clamp-3">{book.title}</td>
                                     <td className="p-3">
                                         {book.categories.map((cat) => cat.name).join(", ")}
+                                        
                                     </td>
                                     <td className="p-3">{book.authorId?.name}</td>
                                     <td className="p-3">

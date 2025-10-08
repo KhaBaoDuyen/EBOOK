@@ -1,82 +1,109 @@
-import { useState } from "react";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "@remix-run/react";
+import { initEpubViewer } from "~/utils/epubViewer";
+import { getBookBySlug } from "~/services/book.service";
 
-export default function Render() {
-    const [progress, setProgress] = useState(5);
+export default function UserRenderBook() {
+  const { nameBook } = useParams();
+  const viewerRef = useRef<HTMLDivElement>(null);
+  const [bookInfo, setBookInfo] = useState<any>(null);
+  const [book, setBook] = useState<any>(null);
+  const [rendition, setRendition] = useState<any>(null);
+  const [chapters, setChapters] = useState<any[]>([]);
+  const [current, setCurrent] = useState<any>(null);
 
-    return (
-        <div className=" h-screen  bg-gray-900 text-white">
-            <span className="mt-[7rem] h-full flex">
-                <aside className="w-[300px]  bg-gray-800 p-5 overflow-y-auto">
-                    {/* Ảnh bìa */}
-                    <div className="mb-5">
-                        <img
-                            src="/Images/Slides/Pages/peterpan.jpg"
-                            alt="Peter and Wendy"
-                            className="rounded-md shadow-lg"
-                        />
-                    </div>
+   useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const data = await getBookBySlug(nameBook as string);
+        setBookInfo(data);
+      } catch (err) {
+        console.error("Lỗi khi lấy thông tin sách:", err);
+      }
+    };
+    fetchBook();
+  }, [nameBook]);
 
-                    {/* Nút đăng nhập */}
-                    <button className="w-full bg-green-600 text-white py-2 rounded-lg font-semibold mb-4">
-                        Đăng nhập
-                    </button>
+   useEffect(() => {
+    if (!bookInfo?.filePath) return;
 
-                    {/* Mô tả sách */}
-                    <h2 className="font-bold text-lg mb-2">
-                        <span className="text-gray-300">[Sách ngoại văn]</span> Peter and Wendy
-                    </h2>
-                    <p className="text-sm leading-relaxed text-gray-300">
-                        "Peter and Wendy" là tác phẩm kinh điển của J.M. Barrie, lần đầu được xuất bản vào
-                        năm 1911, là phiên bản tiểu thuyết của câu chuyện nổi tiếng về Peter Pan,
-                        nhân vật huyền thoại không bao giờ lớn. Cuốn sách này kể về cuộc phiêu lưu kỳ diệu
-                        của Peter Pan và những người bạn của anh, đặc biệt là Wendy Darling và các em của cô...
-                    </p>
-                </aside>
+    initEpubViewer({
+      containerRef: viewerRef.current!,
+      filePath: bookInfo.filePath,  
+      onReady: ({ book, rendition, chapters }) => {
+        setBook(book);
+        setRendition(rendition);
+        setChapters(chapters);
+      },
+      onLocationChange: (loc) => setCurrent(loc),
+    });
+  }, [bookInfo]);
 
-                <main className="flex-1 flex flex-col">
-                    {/* Header */}
-                    <header className="flex justify-between items-center p-4 border-b border-gray-700">
-                        <h1 className="font-bold text-lg">[Sách ngoại văn] Peter and Wendy</h1>
-                        <div className="flex gap-3">
-                            <button className="hover:text-green-400">
-                                <FontAwesomeIcon icon={faArrowLeft} />
-                            </button>
-                            <button className="hover:text-green-400">
-                                <FontAwesomeIcon icon={faArrowRight} />
-                            </button>
-                        </div>
-                    </header>
+  const handleNext = () => rendition?.next();
+  const handlePrev = () => rendition?.prev();
+  const goToChapter = (href: string) => rendition?.display(href);
 
-                    {/* Nội dung sách */}
-                    <div className="flex-1 p-10 bg-gray-200 text-black overflow-y-auto">
-                        <h2 className="text-3xl font-serif text-center mb-8">TABLE OF CONTENTS</h2>
-                        <ul className="space-y-3 font-serif text-lg">
-                            <li>Peter and Wendy ..................................................</li>
-                            <li>Chapter I: Peter Breaks Through ............................</li>
-                            <li>Chapter II: The Shadow ....................................</li>
-                            <li>Chapter III: Come Away, Come Away! ................</li>
-                            <li>Chapter IV: The Flight ......................................</li>
-                            <li>Chapter V: The Island Come True .....................</li>
-                            <li>Chapter VI: The Little House .............................</li>
-                        </ul>
-                    </div>
+  return (
+    <div className="flex flex-col h-screen bg-[#1F2937] text-white">
+      {/* Thanh tiêu đề */}
+      <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+        <h1 className="text-lg font-semibold">
+          📘 {bookInfo?.title || "Đang tải..."}
+        </h1>
+        <p className="text-sm text-gray-300">{bookInfo?.author}</p>
+      </div>
 
-                    <footer className="p-3 bg-gray-900 flex items-center gap-3">
-                        <input
-                            type="range"
-                            min="0"
-                            max="100"
-                            value={progress}
-                            onChange={(e) => setProgress(e.target.value)}
-                            className="flex-1 accent-green-600"
-                        />
-                        <span className="text-sm">{progress}%</span>
-                    </footer>
-                </main>
+      <div className="flex flex-1">
+        {/* Menu chương */}
+        <aside className="w-[260px] border-r border-gray-700 overflow-y-auto bg-[#111827] p-3">
+          <h2 className="font-medium mb-2 text-green-400">📑 Danh mục chương</h2>
+          <ul className="space-y-2 text-sm">
+            {chapters.map((ch, idx) => (
+              <li key={idx}>
+                <button
+                  onClick={() => goToChapter(ch.href)}
+                  className="text-left hover:text-green-400"
+                >
+                  {ch.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        {/* Viewer EPUB */}
+        <main className="flex-1 relative">
+          <div
+            ref={viewerRef}
+            className="w-full h-full bg-[#F5E6B3] text-black overflow-hidden"
+          ></div>
+
+          {/* Nút điều hướng */}
+          <button
+            onClick={handlePrev}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-gray-700 p-2 rounded-full"
+          >
+            ◀
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 hover:bg-gray-700 p-2 rounded-full"
+          >
+            ▶
+          </button>
+
+           <div className="absolute bottom-0 left-0 right-0 bg-gray-900 p-2 flex justify-between text-xs text-gray-300">
+            <span>{current ? `CFi: ${current.start.cfi}` : "Chưa chọn chương"}</span>
+            <span>
+              {book && book.locations
+                ? `${(
+                    book.locations.percentageFromCfi(current?.start?.cfi || 0) * 100
+                  ).toFixed(1)}%`
+                : ""}
             </span>
-
-        </div>
-    );
+          </div>
+        </main>
+      </div>
+    </div>
+  );
 }
