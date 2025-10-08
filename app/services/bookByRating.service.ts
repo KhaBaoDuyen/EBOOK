@@ -1,6 +1,6 @@
 export async function bookByRating() {
     try {
-        const res = await fetch("/api/user/groupCategogy");
+        const res = await fetch("/api/user/bookByRating");
 
         if(!res.ok){
             const text = await res.text();
