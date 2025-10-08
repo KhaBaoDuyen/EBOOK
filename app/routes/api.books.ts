@@ -28,7 +28,7 @@ export async function loader() {
       .populate("categories", "name slug")
       .populate("authorId", "name");
 
-      //  console.log("danh sach book", books);
+    //  console.log("danh sach book", books);
 
     return json({
       status: 200,

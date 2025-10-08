@@ -6,7 +6,7 @@ const CardBook = ({
   cover = "",
   title = "",
   author = "",
-  status = "",
+  category = [],
   description = "",
   link = "#",
 }) => {
@@ -25,6 +25,10 @@ const CardBook = ({
       setAlignLeft(false);
     }
   };
+
+   const categoryText = category.length
+    ? category.map((cat) => cat.name).join(", ")
+    : "Khác";
 
   return (
     <div className="relative w-52 h-80">
@@ -56,10 +60,10 @@ const CardBook = ({
           >
             <div>
               <h1 className="text-xl font-bold leading-snug mb-2">{title}</h1>
-              <p className="text-gray-400 mb-4">{author}</p>
+              <p className="text-gray-400 mb-4">{categoryText}</p>
               <div className="!flex items-center justify-between">
                 <span className="inline-block bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-sm font-medium">
-                  {status}
+                  {author}  
                 </span>
                 <span className="flex lg:flex-row flex-col gap-2">
                   <Button

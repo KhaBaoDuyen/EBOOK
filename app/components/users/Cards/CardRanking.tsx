@@ -6,7 +6,7 @@ type CardRankingsProps = {
   cover?: string;
   title?: string;
   author?: string;
-  status?: number ;
+  category?: {name:string}[];
   description?: string;
   slug?: string;  
 };
@@ -19,7 +19,7 @@ const CardRankings: React.FC<CardRankingsProps> = ({
   cover = "",
   title = "",
   author = "",
-  status = 1,
+  category = "",
   description = "",
   slug = "#",
 }) => {
@@ -30,7 +30,7 @@ const CardRankings: React.FC<CardRankingsProps> = ({
           cover={cover}
           title={title}
           author={author}
-          status={status}
+          category={category}
           description={description}
           link={`/ebook/${slug}`} 
         />

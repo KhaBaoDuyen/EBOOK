@@ -1,6 +1,7 @@
 import CardRanking from "./Cards/CardRanking";
 
 const Section = ({ title, books }) => (
+  
   <div className="!mx-auto py-2">
     <span className="flex items-center group">
       <h1 className="font-bold text-2xl">{title}</h1>
@@ -31,10 +32,10 @@ const Section = ({ title, books }) => (
           key={i}
           cover={book.cover}
           title={book.title}
-          author={book.author}
-          status={book.status}
+          author={book?.authorId?.name}
+          category={book.categories}
           description={book.description}
-          link={book.link}
+          slug={book.link}
         />
       ))}
     </div>
