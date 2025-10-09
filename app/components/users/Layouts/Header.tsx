@@ -93,7 +93,7 @@ export default function Header() {
               {mainCategories.map((cat) => (
                 <div key={cat.slug} className="relative flex flex-col gap-3 group">
                   <a
-                    href={"/dk/" + cat.slug}
+                    href={"/" + cat.slug}
                     className={`py-2 px-3 font-bold transition-colors hover-font ${isActive(cat) ? "text-emerald-400" : ""
                       }`}
                   >

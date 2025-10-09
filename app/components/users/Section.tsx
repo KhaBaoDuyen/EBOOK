@@ -26,7 +26,7 @@ const Section = ({ title, books }) => (
         </svg>
       </a>
     </span>
-    <div className="flex flex-row overflow-x-auto scrollbar-hide w-full gap-10 p-5">
+    <div className="flex flex-row overflow-x-auto scrollbar-hide w-full gap-7 p-5">
       {books.map((book, i) => (
         <CardRanking
           key={i}

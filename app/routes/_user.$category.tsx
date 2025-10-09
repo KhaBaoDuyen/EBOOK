@@ -4,6 +4,7 @@ import categories from "../../public/data/categories.json";
 import Splide from "@splidejs/splide";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 
+
 //==================[ COMPONENT ]====================
 import Button from "~/components/users/Buttons/Button";
 import Section from "~/components/users/Section";
@@ -15,6 +16,12 @@ import { useLoaderData } from "@remix-run/react";
 import type { IBook } from "~/interfaces/book.interface";
 import type { ICategory } from "~/interfaces/category.interface";
 
+
+//------------------[ API ]--------------------------------
+import { bookByCatgories } from "~/services/bookBy/bookByCategory";
+import { title } from "process";
+
+
 interface Book {
   id?: number;
   title?: string;
@@ -25,12 +32,6 @@ interface Book {
   slug?: string;
   category?: string;
   subCategory?: string;
-}
-
-interface LoaderData {
-  parentCategory: ICategory | null;
-  subCategories: ICategory[];
-  books: IBook[];
 }
 
 
@@ -49,35 +50,38 @@ export default function CategoryPage() {
     );
   }
 
+  // ---------------[ LẤY TOÀN BỘ SẢN PHẨM ]------------
+  const [subCategories, setSubCaregory] = useState<any[]>([]);
+
+  const [booksAll, setBooksAll] = useState([]);
+
+
+  useEffect(() => {
+    fetchBooks();
+  }, [category]);
+
+  const fetchBooks = async () => {
+    const res = await bookByCatgories(category);
+    if (res?.allBooks) {
+      setBooksAll(res.allBooks)
+    }
+    if (res?.subCategories) {
+      setSubCaregory(res.subCategories);
+    };
+
+  };
+
+
   // ---------------[ LẤY SẢN PHẨM RANDOM GẦN NHẤT ]------------
   const [projects, setProjects] = useState<Book[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    fetch("/data/listBook.json")
-      .then((res) => res.json())
-      .then((data: Book[]) => {
-        const shuffled = [...data].sort(() => 0.5 - Math.random());
-        setProjects(shuffled.slice(0, 5));
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
-  // ---------------[ LẤY TOÀN BỘ SẢN PHẨM ]------------
-  const [categores, setCaregory] = useState<Book[]>([]);
-
-  const fetchProjects = () => {
-    fetch("/data/listBook.json")
-      .then((res) => res.json())
-      .then((data: Book[]) => {
-        setCaregory(data);
-      })
-      .catch((err) => console.error(err));
-  };
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+    if (booksAll.length > 0) {
+      const shuffled = [...booksAll].sort(() => 0.5 - Math.random());
+      setProjects(shuffled.slice(0, 5));
+    }
+  }, [booksAll]);
 
   //----------------[ SLIDER ]-------------------
   const initSplide = (selector: string, onMove: (newIndex: number) => void) => {
@@ -206,48 +210,19 @@ export default function CategoryPage() {
       </div>
 
       <main className="container !mx-auto">
-        <Section title="Mới nhất" books={projects} />
-
-        <div className="mt-5">
-          <h1 className="text-3xl">Một số thể loại</h1>
-          <div className="!mx-auto grid md:grid-cols-4 grid-cols-2 gap-5 py-2">
-            {categores.slice(0, 8).map((book, i) => (
-              <CardCategory
-                key={i}
-                cover={book.cover}
-                title={String(book.title || "")}
-                author={String(book.author || "")}
-                description={String(book.description || "")}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="!mx-auto py-5">
-          <h1 className="font-bold text-2xl">Bảng xếp hạng</h1>
-          <div className="flex flex-row overflow-x-auto scrollbar-hide w-full gap-10 p-5">
-            {categores.map((book, i) => (
-              <CardRanking
-                key={i}
-                number={i + 1}
-                cover={book.cover}
-                title={String(book.title || "")}
-                author={String(book.author || "")}
-                status={book.status}
-                description={String(book.description || "")}
-                slug={book.slug || "#"}
-              />
-            ))}
-          </div>
-        </div>
+        <Section title="Mới nhất" books={booksAll} />
 
         <div className="mt-5 flex flex-col gap-5">
           <h1 className="text-3xl">Một số thể loại</h1>
           <Slider3Images images={images} />
         </div>
 
-        <Section title="Truyện - Tiểu thuyết " books={projects} />
-        <Section title="Trinh thám - Kinh dị " books={projects} />
+        {subCategories
+          .filter((sub) => sub.books && sub.books.length > 0)
+          .map((sub) => (
+            <Section key={sub._id} title={sub.name} books={sub.books} />
+          ))}
+
       </main>
     </>
   );

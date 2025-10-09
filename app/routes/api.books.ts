@@ -11,9 +11,9 @@ import Book from "~/models/book.server";
 import Category from "~/models/category.server";
 import Author from "~/models/author.server";
 
-const coverDir = path.join(process.cwd(), "uploads/bannerBook");
+const coverDir = path.join(process.cwd(), "public/uploads/bannerBook");
 
-const bookDir = path.join(process.cwd(), "uploads/books");
+const bookDir = path.join(process.cwd(), "public/uploads/books");
 
 if (!fs.existsSync(coverDir)) fs.mkdirSync(coverDir, { recursive: true });
 if (!fs.existsSync(bookDir)) fs.mkdirSync(bookDir, { recursive: true });

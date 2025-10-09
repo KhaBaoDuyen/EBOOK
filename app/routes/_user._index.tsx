@@ -16,15 +16,15 @@ import Section from "../components/users/Section";
 
 import type { IBook } from "~/interfaces/book.interface";
 
-import { bookByRating } from "~/services/bookByRating.service";
-import { bookByCreateAt } from "~/services/bookBySection.service";
+import { bookByRating } from "~/services/bookBy/bookByRating.service";
+import { bookByCreateAt } from "~/services/bookBy/bookBySection.service";
 import {
   bookByGroupsThienDinh,
   bookByGroupsKyNang,
   bookByGroupsTrinhThamKinhDi,
   bookByGroupsTuTruyenHoiKy,
   bookByRandom
-} from "~/services/bookByCategogy.service";
+} from "~/services/bookBy/bookByGroups.service";
 
 const HomePage = () => {
 

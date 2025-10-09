@@ -50,10 +50,9 @@ const CardBook = ({
           }`}
         >
           <div className="flex-shrink-0 w-52 rounded-lg overflow-hidden transition-all duration-400">
-            <img src={cover} alt={title} className="w-full h-full object-cover" />
+            <img src={`/uploads/bannerBook/${cover}`} alt={title} className="w-full h-full object-cover" />
           </div>
-
-          <div
+           <div
             className="flex-1 flex flex-col justify-between opacity-0 invisible translate-x-5
             transition-all duration-400 delay-100 text-white group-hover:opacity-100
             group-hover:visible group-hover:translate-x-0"

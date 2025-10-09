@@ -53,9 +53,9 @@ export default function BookSlider({ projects, onSlideChange }: BookSliderProps)
           {projects.map((ebook, index) => (
             <li key={index} className="splide__slide h-100">
               <img
-                src={ebook.cover}
+                src={`/uploads/bannerBook/${ebook.cover}`}
                 alt={ebook.title ?? `Slide ${index}`}
-                className="rounded-xl shadow-lg h-100 w-full object-cover"
+                className="rounded-xl shadow-lg h-100 w-[90%] object-cover"
               />
               {(ebook.title || ebook.author) && (
                 <div className="absolute bottom-4 left-4 text-white drop-shadow">
