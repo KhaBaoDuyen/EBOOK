@@ -8,6 +8,7 @@ import CustomTextField from "../../text/CustomTextField";
 import CustomDatePicker from "~/components/text/DatePicker";
 import CustomComboBox from "../../text/BoxGroup";
 import RichTextEditor from "../../text/RichTextEditor";
+import AuthorForm from "./AuthorDialog";
 
 //-----------------[ SERVICE - UTILS ]--------------------------
 import { getAllCategory } from "~/services/category.service";
@@ -15,9 +16,7 @@ import { getAllAuthor } from "~/services/author.service";
 import { toSlug } from "~/utils/toSlug";
 import { validateBookForm, type BookValidationInput } from "~/utils/validation/book.validation";
 import { getBookBySlug } from "~/services/book.service";
-import { get } from "http";
-import { s } from "node_modules/react-router/dist/development/context-BqL5Eckq.mjs";
-import { log } from "console";
+import { useNotify } from "~/context/NotifyContext";
 
 export default function BookForm({
   initialData,
@@ -46,6 +45,7 @@ export default function BookForm({
   const [description, setDescription] = useState(initialData?.description || "");
   const [showCategoryError, setShowCategoryError] = useState(false);
   const [allowUpload, setAllowUpload] = useState<boolean>(false);
+  const { setNotify } = useNotify();
 
   const [touched, setTouched] = useState({
     title: false,
@@ -63,15 +63,24 @@ export default function BookForm({
   // ==== Lấy dữ liệu ====
   useEffect(() => {
     getAllCategory().then((res) => {
-      const categoriesAll = res.data;
-      const parentCategories = categoriesAll.filter((c: any) => !c.parentId);
-      const childcategories = categoriesAll.filter((c: any) => c.parentId);
-      const group = parentCategories.map((p: any) => ({
-        ...p,
-        children: childcategories.filter((c: any) => c.parentId === p._id),
-      }));
-      setCategories(group);
+      const allCategories = res.data;
+
+      const parentCategories = allCategories.filter(
+        (c: any) => !c.parentId || c.parentId.length === 0
+      );
+
+      const grouped = parentCategories.map((parent: any) => {
+        const children = allCategories.filter(
+          (child: any) =>
+            Array.isArray(child.parentId) &&
+            child.parentId.some((pid: string) => pid === parent._id)
+        );
+        return { ...parent, children };
+      });
+
+      setCategories(grouped);
     });
+
     getAllAuthor().then((res) => setAuthors(res.data));
   }, []);
 
@@ -137,7 +146,7 @@ export default function BookForm({
     if (cover) formData.append("cover", cover);
     if (fileBook) formData.append("filePath", fileBook);
 
-    
+
     onSubmit(formData);
   };
 
@@ -186,6 +195,38 @@ export default function BookForm({
     console.log("slugParam", slugParam);
   }, [slugParam]);
 
+  // ----------------[ Thêm tác giả  ]----------------------
+  const [open, setOpen] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      const res = await fetch("/api/author",
+        { method: "POST", body: formData });
+      const data = await res.json();
+
+      if (res.ok) {
+        setNotify({
+          open: true,
+          type: "success",
+          title: "Thêm tác giả thành công!",
+          message: "Tác giả đã được lưu vào hệ thống.",
+        });
+        getAllAuthor().then((res) => setAuthors(res.data));
+
+        setOpen(false);
+      } else {
+        setNotify({
+          open: true,
+          type: "error",
+          title: "Lỗi khi thêm tác giả!",
+          message: data.message || "Vui lòng kiểm tra lại thông tin hoặc thử lại sau.",
+        });
+      }
+    } catch (err) {
+      console.error("Không thể kết nối máy chủ!");
+    }
+  };
+
   return (
     <div className="text-white p-6 rounded-md">
       <form className="flex gap-5" onSubmit={Submit}>
@@ -207,7 +248,7 @@ export default function BookForm({
               <p className="pt-2">Đường dẫn: {slug || "duong-dan-sach"}</p>
             </div>
 
-            <div>
+            <div className="">
               <CustomComboBox
                 label="Chọn tác giả"
                 options={authors}
@@ -215,6 +256,7 @@ export default function BookForm({
                 getOptionLabel={(a: any) => a.name}
                 onChange={(value) => setSelectedAuthor(value)}
                 onBlur={() => setTouched((prev) => ({ ...prev, author: true }))}
+                onAddNew={() => setOpen(true)}
                 error={!selectedAuthor && touched.author}
                 helperText={
                   !selectedAuthor && touched.author
@@ -233,28 +275,15 @@ export default function BookForm({
                 value={publisher}
                 onChange={(e) => setPublisher(e.target.value)}
                 onBlur={() => setTouched((p) => ({ ...p, publisher: true }))}
-                error={touched.publisher && !publisher.trim()}
-                helperText={
-                  touched.publisher && !publisher.trim()
-                    ? "Nhà xuất bản không được để trống"
-                    : ""
-                }
               />
             </div>
             <div >
               <CustomDatePicker
                 label="Ngày phát hành"
-                value={releaseDate}
+                value={releaseDate || new Date()}
                 onChange={(newValue) => setReleaseDate(newValue)}
                 onBlur={() => setTouched((p) => ({ ...p, releaseDate: true }))}
-                error={touched.releaseDate && !releaseDate}
-                helperText={
-                  touched.releaseDate && !releaseDate
-                    ? "* Vui lòng chọn ngày phát hành"
-                    : ""
-                }
               />
-
             </div>
           </div>
 
@@ -427,6 +456,7 @@ export default function BookForm({
           </div>
         </aside>
       </form>
+      <AuthorForm open={open} onClose={() => setOpen(false)} onSubmit={handleSubmit} />
     </div>
   );
 }

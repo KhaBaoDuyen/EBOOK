@@ -10,6 +10,7 @@ import fs from "fs";
 import Book from "~/models/book.server";
 import Category from "~/models/category.server";
 import Author from "~/models/author.server";
+import { uploadToCloudinary } from "~/utils/uploadCloudinary.server";
 
 const coverDir = path.join(process.cwd(), "public/uploads/bannerBook");
 
@@ -52,17 +53,9 @@ export async function loader() {
 //----------------[ THEM DU LIEU ]-------------------------------
 export const action = async ({ request }: { request: Request }) => {
   try {
-    const uploadHandler = unstable_composeUploadHandlers(
-      unstable_createFileUploadHandler({
-        directory: (file) =>
-          file.name?.endsWith(".pdf") || file.name?.endsWith(".epub")
-            ? bookDir
-            : coverDir,
-        file: ({ filename }) => `${Date.now()}-${filename}`,
-        maxPartSize: 10_000_000,
-      }),
-      unstable_createMemoryUploadHandler()
-    );
+    const uploadHandler = unstable_createMemoryUploadHandler({
+      maxPartSize: 15_000_000, // giới hạn 15MB
+    });
 
     const formData = await unstable_parseMultipartFormData(request, uploadHandler);
 
@@ -95,6 +88,24 @@ export const action = async ({ request }: { request: Request }) => {
       }, { status: 400 })
     }
 
+    // -------- Upload lên Cloudinary ----------
+    let coverUrl = "";
+    let bookUrl = "";
+    let mimeType = "";
+
+    if (coverFile) {
+      const buffer = Buffer.from(await coverFile.arrayBuffer());
+      const result: any = await uploadToCloudinary(buffer, "smartbook/bannerBook");
+      coverUrl = result.secure_url;
+    }
+
+    if (bookFile) {
+      const buffer = Buffer.from(await bookFile.arrayBuffer());
+      const result: any = await uploadToCloudinary(buffer, "smartbook/books");
+      bookUrl = result.secure_url;
+      mimeType = bookFile.type;
+    }
+
     const newBook = new Book({
       title,
       slug,
@@ -104,8 +115,8 @@ export const action = async ({ request }: { request: Request }) => {
       releaseDate,
       categories,
       status,
-      cover: `${coverFile.name}`,
-      filePath: `${bookFile.name}`,
+      cover: coverUrl,
+      filePath: bookUrl,
       mimeType: bookFile.type,
     });
 
