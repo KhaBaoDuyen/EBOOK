@@ -5,8 +5,7 @@ import Category from "~/models/category.server";
 import type { ICategory } from "~/interfaces/category.interface";
 
 /* ===================== 🔹 HÀM 1: ĐỆ QUY LẤY TẤT CẢ DANH MỤC CON ===================== */
-// -> Truyền vào ID danh mục cha, duyệt toàn bộ các cấp con (cấp 1, 2, 3...) và trả về mảng danh mục con.
-export async function getAllChildCategories(
+ export async function getAllChildCategories(
   parentId: string,
   visited: Set<string> = new Set()
 ): Promise<ICategory[]> {

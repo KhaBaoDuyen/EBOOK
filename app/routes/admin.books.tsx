@@ -6,6 +6,7 @@ import type { IBook } from "../interfaces/book.interface";
 import PaginationComponent from "~/components/Pagination";
 import ButtonCustom from "../components/Button";
 import CusttomLoading from "../components/Loading";
+import { Link } from "@remix-run/react";
 
 export default function Book() {
     const [books, setBooks] = useState<IBook[]>([]);
@@ -26,7 +27,7 @@ export default function Book() {
             setLoading(true);
             const data = await getAllBook();
             setBooks(data.data);
-            console.log("data book=>", books);
+            // console.log("data book=>", data.data);
 
         } catch (err) {
             console.log("Lỗi khi lấy dữ liệu", err);
@@ -37,7 +38,7 @@ export default function Book() {
 
     const [progress, setProgress] = useState(0);
 
- 
+
 
     return (
         <div className="p-6">
@@ -71,7 +72,7 @@ export default function Book() {
                             <tr>
                                 <td colSpan={8} className="p-6">
                                     <div className="flex justify-center items-center h-[200px]">
-                                        <CusttomLoading/>
+                                        <CusttomLoading />
                                     </div>
                                 </td>
                             </tr>
@@ -85,9 +86,9 @@ export default function Book() {
                                     <td className="p-3">
                                         <img src={`/uploads/bannerBook/${book.cover}`} className="rounded-md" alt="anh bia" />
                                     </td>
-                                    <td className="p-3 line-clamp-3 ">{book.title}</td>
+                                    <td className="p-3 line-clamp-4 ">{book.title}</td>
                                     <td className="p-3 ">
-                                        <p> {book.categories.map((cat) => cat.name).join(", ")} </p>
+                                        <p className="line-clamp-4"> {book.categories.map((cat) => cat.name).join(", ")} </p>
                                     </td>
                                     <td className="p-3">{book.authorId?.name}</td>
                                     <td className="p-3">
@@ -105,12 +106,12 @@ export default function Book() {
                                         {new Date(book.releaseDate).toLocaleDateString("vi-VN")}
                                     </td>
                                     <td className="flex items-center justify-center gap-2 p-3">
-                                        <button
+                                        <Link to={`/admin/book/${book.slug}`}
                                             className="rounded bg-blue-100 dark:bg-blue-900 p-2 text-blue-600 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800"
                                             title="Xem"
                                         >
                                             <Eye className="size-4" />
-                                        </button>
+                                        </Link>
                                         <button
                                             className="rounded bg-red-100 dark:bg-red-900 p-2 text-red-600 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800"
                                             title="Xóa"

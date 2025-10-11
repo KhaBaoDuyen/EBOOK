@@ -7,8 +7,10 @@ export interface BookValidationInput {
   selectedAuthor?: any;
   releaseDate?: Date | null;
   selectedCategories: string[];
-  cover: File | null;
-  fileBook: File | null;
+   cover?: File | null | string;   
+  fileBook?: File | null | string;  
+  isUpdate?: boolean;
+
 }
 
  const VALID_TITLE_REGEX = /^[a-zA-ZÀ-ỹ0-9\s.,()'"“”‘’:;?!_-]+$/;
@@ -22,6 +24,7 @@ export function validateBookForm({
   selectedCategories,
   cover,
   fileBook,
+  isUpdate = false,
 }: BookValidationInput): boolean {
   // ====== TÊN SÁCH ======
   if (!title || !title.trim()) {

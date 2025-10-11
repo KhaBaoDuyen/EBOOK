@@ -14,8 +14,20 @@ import { getAllCategory } from "~/services/category.service";
 import { getAllAuthor } from "~/services/author.service";
 import { toSlug } from "~/utils/toSlug";
 import { validateBookForm, type BookValidationInput } from "~/utils/validation/book.validation";
+import { getBookBySlug } from "~/services/book.service";
+import { get } from "http";
+import { s } from "node_modules/react-router/dist/development/context-BqL5Eckq.mjs";
+import { log } from "console";
 
-export default function BookForm({ initialData, onSubmit }: { initialData?: Partial<IBook>, onSubmit: (formData: FormData) => void }) {
+export default function BookForm({
+  initialData,
+  slugParam,
+  onSubmit
+}: {
+  initialData?: Partial<IBook>,
+  slugParam?: string,
+  onSubmit: (formData: FormData) => void
+}) {
   const [slug, setSlug] = useState("");
   const [authors, setAuthors] = useState<any[]>([]);
   const [selectedAuthor, setSelectedAuthor] = useState<any>(null);
@@ -24,6 +36,7 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
   const [cover, setCover] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [fileBook, setFileBook] = useState<File | null>(null);
+  const [oldFile, setOldFile] = useState<string | null>(null);
   const [status, setStatus] = useState<number>(initialData?.status ?? 1);
   const [releaseDate, setReleaseDate] = useState<Date | null>(
     initialData?.releaseDate || null
@@ -32,6 +45,7 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
   const [publisher, setPublisher] = useState(initialData?.publisher || "");
   const [description, setDescription] = useState(initialData?.description || "");
   const [showCategoryError, setShowCategoryError] = useState(false);
+  const [allowUpload, setAllowUpload] = useState<boolean>(false);
 
   const [touched, setTouched] = useState({
     title: false,
@@ -73,6 +87,7 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
     setChecked((prev) => ({ ...prev, [childId]: !prev[childId] }));
   };
 
+
   // ==== Ảnh bìa ====
   const handleCover = (e: React.ChangeEvent<HTMLInputElement>) => {
     const image = e.target.files?.[0];
@@ -102,9 +117,12 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
       selectedAuthor,
       releaseDate,
       selectedCategories,
-      cover,
-      fileBook,
+      cover: cover || preview,
+      fileBook: fileBook || oldFile,
+      isUpdate: !!slugParam,
     });
+    console.log(isValid);
+
     if (!isValid) return;
 
     const formData = new FormData();
@@ -116,11 +134,57 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
     formData.append("authorId", selectedAuthor?._id || "");
     formData.append("status", status.toString());
     formData.append("categories", JSON.stringify(selectedCategories));
-    formData.append("cover", cover!);
-    formData.append("filePath", fileBook!);
+    if (cover) formData.append("cover", cover);
+    if (fileBook) formData.append("filePath", fileBook);
+
 
     onSubmit(formData);
   };
+
+  // ----------------[ Dữ liệu ban đầu ]----------------------
+  const getBySlug = async (slugBook?: string) => {
+    if (!slugBook) return;
+
+    try {
+      const res = await getBookBySlug(slugBook);
+      const book = res.data;
+      if (!book) return;
+
+      setDataTitle(book.title);
+      setSlug(book.slug);
+      setPublisher(book.publisher);
+      setDescription(book.description);
+      setSelectedAuthor(book.authorId);
+      setStatus(book.status);
+      setReleaseDate(book.releaseDate ? new Date(book.releaseDate) : null);
+      setPreview(`/uploads/bannerBook/${book.cover}`);
+      setOldFile(book.filePath);
+
+      const checkedMap: Record<string, boolean> = {};
+      book.categories.forEach((c: any) => (checkedMap[c._id] = true));
+      setChecked(checkedMap);
+
+    } catch (err) {
+      console.error("Lỗi khi lấy dữ liệu sách:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (!slugParam) return;
+    setDataTitle("");
+    setPublisher("");
+    setDescription("");
+    setSelectedAuthor(null);
+    setChecked({});
+    setCover(null);
+    setPreview(null);
+    setFileBook(null);
+    setOldFile(null);
+    setReleaseDate(null);
+
+    getBySlug(slugParam);
+    console.log("slugParam", slugParam);
+  }, [slugParam]);
 
   return (
     <div className="text-white p-6 rounded-md">
@@ -209,7 +273,7 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
 
           </div>
 
-          <div className={`border p-3 rounded-md transition-all duration-200 ${showCategoryError ? "border-red-500" : "border-gray-700" }`}>
+          <div className={`border p-3 rounded-md transition-all duration-200 ${showCategoryError ? "border-red-500" : "border-gray-700"}`}>
             <h1>Danh mục</h1>
             <Box>
               {categories.map((parent) => {
@@ -315,7 +379,8 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
           </div>
         </div>
 
-        <aside className="basis-[30%] p-5 bg-[#1F2937] border border-gray-500 shadow-gray-700 flex rounded-md flex-col justify-start items-center space-y-6">
+        <aside className="basis-[30%] p-5 bg-[#1F2937] border border-gray-500
+         shadow-gray-700 flex rounded-md flex-col justify-start items-center space-y-6">
           <div className="w-full flex flex-col gap-3 text-center">
             <label className="block mb-2 text-sm font-medium">Ảnh bìa sách</label>
             <img
@@ -330,21 +395,33 @@ export default function BookForm({ initialData, onSubmit }: { initialData?: Part
               onChange={handleCover}
               className="w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
             />
-            {!cover && (
+            {!cover && !preview && (
               <p className="text-red-400 text-sm">* Vui lòng chọn ảnh bìa</p>
             )}
           </div>
 
           <div className="w-full text-center">
             <label className="block mb-2 text-sm font-medium">Tải file sách</label>
-            <input
-              type="file"
-              accept=".pdf,.epub"
-              onChange={(e) => setFileBook(e.target.files?.[0] || null)}
-              className={`w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold ${!fileBook ? "file:bg-red-700" : "file:bg-blue-600"
-                } file:text-white hover:file:bg-blue-700`}
-            />
-            {!fileBook && (
+            {oldFile && !allowUpload ? (
+              <div className="bg-gray-800 p-3 rounded-md text-sm">
+                <p>{oldFile}</p>
+                <button
+                  type="button"
+                  onClick={() => setAllowUpload(true)}
+                  className="mt-2 px-3 py-1 text-xs rounded-md bg-blue-700 hover:bg-blue-800"
+                >
+                  Thay file sách
+                </button>
+              </div>
+            ) : (
+              <input
+                type="file"
+                accept=".pdf,.epub"
+                onChange={(e) => setFileBook(e.target.files?.[0] || null)}
+                className={`w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold ${!fileBook ? "file:bg-red-700" : "file:bg-blue-600"
+                  } file:text-white hover:file:bg-blue-700`}
+              />)}
+            {!fileBook && !oldFile && (
               <p className="text-red-400 text-sm">* Vui lòng tải file sách</p>
             )}
           </div>

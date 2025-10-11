@@ -9,7 +9,7 @@ export async function getAllBook() {
   return await res.json();
 }
 
-export async function getBookBySlug(slug: string) {
-  const res = await fetch(`/api/books/${slug}`);
+export async function getBookBySlug(slugBook: string) {
+  const res = await fetch(`/api/book/${slugBook}`);
   return await res.json();
 }
