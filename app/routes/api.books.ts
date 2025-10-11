@@ -80,6 +80,21 @@ export const action = async ({ request }: { request: Request }) => {
     const coverFile = formData.get("cover") as File;
     const bookFile = formData.get("filePath") as File;
 
+    if (title) {
+      const existingBook = await Book.findOne({ title: title });
+      if (existingBook) {
+        return json({ status: 400, message: "Tên sách đã tồn tại!" }, { status: 400 });
+      }
+    };
+
+    if (slug) {
+      const exictingSlug = await Book.findOne({ slug });
+      return json({
+        status: 400,
+        message: "Slug đã tồn tại, vui lòng sử dụng slug khác!",
+      }, { status: 400 })
+    }
+
     const newBook = new Book({
       title,
       slug,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams , useNavigate } from "@remix-run/react";
+import { useParams, useNavigate } from "@remix-run/react";
 import BookForm from "../components/admin/from/book";
 import { useNotify } from "~/context/NotifyContext";
 
@@ -10,7 +10,7 @@ export default function UpdateBookPage() {
 
     const handleSubmit = async (formData: FormData) => {
         console.log("from", formData);
-        
+
         try {
             const res = await fetch(`/api/book/${slugBook}`, {
                 method: "PUT",
@@ -25,6 +25,14 @@ export default function UpdateBookPage() {
                     message: "Cuốn sách đã được sửa dữ liệu trong hệ thống.",
                 });
                 navigate("/admin/books");
+            } else if (res.status === 400) {
+                const error = await res.json();
+                setNotify({
+                    open: true,
+                    type: "error",
+                    title: "Lỗi khi cập nhật sách!",
+                    message: error.message || "Vui lòng kiểm tra lại thông tin hoặc thử lại sau.",
+                });
             } else {
                 setNotify({
                     open: true,

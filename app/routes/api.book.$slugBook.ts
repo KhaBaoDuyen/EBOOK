@@ -86,17 +86,34 @@ export const action = async ({ request, params }: { request: Request; params: { 
         updateData.mimeType = bookFile.type;
       }
 
-      const slugParam = toSlug(params.slugBook);
+      if (title) {
+        const existingBook = await Book.findOne({ title: title });
+        if (existingBook && existingBook.slug !== params.slugBook) {
+          return json({ status: 400, message: "Tên sách đã tồn tại!" }, { status: 400 });
+        }
+      };
+
+      if (slug) {
+        const exictingSlug = await Book.findOne({ slug });
+        if (exictingSlug && exictingSlug.slug !== params.slugBook) {
+          return json({
+            status: 400,
+            message: "Slug đã tồn tại, vui lòng sử dụng slug khác!",
+          }, { status: 400 })
+        }
+
+        const slugParam = toSlug(params.slugBook);
 
 
-      const updatedBook = await Book.findOneAndUpdate({ slug: slugParam }, updateData, { new: true });
+        const updatedBook = await Book.findOneAndUpdate({ slug: slugParam }, updateData, { new: true });
 
-      if (!updatedBook) {
-        return json({ status: 404, message: "Không tìm thấy sách cần cập nhật!" }, { status: 404 });
+        if (!updatedBook) {
+          return json({ status: 404, message: "Không tìm thấy sách cần cập nhật!" }, { status: 404 });
+        }
+
+        console.log(" Cập nhật thành công:", updatedBook);
+        return json({ status: 200, message: "Cập nhật sách thành công!", data: updatedBook });
       }
-
-      console.log(" Cập nhật thành công:", updatedBook);
-      return json({ status: 200, message: "Cập nhật sách thành công!", data: updatedBook });
     } else if (method === "DELETE") {
       const slugParam = toSlug(params.slugBook);
       const deletedBook = await Book.findOneAndDelete({ slug: slugParam });

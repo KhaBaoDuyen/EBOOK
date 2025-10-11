@@ -22,8 +22,8 @@ export function NotifyProvider({ children }: { children: React.ReactNode }) {
     title: "",
     message: "",
   });
- 
-   useEffect(() => {
+
+  useEffect(() => {
     if (notify.open) {
       const timer = setTimeout(() => {
         setNotify((prev) => ({ ...prev, open: false }));
@@ -37,13 +37,11 @@ export function NotifyProvider({ children }: { children: React.ReactNode }) {
       {children}
 
       {notify.open && (
-        <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-black/40 backdrop-blur-sm animate-fadeIn">
-          <NotificationCard
-            type={notify.type}
-            title={notify.title}
-            message={notify.message}
-          />
-        </div>
+        <NotificationCard
+          type={notify.type}
+          title={notify.title}
+          message={notify.message}
+        />
       )}
     </NotifyContext.Provider>
   );

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import BookForm from "../components/admin/from/book";
-import { useNotify } from "~/context/NotifyContext"; 
+import { useNotify } from "~/context/NotifyContext";
 
 export default function CreateBookPage() {
- const { setNotify } = useNotify();
- 
- 
+  const { setNotify } = useNotify();
+
+
   const handleSubmit = async (formData: FormData) => {
     try {
       const res = await fetch("/api/books", {
@@ -19,6 +19,15 @@ export default function CreateBookPage() {
           type: "success",
           title: "Thêm sách thành công!",
           message: "Cuốn sách đã được lưu vào hệ thống.",
+        });
+        return 
+      } else if (res.status === 400) {
+        const error = await res.json();
+        setNotify({
+          open: true,
+          type: "error",
+          title: "Lỗi khi thêm sách!",
+          message: error.message || "Vui lòng kiểm tra lại thông tin hoặc thử lại sau.",
         });
       } else {
         setNotify({

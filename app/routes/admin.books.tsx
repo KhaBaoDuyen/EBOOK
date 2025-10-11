@@ -8,10 +8,13 @@ import PaginationComponent from "~/components/Pagination";
 import ButtonCustom from "../components/Button";
 import CusttomLoading from "../components/Loading";
 import ConfirmDeleteDialog from "~/components/FromDelete";
+import { useNotify } from "~/context/NotifyContext";
+import { set } from "mongoose";
 
 export default function Book() {
     const [books, setBooks] = useState<IBook[]>([]);
     const [search, setSearch] = useState("");
+    const { setNotify } = useNotify();
 
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -54,6 +57,34 @@ export default function Book() {
         setSelectedSlug(undefined);
     };
 
+    const handleConfirmDelete = async () => {
+        if (!selectedBook) return;
+        try {
+            const res = await fetch(`/api/book/${selectedBook.slug}`,
+                { method: "DELETE" });
+            const data = await res.json();
+
+            if (res.ok) {
+                setNotify({
+                    open: true,
+                    type: "success",
+                    title: "Xóa sách thành công!",
+                    message: "Cuốn sách đã được xóa khỏi hệ thống.",
+                });
+                return getAll();
+            } else {
+                setNotify({
+                    open: true,
+                    type: "error",
+                    title: "Lỗi khi xóa!",
+                    message: data.message || "Vui lòng thử lại sau.",
+                });
+                return;
+            }
+        } catch (err: any) {
+            console.error("Lỗi khi xóa:", err);
+        }
+    };
     //-----------------[ TIM KIEM ]-----------------------
     const keyword = search.trim().toLowerCase();
     const searchBook = books.filter((book) =>
@@ -203,9 +234,8 @@ export default function Book() {
             <ConfirmDeleteDialog
                 open={open}
                 title={selectedBook?.title}
-                slug={selectedSlug}
                 onClose={handleCloseDialog}
-                onDeleted={getAll}
+                onConfirmDelete={handleConfirmDelete}
             />
         </div>
     );

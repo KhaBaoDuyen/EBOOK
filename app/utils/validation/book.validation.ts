@@ -7,7 +7,7 @@ export interface BookValidationInput {
   selectedAuthor?: any;
   releaseDate?: Date | null;
   selectedCategories: string[];
-   cover?: File | null | string;   
+  cover?: File | null | string;   
   fileBook?: File | null | string;  
   isUpdate?: boolean;
 

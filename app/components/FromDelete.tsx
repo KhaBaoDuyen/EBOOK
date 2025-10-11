@@ -9,44 +9,30 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { toast } from "react-hot-toast";
 
 interface ConfirmDeleteDialogProps {
   open: boolean;
-  slug?: string;
-  title?: string;
-  onClose: () => void;
-  onDeleted?: () => void;
+  title?: string;            
+  onClose: () => void;       
+  onConfirmDelete: () => Promise<void> | void;  
 }
 
-export default function ConfirmDeleteDialog({ 
+export default function ConfirmDeleteDialog({
   open,
   title,
-  slug, 
-  onClose, 
-  onDeleted 
+  onClose,
+  onConfirmDelete,
 }: ConfirmDeleteDialogProps) {
-
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const [loading, setLoading] = React.useState(false);
 
-  const handleConfirmDelete = async () => {
-    if (!slug) return;
+  const handleConfirm = async () => {
     try {
-      const res = await fetch(`/api/book/${slug}`,
-      { method: "DELETE" });
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success(data.message || "Đã xóa sách thành công!");
-        onDeleted?.();
-      } else {
-        toast.error(data.message || "Xóa sách thất bại!");
-      }
-    } catch (err: any) {
-      console.error("Lỗi khi xóa:", err);
-      toast.error("Không thể kết nối đến máy chủ!");
+      setLoading(true);
+      await onConfirmDelete(); 
     } finally {
+      setLoading(false);
       onClose();
     }
   };
@@ -56,23 +42,31 @@ export default function ConfirmDeleteDialog({
       fullScreen={fullScreen}
       open={open}
       onClose={onClose}
-      aria-labelledby="delete-book-dialog-title"
+      aria-labelledby="confirm-delete-dialog-title"
     >
-      <DialogTitle id="delete-book-dialog-title" className="text-red-600 font-bold">
-        Xác nhận xóa sách {title}
+      <DialogTitle id="confirm-delete-dialog-title" className="text-red-600 font-bold">
+        Xác nhận xóa {title ? `"${title}"` : ""}
       </DialogTitle>
+
       <DialogContent>
         <DialogContentText>
-          Bạn có chắc chắn muốn <strong>xóa</strong> sách này không?  
+          Bạn có chắc chắn muốn <strong>xóa</strong> mục này không?  
           Hành động này <strong>không thể hoàn tác</strong>.
         </DialogContentText>
       </DialogContent>
+
       <DialogActions>
-        <Button onClick={onClose} color="inherit">
+        <Button onClick={onClose} color="inherit" disabled={loading}>
           Hủy
         </Button>
-        <Button onClick={handleConfirmDelete} color="error" variant="contained" autoFocus>
-          Xóa
+        <Button
+          onClick={handleConfirm}
+          color="error"
+          variant="contained"
+          autoFocus
+          disabled={loading}
+        >
+          {loading ? "Đang xóa..." : "Xóa"}
         </Button>
       </DialogActions>
     </Dialog>
