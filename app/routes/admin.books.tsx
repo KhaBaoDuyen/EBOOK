@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { Eye, Trash2, Search } from "lucide-react";
 import { getAllBook } from "~/services/book.service";
+import { Link } from "@remix-run/react";
 
 import type { IBook } from "../interfaces/book.interface";
 import PaginationComponent from "~/components/Pagination";
 import ButtonCustom from "../components/Button";
 import CusttomLoading from "../components/Loading";
-import { Link } from "@remix-run/react";
+import ConfirmDeleteDialog from "~/components/FromDelete";
 
 export default function Book() {
     const [books, setBooks] = useState<IBook[]>([]);
     const [search, setSearch] = useState("");
+
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const items = 5;
+
 
     const startIndex = (page - 1) * items;
     const pagination = books.slice(startIndex, startIndex + items);
@@ -36,9 +39,29 @@ export default function Book() {
         }
     };
 
-    const [progress, setProgress] = useState(0);
+    //-----------------[ XOA SACH ]-----------------------
+    const [open, setOpen] = useState(false);
+    const [selectedSlug, setSelectedSlug] = useState<string | undefined>(undefined);
+    const selectedBook = books.find((b) => b.slug === selectedSlug);
 
+    const handleOpenDialog = (slug: string) => {
+        setSelectedSlug(slug);
+        setOpen(true);
+    };
 
+    const handleCloseDialog = () => {
+        setOpen(false);
+        setSelectedSlug(undefined);
+    };
+
+    //-----------------[ TIM KIEM ]-----------------------
+    const keyword = search.trim().toLowerCase();
+    const searchBook = books.filter((book) =>
+        keyword
+            ? book.title.toLowerCase().includes(keyword) ||
+            book.authorId?.name.toLowerCase().includes(keyword)
+            : false
+    );
 
     return (
         <div className="p-6">
@@ -52,7 +75,42 @@ export default function Book() {
                 <Search className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500 size-5" />
                 <input type="text" placeholder="Tìm kiếm sách..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg 
              border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 pl-10 pr-3 py-2 text-gray-900 dark:text-gray-100 
-             focus:border-green-700 dark:focus:border-green-500 focus:ring focus:ring-green-200 dark:focus:ring-green-800" /> </div>
+             focus:border-green-700 dark:focus:border-green-500 focus:ring focus:ring-green-200 dark:focus:ring-green-800" />
+                {search && (
+                    <div className="absolute top-full mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
+                        {searchBook.length > 0 ? (
+                            searchBook.map((book) => (
+                                <Link
+                                    key={book._id}
+                                    to={`/admin/book/${book.slug}`}
+                                    className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                    <img
+                                        src={`/uploads/bannerBook/${book.cover}`}
+                                        alt={book.title}
+                                        className="w-10 h-14 object-cover rounded"
+                                    />
+                                    <div className="flex flex-col">
+                                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                                            {book.title}
+                                        </span>
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                                            {book.authorId?.name || "Không rõ tác giả"}
+                                        </span>
+                                    </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-3">
+                                Không tìm thấy kết quả nào
+                            </p>
+                        )}
+                    </div>
+                )}
+            </div>
+
+
+
             <div className="overflow-x-auto">
                 <table className="w-full border-collapse rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow">
                     <thead>
@@ -86,7 +144,8 @@ export default function Book() {
                                     <td className="p-3">
                                         <img src={`/uploads/bannerBook/${book.cover}`} className="rounded-md" alt="anh bia" />
                                     </td>
-                                    <td className="p-3 line-clamp-4 ">{book.title}</td>
+                                    <td className="p-3  ">
+                                        <p className="line-clamp-4">{book.title} </p> </td>
                                     <td className="p-3 ">
                                         <p className="line-clamp-4"> {book.categories.map((cat) => cat.name).join(", ")} </p>
                                     </td>
@@ -105,20 +164,25 @@ export default function Book() {
                                     <td className="p-3">
                                         {new Date(book.releaseDate).toLocaleDateString("vi-VN")}
                                     </td>
-                                    <td className="flex items-center justify-center gap-2 p-3">
-                                        <Link to={`/admin/book/${book.slug}`}
-                                            className="rounded bg-blue-100 dark:bg-blue-900 p-2 text-blue-600 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800"
-                                            title="Xem"
-                                        >
-                                            <Eye className="size-4" />
-                                        </Link>
-                                        <button
-                                            className="rounded bg-red-100 dark:bg-red-900 p-2 text-red-600 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800"
-                                            title="Xóa"
-                                        >
-                                            <Trash2 className="size-4" />
-                                        </button>
+                                    <td className="text-center">
+                                        <div className="inline-flex items-center justify-center gap-2">
+                                            <Link
+                                                to={`/admin/book/${book.slug}`}
+                                                className="rounded bg-blue-100 dark:bg-blue-900 p-2 text-blue-600 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800"
+                                                title="Xem"
+                                            >
+                                                <Eye className="size-4" />
+                                            </Link>
+                                            <button
+                                                onClick={() => handleOpenDialog(book.slug)}
+                                                className="rounded bg-red-100 dark:bg-red-900 p-2 text-red-600 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800"
+                                                title="Xóa"
+                                            >
+                                                <Trash2 className="size-4" />
+                                            </button>
+                                        </div>
                                     </td>
+
                                 </tr>
                             ))
                         ) : (
@@ -135,6 +199,14 @@ export default function Book() {
                     itemsPerPage={items}
                     currentPage={page}
                     onPageChange={setPage} />
-            </div> </div>
+            </div>
+            <ConfirmDeleteDialog
+                open={open}
+                title={selectedBook?.title}
+                slug={selectedSlug}
+                onClose={handleCloseDialog}
+                onDeleted={getAll}
+            />
+        </div>
     );
 }
