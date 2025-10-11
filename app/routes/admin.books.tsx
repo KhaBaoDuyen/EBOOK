@@ -5,7 +5,7 @@ import { getAllBook } from "~/services/book.service";
 import type { IBook } from "../interfaces/book.interface";
 import PaginationComponent from "~/components/Pagination";
 import ButtonCustom from "../components/Button";
-import CircularProgressWithLabel from "../components/Loading";
+import CusttomLoading from "../components/Loading";
 
 export default function Book() {
     const [books, setBooks] = useState<IBook[]>([]);
@@ -27,7 +27,7 @@ export default function Book() {
             const data = await getAllBook();
             setBooks(data.data);
             console.log("data book=>", books);
-            
+
         } catch (err) {
             console.log("Lỗi khi lấy dữ liệu", err);
         } finally {
@@ -37,25 +37,7 @@ export default function Book() {
 
     const [progress, setProgress] = useState(0);
 
-    useEffect(() => {
-        Loading();
-    }, [loading]);
-
-    const Loading = () => {
-        if (loading) {
-            setProgress(0);
-            const timer = setInterval(() => {
-                setProgress((prev) => {
-                    if (prev >= 100) {
-                        clearInterval(timer);
-                        return 100;
-                    }
-                    return prev + 10;
-                });
-            }, 400);
-            return () => clearInterval(timer);
-        }
-    }
+ 
 
     return (
         <div className="p-6">
@@ -76,19 +58,21 @@ export default function Book() {
                         <tr className="bg-gray-100 dark:bg-gray-700 text-left">
                             <th className="p-3">#</th>
                             <th className="p-3 w-[10%]">Ảnh bìa</th>
-                            <th className="p-3">Tên</th>
-                            <th className="p-3">Loại sách</th>
+                            <th className="p-3 w-[20%]">Tên</th>
+                            <th className="p-3 w-[20%]">Loại sách</th>
                             <th className="p-3">Tác giả</th>
                             <th className="p-3">Trạng thái</th>
                             <th className="p-3">Ngày tạo</th>
                             <th className="p-3 text-center">Hành động</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="w-full items-center justify-center">
                         {loading ? (
                             <tr>
-                                <td colSpan={8} className="p-6 text-center">
-                                    <CircularProgressWithLabel value={progress} />
+                                <td colSpan={8} className="p-6">
+                                    <div className="flex justify-center items-center h-[200px]">
+                                        <CusttomLoading/>
+                                    </div>
                                 </td>
                             </tr>
                         ) : pagination.length > 0 ? (
@@ -99,12 +83,11 @@ export default function Book() {
                                 >
                                     <td className="p-3">{startIndex + i + 1}</td>
                                     <td className="p-3">
-                                        <img src={book.cover || `/uploads/bannerBook/`+ book.cover} className="rounded-md" alt="anh bia" />
+                                        <img src={`/uploads/bannerBook/${book.cover}`} className="rounded-md" alt="anh bia" />
                                     </td>
-                                    <td className="p-3 line-clamp-3">{book.title}</td>
-                                    <td className="p-3">
-                                        {book.categories.map((cat) => cat.name).join(", ")}
-                                        
+                                    <td className="p-3 line-clamp-3 ">{book.title}</td>
+                                    <td className="p-3 ">
+                                        <p> {book.categories.map((cat) => cat.name).join(", ")} </p>
                                     </td>
                                     <td className="p-3">{book.authorId?.name}</td>
                                     <td className="p-3">

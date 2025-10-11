@@ -12,7 +12,7 @@ export interface IBook {
   filePath: string;
   mimeType?: string;
   categories?: Types.ObjectId[];
-  status: number;
+  status: number | string; 
   createdAt?: Date;
   updatedAt?: Date;
 }

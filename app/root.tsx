@@ -4,7 +4,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse
+  isRouteErrorResponse,
 } from "@remix-run/react";
 import type { Route } from "./+types/root";
 
@@ -12,10 +12,11 @@ import appCss from "./app.css?url";
 import tailwindCss from "./styles/tailwind.css?url";
 import mainCss from "./styles/main.css?url";
 
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { vi } from "date-fns/locale";
-import { Toaster } from "react-hot-toast";
+
+import { NotifyProvider } from "~/context/NotifyContext";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -44,20 +45,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="font-inter antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         {children}
         <ScrollRestoration />
         <Scripts />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: "#333",
-              color: "#fff",
-            },
-          }}
-        />
-
       </body>
     </html>
   );
@@ -66,7 +57,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={vi}>
-      <Outlet />
+      <NotifyProvider>
+        <Outlet />
+      </NotifyProvider>
     </LocalizationProvider>
   );
 }
@@ -92,7 +85,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       <h1 className="text-2xl font-bold">{message}</h1>
       <p className="mb-4">{details}</p>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto bg-gray-100 rounded">
+        <pre className="w-full p-4 overflow-x-auto bg-gray-100 rounded dark:bg-gray-800 dark:text-gray-100">
           <code>{stack}</code>
         </pre>
       )}

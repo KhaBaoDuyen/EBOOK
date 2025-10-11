@@ -14,7 +14,7 @@ body {
   }
 }
 
-
+ 
 
 
 @custom-variant dark (&:is(.dark *));
@@ -1366,4 +1366,25 @@ span.flatpickr-weekday,
   width: 100% !important;
   height: 100% !important;
   border: none !important;
+}
+
+ .ProseMirror {
+  min-height: 180px;         
+  max-height: 300px;           
+  overflow-y: auto;       
+  outline: none;             
+  padding: 0.5rem 0.75rem;   
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #fff;
+}
+
+ .ProseMirror:focus {
+  border: none;
+  outline: none;
+}
+
+ .ProseMirror {
+  background-color: #1F2937;
+  border-radius: 0.375rem;   
 }

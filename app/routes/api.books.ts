@@ -26,7 +26,8 @@ export async function loader() {
     Author;
     const books = await Book.find()
       .populate("categories", "name slug")
-      .populate("authorId", "name");
+      .populate("authorId", "name")
+      .sort({ createdAt: -1 });
 
     //  console.log("danh sach book", books);
 

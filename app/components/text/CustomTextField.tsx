@@ -2,30 +2,34 @@ import { TextField, TextFieldProps } from "@mui/material";
 import React from "react";
 
 const CustomTextField: React.FC<TextFieldProps> = (props) => {
+  const { error, helperText, ...rest } = props;
+
   return (
     <TextField
-      {...props}
+      {...rest}
+      error={error}
+      helperText={helperText}
       fullWidth
       variant="outlined"
       sx={{
         "& .MuiOutlinedInput-root": {
           color: "white",
-          backgroundColor: "#1F2937",  
-          "& fieldset": {
-            borderColor: "#aaa",  
-          },
-          "&:hover fieldset": {
-            borderColor: "#fff",
-          },
+          backgroundColor: "#1F2937",
+          borderRadius: "8px",
+          "& fieldset": { borderColor: error ? "#f87171" : "#aaa" },
+          "&:hover fieldset": { borderColor: error ? "#f87171" : "#fff" },
           "&.Mui-focused fieldset": {
-            borderColor: "#4ade80",  
+            borderColor: error ? "#f87171" : "#4ade80",
           },
         },
         "& .MuiInputLabel-root": {
-          color: "#ccc",  
+          color: error ? "#f87171" : "#ccc",
         },
         "& .MuiInputLabel-root.Mui-focused": {
-          color: "#4ade80", 
+          color: error ? "#f87171" : "#4ade80",
+        },
+        "& .MuiFormHelperText-root": {
+          color: error ? "#f87171" : "#ccc",
         },
       }}
     />

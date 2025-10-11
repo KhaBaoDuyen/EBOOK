@@ -21,7 +21,7 @@ function LayoutContent() {
         } ${isMobileOpen ? "ml-0" : ""}`}
       >
         <AppHeader />
-        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+        <div className="p-4 mx-auto z-1  max-w-(--breakpoint-2xl) md:p-6">
           <Outlet />
         </div>
       </div>
