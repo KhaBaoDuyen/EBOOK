@@ -18,7 +18,7 @@ const CardBook = ({
     const windowWidth = window.innerWidth;
     const expandedWidth = 600;
     const imageWidth = 208;
-    
+
     if (rect.right + (expandedWidth - imageWidth) > windowWidth) {
       setAlignLeft(true);
     } else {
@@ -26,7 +26,7 @@ const CardBook = ({
     }
   };
 
-   const categoryText = category.length
+  const categoryText = category.length
     ? category.map((cat) => cat.name).join(", ")
     : "Khác";
 
@@ -45,14 +45,13 @@ const CardBook = ({
         }}
       >
         <div
-          className={`flex gap-6 h-full ${
-            alignLeft ? "flex-row-reverse text-left" : "flex-row"
-          }`}
+          className={`flex gap-6 h-full ${alignLeft ? "flex-row-reverse text-left" : "flex-row"
+            }`}
         >
           <div className="flex-shrink-0 w-52 rounded-lg overflow-hidden transition-all duration-400">
-            <img src={`/uploads/bannerBook/${cover}`} alt={title} className="w-full h-full object-cover" />
+            <img src={cover} alt={title} className="w-full h-full object-cover" />
           </div>
-           <div
+          <div
             className="flex-1 flex flex-col justify-between opacity-0 invisible translate-x-5
             transition-all duration-400 delay-100 text-white group-hover:opacity-100
             group-hover:visible group-hover:translate-x-0"
@@ -62,7 +61,7 @@ const CardBook = ({
               <p className="text-gray-400 mb-4">{categoryText}</p>
               <div className="!flex items-center justify-between">
                 <span className="inline-block bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-sm font-medium">
-                  {author}  
+                  {author}
                 </span>
                 <span className="flex lg:flex-row flex-col gap-2">
                   <Button
@@ -76,11 +75,13 @@ const CardBook = ({
                   </button>
                 </span>
               </div>
-              <p className="text-sm text-gray-300 leading-relaxed mt-4 line-clamp-4 group-hover:line-clamp-none">
-                {description}
-              </p>
+              <p
+                className="text-sm text-gray-300 leading-relaxed mt-4 !line-clamp-5 "
+                dangerouslySetInnerHTML={{ __html: description }}
+              ></p>
+
             </div>
-           <a 
+            <a
               href={link}
               className="text-emerald-500 text-sm font-medium mt-4 block hover:underline hover:text-emerald-600 transition"
             >

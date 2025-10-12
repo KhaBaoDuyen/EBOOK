@@ -64,6 +64,7 @@
     "@types/node": "^22",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.24",
+    "@types/streamifier": "^0.1.2",
     "autoprefixer": "^10.4.21",
     "nodemon": "^3.1.10",
     "postcss": "^8.5.6",

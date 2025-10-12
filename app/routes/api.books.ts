@@ -54,56 +54,52 @@ export async function loader() {
 export const action = async ({ request }: { request: Request }) => {
   try {
     const uploadHandler = unstable_createMemoryUploadHandler({
-      maxPartSize: 15_000_000, // giới hạn 15MB
+      maxPartSize: 35_000_000,
     });
-
+    
     const formData = await unstable_parseMultipartFormData(request, uploadHandler);
 
-    const title = formData.get("title") as string;
-    const slug = formData.get("slug") as string;
-    const description = formData.get("description") as string;
-    const publisher = formData.get("publisher") as string;
-    const authorId = formData.get("authorId") as string;
-    const releaseDate = formData.get("releaseDate") as string;
-    const categoriesRaw = formData.get("categories") as string;
+    const title = formData.get("title")?.toString().trim() || "";
+    const slug = formData.get("slug")?.toString().trim().toLowerCase() || "";
+    const description = formData.get("description")?.toString().trim() || "Đang cập nhật";
+    const publisher = formData.get("publisher")?.toString().trim() || "Đang cập nhật";
+    const authorId = formData.get("authorId")?.toString().trim() || "";
+    const releaseDateStr = formData.get("releaseDate")?.toString() || "";
+    const categoriesRaw = formData.get("categories")?.toString() || "[]";
     const status = Number(formData.get("status")) || 1;
 
-    const categories = categoriesRaw ? JSON.parse(categoriesRaw) : [];
+    const releaseDate = releaseDateStr ? new Date(releaseDateStr) : new Date();
+    const categories = JSON.parse(categoriesRaw || "[]");
 
-    const coverFile = formData.get("cover") as File;
-    const bookFile = formData.get("filePath") as File;
+    const coverFile = formData.get("cover") as File | null;
+    const bookFile = formData.get("filePath") as File | null;
 
-    if (title) {
-      const existingBook = await Book.findOne({ title: title });
-      if (existingBook) {
-        return json({ status: 400, message: "Tên sách đã tồn tại!" }, { status: 400 });
-      }
-    };
-
-    if (slug) {
-      const exictingSlug = await Book.findOne({ slug });
-      return json({
-        status: 400,
-        message: "Slug đã tồn tại, vui lòng sử dụng slug khác!",
-      }, { status: 400 })
+    if (await Book.findOne({ title })) {
+      return json({ status: 400, message: "Tên sách đã tồn tại!" }, { status: 400 });
     }
 
-    // -------- Upload lên Cloudinary ----------
+    if (await Book.findOne({ slug })) {
+      return json(
+        { status: 400, message: "Slug đã tồn tại, vui lòng nhập slug khác!" },
+        { status: 400 }
+      );
+    }
+
     let coverUrl = "";
     let bookUrl = "";
     let mimeType = "";
 
-    if (coverFile) {
+    if (coverFile && coverFile.size > 0) {
       const buffer = Buffer.from(await coverFile.arrayBuffer());
-      const result: any = await uploadToCloudinary(buffer, "smartbook/bannerBook");
-      coverUrl = result.secure_url;
+      const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/bannerBook");
+      coverUrl = uploadResult.secure_url;
     }
 
-    if (bookFile) {
+    if (bookFile && bookFile.size > 0) {
       const buffer = Buffer.from(await bookFile.arrayBuffer());
-      const result: any = await uploadToCloudinary(buffer, "smartbook/books");
-      bookUrl = result.secure_url;
-      mimeType = bookFile.type;
+      const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/books");
+      bookUrl = uploadResult.secure_url;
+      mimeType = bookFile.type || "";
     }
 
     const newBook = new Book({
@@ -115,16 +111,28 @@ export const action = async ({ request }: { request: Request }) => {
       releaseDate,
       categories,
       status,
-      cover: coverUrl,
-      filePath: bookUrl,
-      mimeType: bookFile.type,
+      cover: coverUrl || "https://res.cloudinary.com/demo/image/upload/v1/default-cover.png",
+      filePath: bookUrl || "",
+      mimeType,
     });
 
     await newBook.save();
 
-    return json({ status: 200, message: "Thêm sách thành công!", data: newBook });
+    return json({
+      status: 200,
+      message: "Thêm sách thành công!",
+      data: newBook,
+    });
   } catch (err: any) {
-    console.error(" Lỗi thêm sách:", err);
-    return json({ status: 500, message: "Lỗi khi thêm sách", error: err.message }, { status: 500 });
+    console.error("Lỗi khi thêm sách:", err);
+    return json(
+      {
+        status: 500,
+        message: "Lỗi khi thêm sách",
+        error: err.message,
+        stack: err.stack,
+      },
+      { status: 500 }
+    );
   }
 };

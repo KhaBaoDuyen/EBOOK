@@ -26,7 +26,11 @@ const CardCategory: React.FC<CardCategoryProps> = ({
       <span className="flex flex-col justify-center">
         <h1 className="line-clamp-3 font-semibold">{title}</h1>
         <p className="font-pri line-clamp-2">{author}</p>
-        <p className="text-gray-500 line-clamp-4 text-justify">{description}</p>
+        <p
+          className="text-gray-500 line-clamp-4 text-justify"
+          dangerouslySetInnerHTML={{ __html: description }}
+        ></p>
+
       </span>
     </a>
   );

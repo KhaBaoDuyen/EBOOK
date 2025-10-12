@@ -1,5 +1,3 @@
-import { toast } from "react-hot-toast";
-
 export interface BookValidationInput {
   title?: string;
   publisher?: string;
@@ -7,13 +5,13 @@ export interface BookValidationInput {
   selectedAuthor?: any;
   releaseDate?: Date | null;
   selectedCategories: string[];
-  cover?: File | null | string;   
-  fileBook?: File | null | string;  
+  cover?: File | null | string;
+  fileBook?: File | null | string;
   isUpdate?: boolean;
-
+  setNotify?: (params: any) => void;
 }
 
- const VALID_TITLE_REGEX = /^[a-zA-ZÀ-ỹ0-9\s.,()'"“”‘’:;?!_-]+$/;
+const VALID_TITLE_REGEX = /^[a-zA-ZÀ-ỹ0-9\s.,()'"“”‘’:;?!_\-–—=]+$/;
 
 export function validateBookForm({
   title,
@@ -25,64 +23,26 @@ export function validateBookForm({
   cover,
   fileBook,
   isUpdate = false,
+  setNotify,
 }: BookValidationInput): boolean {
-  // ====== TÊN SÁCH ======
-  if (!title || !title.trim()) {
-    toast.error("Tên sách không được để trống");
-    return false;
-  }
+  const notifyError = (message: string) => {
+    setNotify?.({
+      open: true,
+      type: "error",
+      title: "Lỗi khi thêm sách!",
+      message,
+    });
+  };
 
-  if (title.length > 300) {
-    toast.error("Tên sách không được vượt quá 300 ký tự");
-    return false;
-  }
-
-  if (!VALID_TITLE_REGEX.test(title)) {
-    toast.error("Tên sách chứa ký tự không hợp lệ");
-    return false;
-  }
-
-
-  // ====== NHÀ XUẤT BẢN ======
-  // if (!publisher || !publisher.trim()) {
-  //   toast.error("Nhà xuất bản không được để trống");
-  //   return false;
-  // }
-
-  // ====== MÔ TẢ ======
-  if (!description || !description.trim()) {
-    toast.error("Mô tả không được để trống");
-    return false;
-  }
-
-  // ====== TÁC GIẢ ======
-  if (!selectedAuthor) {
-    toast.error("Vui lòng chọn tác giả!");
-    return false;
-  }
-
-  // ====== NGÀY PHÁT HÀNH ======
-  // if (!releaseDate) {
-  //   toast.error("Vui lòng chọn ngày phát hành!");
-  //   return false;
-  // }
-
-  // ====== DANH MỤC ======
-  if (selectedCategories.length === 0) {
-    toast.error("Vui lòng chọn ít nhất một danh mục!");
-    return false;
-  }
-
-  // ====== ẢNH & FILE ======
-  if (!cover) {
-    toast.error("Vui lòng chọn ảnh bìa sách!");
-    return false;
-  }
-
-  if (!fileBook) {
-    toast.error("Vui lòng tải file sách!");
-    return false;
-  }
+  if (!title?.trim()) return notifyError("Tên sách không được để trống"), false;
+  if (title.length > 300) return notifyError("Tên sách không được vượt quá 300 ký tự"), false;
+  if (!VALID_TITLE_REGEX.test(title)) return notifyError("Tên sách chứa ký tự không hợp lệ"), false;
+  if (!description?.trim()) return notifyError("Mô tả không được để trống"), false;
+  if (!selectedAuthor) return notifyError("Vui lòng chọn tác giả cho sách"), false;
+  if (selectedCategories.length === 0)
+    return notifyError("Vui lòng chọn ít nhất một thể loại cho sách"), false;
+  if (!cover) return notifyError("Vui lòng tải ảnh bìa sách!"), false;
+  if (!fileBook) return notifyError("Vui lòng tải file sách!"), false;
 
   return true;
 }

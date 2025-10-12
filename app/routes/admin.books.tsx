@@ -173,7 +173,7 @@ export default function Book() {
                                 >
                                     <td className="p-3">{startIndex + i + 1}</td>
                                     <td className="p-3">
-                                        <img src={`/uploads/bannerBook/${book.cover}`} className="rounded-md" alt="anh bia" />
+                                        <img src={book.cover} className="rounded-md" alt="anh bia" />
                                     </td>
                                     <td className="p-3  ">
                                         <p className="line-clamp-4">{book.title} </p> </td>

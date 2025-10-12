@@ -118,19 +118,31 @@ export default function BookForm({
       author: true,
     });
     setShowCategoryError(selectedCategories.length === 0);
+    console.log({
+      title: dataTitle,
+      description,
+      selectedAuthor,
+      selectedCategories,
+      cover,
+      preview,
+      fileBook,
+      oldFile
+    });
 
     const isValid = validateBookForm({
       title: dataTitle,
-      publisher,
+      publisher: publisher || "Đang cập nhật",
       description,
       selectedAuthor,
-      releaseDate,
+      releaseDate: releaseDate || new Date(),
       selectedCategories,
       cover: cover || preview,
       fileBook: fileBook || oldFile,
       isUpdate: !!slugParam,
+      setNotify,
     });
-    console.log(isValid);
+
+    console.log("Bat loi from =>", isValid);
 
     if (!isValid) return;
 
@@ -139,13 +151,13 @@ export default function BookForm({
     formData.append("slug", slug);
     formData.append("description", description);
     formData.append("publisher", publisher);
-    formData.append("releaseDate", releaseDate!.toISOString());
     formData.append("authorId", selectedAuthor?._id || "");
     formData.append("status", status.toString());
     formData.append("categories", JSON.stringify(selectedCategories));
     if (cover) formData.append("cover", cover);
     if (fileBook) formData.append("filePath", fileBook);
-
+    const finalDate = releaseDate || new Date();
+    formData.append("releaseDate", finalDate.toISOString());
 
     onSubmit(formData);
   };
@@ -166,7 +178,7 @@ export default function BookForm({
       setSelectedAuthor(book.authorId);
       setStatus(book.status);
       setReleaseDate(book.releaseDate ? new Date(book.releaseDate) : null);
-      setPreview(`/uploads/bannerBook/${book.cover}`);
+      setPreview(book.cover);
       setOldFile(book.filePath);
 
       const checkedMap: Record<string, boolean> = {};
@@ -280,7 +292,7 @@ export default function BookForm({
             <div >
               <CustomDatePicker
                 label="Ngày phát hành"
-                value={releaseDate || new Date()}
+                value={releaseDate}
                 onChange={(newValue) => setReleaseDate(newValue)}
                 onBlur={() => setTouched((p) => ({ ...p, releaseDate: true }))}
               />

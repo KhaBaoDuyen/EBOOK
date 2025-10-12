@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 export interface CategogyValidationInput {
     name?: string;
 }
-const VALID_TITLE_REGEX = /^[a-zA-ZÀ-ỹ0-9\s.,()'"“”‘’:;?!_-]+$/;
+const VALID_TITLE_REGEX = /^[a-zA-ZÀ-ỹ0-9\s.,()'"“”‘’:;?!_\-–—]+$/;
 
 export function validateCategogyForm({
     name,
