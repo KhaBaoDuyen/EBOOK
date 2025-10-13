@@ -25,7 +25,19 @@ export async function loader({ params }: { params: { slugBook: string } }) {
       return json({ status: 404, message: "Không tìm thấy sách" }, { status: 404 });
     }
 
-    return json({ status: 200, data: book });
+    const relateBook = await Book.find({
+      authorId: book.authorId._id,
+      _id: { $ne: book._id },
+    })
+      .populate("authorId")
+      .populate("categories")
+      .lean();
+
+    return json({
+      status: 200,
+      data: book,
+      relateBook: relateBook || [],
+    });
   } catch (err: any) {
     console.error("Lỗi lấy dữ liệu sách:", err);
     return json({ status: 500, message: "Lỗi server", error: err.message }, { status: 500 });

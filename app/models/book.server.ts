@@ -21,7 +21,8 @@ const bookSchema = new Schema<IBook>(
     categories: [{
       type: Schema.Types.ObjectId,
       ref: "Category"
-    }]
+    }],
+    viewCount: { type: Number, default: 0 }
   },
   {
     timestamps: true,

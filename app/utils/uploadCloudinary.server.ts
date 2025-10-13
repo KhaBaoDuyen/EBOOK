@@ -1,15 +1,15 @@
 import cloudinary from "./cloudinary.server";
 import streamifier from "streamifier";
 
-export const uploadToCloudinary = async (fileBuffer: Buffer, folder: string) => {
+export async function uploadToCloudinary(buffer: Buffer, folder: string, options: any = {}) {
   return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder, resource_type: "raw" },
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder, resource_type: "auto", ...options },
       (error, result) => {
         if (error) reject(error);
         else resolve(result);
       }
     );
-    streamifier.createReadStream(fileBuffer).pipe(stream);
+    uploadStream.end(buffer);
   });
-};
+}

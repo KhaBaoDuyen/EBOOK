@@ -14,7 +14,7 @@ body {
   }
 }
 
- 
+
 
 
 @custom-variant dark (&:is(.dark *));
@@ -199,6 +199,8 @@ body {
     @apply relative font-outfit z-1 bg-gray-50;
   }
 }
+
+
 
 .menu-item {
   position: relative;
@@ -768,39 +770,51 @@ body {
 
 .flatpickr-months .flatpickr-prev-month,
 .flatpickr-months .flatpickr-next-month {
-  top: 1.75rem !important; /* !top-7 */
-  background: transparent !important; /* !bg-transparent */
-  fill: white; /* dark:!fill-white */
-  color: white; /* dark:!text-white */
+  top: 1.75rem !important;
+  /* !top-7 */
+  background: transparent !important;
+  /* !bg-transparent */
+  fill: white;
+  /* dark:!fill-white */
+  color: white;
+  /* dark:!text-white */
 }
 
 .flatpickr-months .flatpickr-prev-month.flatpickr-prev-month,
 .flatpickr-months .flatpickr-next-month.flatpickr-prev-month {
-  left: 1.75rem !important; /* !left-7 */
+  left: 1.75rem !important;
+  /* !left-7 */
 }
 
 .flatpickr-months .flatpickr-prev-month.flatpickr-next-month,
 .flatpickr-months .flatpickr-next-month.flatpickr-next-month {
-  right: 1.75rem !important; /* !right-7 */
+  right: 1.75rem !important;
+  /* !right-7 */
 }
 
 .flatpickr-days {
-  border: 0 !important; /* !border-0 */
+  border: 0 !important;
+  /* !border-0 */
 }
 
 span.flatpickr-weekday,
 .flatpickr-months .flatpickr-month {
-  background: none !important; /* !bg-none */
-  fill: white; /* dark:!fill-white */
-  color: white; /* dark:!text-white */
+  background: none !important;
+  /* !bg-none */
+  fill: white;
+  /* dark:!fill-white */
+  color: white;
+  /* dark:!text-white */
 }
 
 .flatpickr-innerContainer {
-  border-bottom: 0 !important; /* !border-b-0 */
+  border-bottom: 0 !important;
+  /* !border-b-0 */
 }
 
 .flatpickr-months .flatpickr-month {
-  background: none !important; /* !bg-none */
+  background: none !important;
+  /* !bg-none */
 }
 
 .flatpickr-day.inRange {
@@ -808,7 +822,8 @@ span.flatpickr-weekday,
 }
 
 .dark .flatpickr-day.inRange {
-  box-shadow: var(--tw-shadow-datepicker) !important; /* dark:!shadow-datepicker */
+  box-shadow: var(--tw-shadow-datepicker) !important;
+  /* dark:!shadow-datepicker */
 }
 
 .flatpickr-day.inRange,
@@ -826,6 +841,7 @@ span.flatpickr-weekday,
   border-color: #f9fafb !important;
   background-color: #f9fafb !important;
 }
+
 .dark .flatpickr-day.inRange,
 .dark .flatpickr-day.prevMonthDay.inRange,
 .dark .flatpickr-day.nextMonthDay.inRange,
@@ -839,8 +855,8 @@ span.flatpickr-weekday,
 .dark .flatpickr-day.prevMonthDay:focus,
 .dark .flatpickr-day.nextMonthDay:focus {
   border: 0 !important;
-  border-color: rgba(255,255,255,0.05) !important;
-  background-color: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .flatpickr-day.selected,
@@ -848,6 +864,7 @@ span.flatpickr-weekday,
 .flatpickr-day.endRange {
   color: #fff !important;
 }
+
 .dark .flatpickr-day.selected,
 .dark .flatpickr-day.startRange,
 .dark .flatpickr-day.endRange {
@@ -875,6 +892,7 @@ span.flatpickr-weekday,
   border-color: #465fff !important;
   background-color: #465fff !important;
 }
+
 .flatpickr-day.selected:hover,
 .flatpickr-day.startRange:hover,
 .flatpickr-day.endRange:hover {
@@ -925,6 +943,7 @@ span.flatpickr-weekday,
   padding-right: 1.5rem;
   padding-top: 1.5rem;
 }
+
 @media (min-width: 640px) {
   .fc .fc-toolbar.fc-header-toolbar {
     flex-direction: row;
@@ -948,27 +967,33 @@ span.flatpickr-weekday,
   transition: all 0.2s;
   color: #374151;
 }
+
 .fc-button-group .fc-button:hover {
   border-color: #e5e7eb;
   background-color: #f9fafb;
 }
+
 .fc-button-group .fc-button:focus {
   box-shadow: none;
 }
+
 .fc-button-group .fc-button:active {
   border-color: #e5e7eb !important;
   background: transparent !important;
   box-shadow: none !important;
 }
+
 .dark .fc-button-group .fc-button {
   border: 1px solid #1f2937;
   background-color: #1f2937;
   color: #9ca3af !important;
 }
+
 .dark .fc-button-group .fc-button:hover {
   border-color: #1f2937;
   background-color: #111827;
 }
+
 .dark .fc-button-group .fc-button:active {
   border-color: #1f2937 !important;
 }
@@ -978,14 +1003,17 @@ span.flatpickr-weekday,
   margin-top: 0.25rem;
   content: url("data:image/svg+xml,%3Csvg width='25' height='24' ... %3C/svg%3E");
 }
+
 .fc-button-group .fc-button.fc-next-button:before {
   display: inline-block;
   margin-top: 0.25rem;
   content: url("data:image/svg+xml,%3Csvg width='25' height='24' ... %3C/svg%3E");
 }
+
 .dark .fc-button-group .fc-button.fc-prev-button:before {
   content: url("data:image/svg+xml,%3Csvg width='25' height='24' ... stroke='%2398A2B3' ... %3C/svg%3E");
 }
+
 .dark .fc-button-group .fc-button.fc-next-button:before {
   content: url("data:image/svg+xml,%3Csvg width='25' height='24' ... stroke='%2398A2B3' ... %3C/svg%3E");
 }
@@ -1002,9 +1030,11 @@ span.flatpickr-weekday,
   font-size: 0.875rem !important;
   font-weight: 500 !important;
 }
+
 .fc-addEventButton-button:hover {
   background-color: #3749c9 !important;
 }
+
 .fc-addEventButton-button:focus {
   box-shadow: none !important;
 }
@@ -1014,8 +1044,9 @@ span.flatpickr-weekday,
   font-weight: 500 !important;
   color: #1f2937;
 }
+
 .dark .fc-toolbar-title {
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child {
@@ -1023,6 +1054,7 @@ span.flatpickr-weekday,
   background-color: #f3f4f6;
   padding: 0.125rem;
 }
+
 .dark .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child {
   background-color: #111827;
 }
@@ -1038,9 +1070,11 @@ span.flatpickr-weekday,
   font-weight: 500;
   color: #6b7280;
 }
+
 .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child .fc-button:hover {
   color: #374151;
 }
+
 .dark .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child .fc-button {
   color: #9ca3af;
 }
@@ -1049,6 +1083,7 @@ span.flatpickr-weekday,
   color: #111827;
   background: #fff;
 }
+
 .dark .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child .fc-button.fc-button-active {
   background: #1f2937;
   color: #fff;
@@ -1061,6 +1096,7 @@ span.flatpickr-weekday,
   background: #f9fafb;
   text-align: left !important;
 }
+
 .dark .fc-theme-standard th {
   border-color: #1f2937 !important;
   background: #111827;
@@ -1070,6 +1106,7 @@ span.flatpickr-weekday,
 .fc-theme-standard .fc-scrollgrid {
   border-color: #e5e7eb !important;
 }
+
 .dark .fc-theme-standard td,
 .dark .fc-theme-standard .fc-scrollgrid {
   border-color: #1f2937 !important;
@@ -1095,8 +1132,9 @@ span.flatpickr-weekday,
   border-radius: 0.125rem;
   background: #f3f4f6;
 }
+
 .dark .fc .fc-daygrid-day.fc-day-today .fc-scrollgrid-sync-inner {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .fc .fc-daygrid-day-number {
@@ -1105,6 +1143,7 @@ span.flatpickr-weekday,
   font-weight: 500;
   color: #374151;
 }
+
 .dark .fc .fc-daygrid-day-number {
   color: #9ca3af;
 }
@@ -1116,11 +1155,13 @@ span.flatpickr-weekday,
 .fc .fc-day-other .fc-daygrid-day-top {
   opacity: 1;
 }
+
 .fc .fc-day-other .fc-daygrid-day-top .fc-daygrid-day-number {
   color: #9ca3af;
 }
+
 .dark .fc .fc-day-other .fc-daygrid-day-top .fc-daygrid-day-number {
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .event-fc-color {
@@ -1155,14 +1196,17 @@ span.flatpickr-weekday,
   border-color: #ecfdf5;
   background-color: #ecfdf5;
 }
+
 .event-fc-color.fc-bg-danger {
   border-color: #fef2f2;
   background-color: #fef2f2;
 }
+
 .event-fc-color.fc-bg-primary {
   border-color: #eef2ff;
   background-color: #eef2ff;
 }
+
 .event-fc-color.fc-bg-warning {
   border-color: #fff7ed;
   background-color: #fff7ed;
@@ -1171,12 +1215,15 @@ span.flatpickr-weekday,
 .event-fc-color.fc-bg-success .fc-daygrid-event-dot {
   background-color: #10b981;
 }
+
 .event-fc-color.fc-bg-danger .fc-daygrid-event-dot {
   background-color: #ef4444;
 }
+
 .event-fc-color.fc-bg-primary .fc-daygrid-event-dot {
   background-color: #465fff;
 }
+
 .event-fc-color.fc-bg-warning .fc-daygrid-event-dot {
   background-color: #f97316;
 }
@@ -1188,6 +1235,7 @@ span.flatpickr-weekday,
   font-weight: 500;
   color: #6b7280;
 }
+
 .dark .fc-direction-ltr .fc-timegrid-slot-label-frame {
   color: #9ca3af;
 }
@@ -1197,6 +1245,7 @@ span.flatpickr-weekday,
   font-weight: 500;
   color: #6b7280;
 }
+
 .dark .fc .fc-timegrid-axis-cushion {
   color: #9ca3af;
 }
@@ -1238,7 +1287,7 @@ span.flatpickr-weekday,
   border: 0.5px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.9);
   color: #374151 !important;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
 }
 
@@ -1246,7 +1295,9 @@ span.flatpickr-weekday,
 .carouselFour .swiper-button-prev {
   left: 0.75rem !important;
 }
+
 @media (min-width: 640px) {
+
   .carouselTwo .swiper-button-prev,
   .carouselFour .swiper-button-prev {
     left: 1rem !important;
@@ -1257,7 +1308,9 @@ span.flatpickr-weekday,
 .carouselFour .swiper-button-next {
   right: 0.75rem !important;
 }
+
 @media (min-width: 640px) {
+
   .carouselTwo .swiper-button-next,
   .carouselFour .swiper-button-next {
     right: 1rem !important;
@@ -1277,10 +1330,12 @@ span.flatpickr-weekday,
   border: 0.5px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.6);
   padding: 0.375rem 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
 }
+
 @media (min-width: 640px) {
+
   .carouselThree .swiper-pagination,
   .carouselFour .swiper-pagination {
     bottom: 1.25rem !important;
@@ -1294,7 +1349,7 @@ span.flatpickr-weekday,
   width: 0.625rem;
   background-color: #fff;
   opacity: 1;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease-in-out;
 }
 
@@ -1308,6 +1363,7 @@ span.flatpickr-weekday,
   border: 6px solid #465fff;
   background-color: #465fff;
 }
+
 .dark .form-check-input:checked~span {
   border-color: #465fff;
 }
@@ -1326,6 +1382,7 @@ span.flatpickr-weekday,
   border-color: #465fff;
   background-color: #465fff;
 }
+
 .dark .taskCheckbox:checked~.box {
   border-color: #465fff;
 }
@@ -1334,7 +1391,7 @@ span.flatpickr-weekday,
   transition: all 0.2s ease;
   border-radius: 0.75rem;
   box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.1),
-              0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+    0px 1px 2px 0px rgba(16, 24, 40, 0.06);
   opacity: 0.8;
   cursor: grabbing;
 }
@@ -1354,6 +1411,7 @@ span.flatpickr-weekday,
   border-radius: 9999px !important;
   opacity: 1 !important;
 }
+
 .dark .simplebar-scrollbar::before {
   background-color: #374151 !important;
 }
@@ -1368,23 +1426,91 @@ span.flatpickr-weekday,
   border: none !important;
 }
 
- .ProseMirror {
-  min-height: 180px;         
-  max-height: 300px;           
-  overflow-y: auto;       
-  outline: none;             
-  padding: 0.5rem 0.75rem;   
+.ProseMirror {
+  min-height: 180px;
+  max-height: 300px;
+  overflow-y: auto;
+  outline: none;
+  padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
   line-height: 1.5;
   color: #fff;
 }
 
- .ProseMirror:focus {
+.ProseMirror:focus {
   border: none;
   outline: none;
 }
 
- .ProseMirror {
+.ProseMirror {
   background-color: #1F2937;
-  border-radius: 0.375rem;   
+  border-radius: 0.375rem;
+}
+.book-content h1,
+.book-content h2,
+.book-content h3 {
+  font-weight: bold;
+  text-align: center;
+  margin: 1.2rem 0;
+}
+
+.book-content p {
+  margin-bottom: 0.75rem;
+}
+
+.book-content img {
+  display: block;
+  margin: 1rem auto;
+  max-width: 90%;
+  border-radius: 6px;
+}
+
+.book-content ul,
+.book-content ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+.animate-fade {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.book-page p {
+  margin: 0.5rem 0;
+}
+
+.book-page ul, .book-page ol {
+  list-style-position: inside;
+  padding-left: 1.5rem;
+}
+
+.book-page h1, .book-page h2, .book-page h3 {
+  text-align: center;
+  font-weight: bold;
+}
+
+.book-page em, .book-page i {
+  font-style: italic;
+}
+
+.book-page strong, .book-page b {
+  font-weight: bold;
+}
+
+.chapter-section svg {
+  display: none ;
+}
+
+.book-page .ptext{
+  text-align: center;
+  font-size: 1.3rem;
 }

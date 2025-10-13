@@ -56,7 +56,7 @@ export const action = async ({ request }: { request: Request }) => {
     const uploadHandler = unstable_createMemoryUploadHandler({
       maxPartSize: 35_000_000,
     });
-    
+
     const formData = await unstable_parseMultipartFormData(request, uploadHandler);
 
     const title = formData.get("title")?.toString().trim() || "";
@@ -79,27 +79,35 @@ export const action = async ({ request }: { request: Request }) => {
     }
 
     if (await Book.findOne({ slug })) {
-      return json(
-        { status: 400, message: "Slug đã tồn tại, vui lòng nhập slug khác!" },
-        { status: 400 }
-      );
+      return json({ status: 400, message: "Slug đã tồn tại, vui lòng nhập slug khác!" }, { status: 400 });
     }
 
     let coverUrl = "";
     let bookUrl = "";
     let mimeType = "";
 
-    if (coverFile && coverFile.size > 0) {
+     if (coverFile && coverFile.size > 0) {
       const buffer = Buffer.from(await coverFile.arrayBuffer());
       const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/bannerBook");
       coverUrl = uploadResult.secure_url;
     }
 
-    if (bookFile && bookFile.size > 0) {
+     if (bookFile && bookFile.size > 0) {
       const buffer = Buffer.from(await bookFile.arrayBuffer());
-      const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/books");
+      let originalName = bookFile.name || "book.epub";
+      if (!originalName.endsWith(".epub")) {
+         originalName = originalName + ".epub";
+      }
+
+      const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/books", {
+        resource_type: "raw",
+        use_filename: true,
+        filename_override: originalName,
+        unique_filename: true,
+      });
+
       bookUrl = uploadResult.secure_url;
-      mimeType = bookFile.type || "";
+      mimeType = bookFile.type || "application/epub+zip";
     }
 
     const newBook = new Book({
@@ -124,7 +132,7 @@ export const action = async ({ request }: { request: Request }) => {
       data: newBook,
     });
   } catch (err: any) {
-    console.error("Lỗi khi thêm sách:", err);
+    console.error("❌ Lỗi khi thêm sách:", err);
     return json(
       {
         status: 500,
@@ -136,3 +144,4 @@ export const action = async ({ request }: { request: Request }) => {
     );
   }
 };
+

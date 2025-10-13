@@ -32,7 +32,8 @@ const CardRankings: React.FC<CardRankingsProps> = ({
           author={author}
           category={category}
           description={description}
-          link={`/ebook/${slug}`} 
+          linkEbook={`/ebook/${slug}`} 
+          linkRender={`/reader/${slug}`}
         />
         {number !== null && (
           <div

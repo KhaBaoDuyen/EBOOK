@@ -2,7 +2,7 @@ import CardRanking from "./Cards/CardRanking";
 
 const Section = ({ title, books }) => (
   
-  <div className="!mx-auto py-2">
+  <div className="!mx-auto h-max py-2">
     <span className="flex items-center group">
       <h1 className="font-bold text-2xl">{title}</h1>
       <a
@@ -35,7 +35,7 @@ const Section = ({ title, books }) => (
           author={book?.authorId?.name}
           category={book.categories}
           description={book.description}
-          slug={book.link}
+          slug={book.slug}
         />
       ))}
     </div>

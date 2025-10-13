@@ -13,6 +13,7 @@ export interface IBook {
   mimeType?: string;
   categories?: Types.ObjectId[];
   status: number | string; 
+  viewCount?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
