@@ -12,6 +12,8 @@ import {
   ChevronRight as ChevronRightIcon,
 } from "lucide-react";
 
+import Loading from "~/components/Loading";
+
 export default function UserRenderBook() {
   const { nameBook } = useParams();
   const [bookInfo, setBookInfo] = useState<any>(null);
@@ -25,11 +27,33 @@ export default function UserRenderBook() {
   const [openNodes, setOpenNodes] = useState<Record<string, boolean>>({});
   const viewerRef = useRef<HTMLDivElement>(null);
   const [anchorIndex, setAnchorIndex] = useState<Record<string, number>>({});
+  const [activeTab, setActiveTab] = useState(0); // 0: mục lục, 1: dấu trang, 2: ghi chú
+  const [bookmarks, setBookmarks] = useState<any[]>([]);
+  const [notes, setNotes] = useState<any[]>([]);
+  const [noteText, setNoteText] = useState("");
+
+  // Giả lập thêm/xoá bookmark
+  function removeBookmark(index: number) {
+    setBookmarks((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  // Ghi chú đơn giản
+  function addNote() {
+    if (!noteText.trim()) return;
+    setNotes((prev) => [...prev, { text: noteText }]);
+    setNoteText("");
+  }
+
 
   useEffect(() => {
     const cachedBook = sessionStorage.getItem("currentBook");
-    if (cachedBook) setBookInfo(JSON.parse(cachedBook));
+    if (cachedBook)
+      setBookInfo(JSON.parse(cachedBook));
+
   }, [nameBook]);
+
+  console.log("bookInfo", bookInfo);
+
 
   useEffect(() => {
     if (!bookInfo?.filePath && !bookInfo?.fileUrl) return;
@@ -44,7 +68,6 @@ export default function UserRenderBook() {
 
   const goToHref = (href: string) => {
     if (!href) return;
-    // Chuẩn hóa
     const [path, frag] = href.split("#");
     const base = path ? path.split("/").pop()! : undefined;
     const candidates = [
@@ -64,7 +87,6 @@ export default function UserRenderBook() {
       }
     }
 
-    // Fallback cũ: tìm thô trong HTML (ít khi cần)
     const safe = href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(safe, "i");
     const found = pages.findIndex((p) => regex.test(p));
@@ -137,9 +159,16 @@ export default function UserRenderBook() {
   }, [pages, anchorIndex]);
 
 
+  const pastelColors = [
+    { name: "Xanh dương ", color: "#A7C7E7" },
+    { name: "Vàng ", color: "#FFF5BA" },
+    { name: "Hồng ", color: "#FFD1DC" },
+    { name: "Xanh lá ", color: "#BEECC5" },
+  ];
+
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[#1F2937] text-white">
-      <header className="absolute top-0 left-0 right-0 h-14 bg-[#111827] border-b border-gray-700 flex items-center justify-between px-4 z-20">
+      <header className="absolute shadow-xl top-0 left-0 right-0 h-14 bg-[#17171A] border-b border-gray-700 flex items-center justify-between px-4 z-20">
         <Link
           to={`/ebook/${bookInfo?.slug || ""}`}
           className="flex items-center gap-2 text-green-400 hover:text-green-300"
@@ -160,71 +189,183 @@ export default function UserRenderBook() {
           />
         </div>
       </header>
-
-      <div className="absolute top-14 bottom-0 left-0 right-0 flex items-center justify-center">
-        <div
-          ref={viewerRef}
-          className="rounded-lg shadow-lg overflow-hidden p-6 text-black"
-          style={{
-            width: "60%",
-            height: "80vh",
-            background: bgColor,
-            fontSize: `${fontSize}%`,
-            lineHeight: "1.8",
-            textAlign: "justify",
-          }}
-        >
-          {pages.length > 0 ? (
-            <div
-              className="book-content prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: pages[currentPage] }}
+      <div
+        className="flex h-screen"
+        style={{ backgroundColor: bgColor }}
+      >
+        <aside className="w-[26%] shadow-lg pt-[5rem] max-w-[360px] min-w-[260px] bg-customGray px-5 py-6 border-r border-white/20 overflow-y-auto">
+          <div className="pb-4 md:flex md:flex-row flex-col gap-5  mb-4 border-b border-white/20">
+            <img
+              src={bookInfo?.cover}
+              alt={bookInfo?.title}
+              className="w-[40%] h-auto rounded-md"
             />
-          ) : (
-            "Đang tải nội dung..."
-          )}
-        </div>
+            <div className="mt-4 space-y-1">
+              <h1 className="text-lg font-semibold">{bookInfo?.title || "—"}</h1>
+              <p className="text-sm text-white/70">
+                {bookInfo?.authorId?.name || "Không rõ tác giả"}
+              </p>
+            </div>
+          </div>
 
-        <button
-          onClick={handlePrev}
-          disabled={currentPage === 0}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/70 p-2 rounded-full z-10 disabled:opacity-40"
-        >
-          <ChevronLeft />
-        </button>
-        <button
-          onClick={handleNext}
-          disabled={currentPage === pages.length - 1}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/70 p-2 rounded-full z-10 disabled:opacity-40"
-        >
-          <ChevronRight />
-        </button>
+          <div
+            className="prose prose-invert prose-sm max-w-none text-white/90"
+            dangerouslySetInnerHTML={{ __html: bookInfo?.description || "" }}
+          />
+        </aside>
 
-        <div className="absolute bottom-0 left-0 right-0 bg-[#111827] h-8 px-4 flex items-center justify-center text-xs text-gray-300">
-          Trang {currentPage + 1} / {pages.length}
-        </div>
+        <section className="flex-1 relative flex items-center justify-center">
+          <div
+            ref={viewerRef}
+            className="rounded-lg overflow-hidden p-6 text-black"
+            style={{
+              width: "70%",
+              height: "80vh",
+              fontSize: `${fontSize}%`,
+              lineHeight: "1.8",
+              textAlign: "justify",
+            }}
+          >
+            {pages.length > 0 ? (
+              <div
+                className="book-content prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: pages[currentPage] }}
+              />
+            ) : (
+              <div className="flex h-2/3 justify-center items-center">
+                <Loading />
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 0}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/70 p-2 rounded-full z-10 disabled:opacity-40"
+            aria-label="Trang trước"
+          >
+            <ChevronLeft />
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={currentPage === pages.length - 1}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/70 p-2 rounded-full z-10 disabled:opacity-40"
+            aria-label="Trang sau"
+          >
+            <ChevronRight />
+          </button>
+
+          <div className="absolute bottom-0 left-0 right-0 bg-[#111827] h-8 px-4 flex items-center justify-center text-xs text-gray-300">
+            Trang {currentPage + 1} / {pages.length}
+          </div>
+        </section>
       </div>
 
       <aside
-        className={`absolute top-14 bottom-0 right-0 w-[280px] bg-[#111827] border-l border-gray-700 transform transition-transform duration-300 z-30 ${showRight ? "translate-x-0" : "translate-x-full"
+        className={`absolute top-18 rounded-md bottom-0 right-0 w-[320px] bg-black/80 border-l border-gray-700 transform transition-transform duration-300 z-30 ${showRight ? "translate-x-0" : "translate-x-full"
           }`}
       >
-        <div className="p-4">
-          <button
+        <div className="p-4 relative h-full flex flex-col">
+           <button
             onClick={() => setShowRight(false)}
             className="absolute top-3 right-3 text-gray-400 hover:text-white"
           >
             <X size={18} />
           </button>
-          <h2 className="font-medium mb-3 text-green-400">Danh mục chương</h2>
-          {chapters.length > 0 ? (
-            <div className="max-h-[80vh] overflow-y-auto pr-2 text-sm">
-              {renderChapters(chapters)}
-            </div>
-          ) : (
-            <p className="text-gray-400 text-sm">Đang tải mục lục...</p>
-          )}
+
+           <div className="flex bold mb-4 border-b border-gray-700">
+            {["Mục lục", "Dấu trang", "Ghi chú"].map((tab, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveTab(i)}
+                className={`flex-1 py-2 text-sm font-medium transition ${activeTab === i
+                  ? "text-green-400 border-b-2 border-green-400"
+                  : "text-gray-400 hover:text-gray-200"
+                  }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+           <div className="flex-1 overflow-y-auto pr-2 text-sm">
+            {activeTab === 0 && (
+              <>
+                <h2 className="font-medium mb-3 text-green-400">Danh mục chương</h2>
+                {chapters.length > 0 ? (
+                  <div className="space-y-2">{renderChapters(chapters)}</div>
+                ) : (
+                  <p className="text-gray-400 text-sm">Đang tải mục lục...</p>
+                )}
+              </>
+            )}
+
+            {activeTab === 1 && (
+              <>
+                <h2 className="font-medium mb-3 text-green-400">Dấu trang của bạn</h2>
+                {bookmarks.length > 0 ? (
+                  <ul className="space-y-2">
+                    {bookmarks.map((b, i) => (
+                      <li
+                        key={i}
+                        className="flex justify-between items-center bg-gray-800/50 p-2 rounded hover:bg-gray-700 cursor-pointer"
+                        onClick={() => goToHref(b.href)}
+                      >
+                        <span>{b.title}</span>
+                        <X
+                          size={14}
+                          className="text-gray-400 hover:text-red-400"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeBookmark(i);
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-400 text-sm">Chưa có dấu trang nào</p>
+                )}
+              </>
+            )}
+
+            {activeTab === 2 && (
+              <>
+                <h2 className="font-medium mb-3 text-green-400">Ghi chú</h2>
+                <div className="space-y-3">
+                  <textarea
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    placeholder="Viết ghi chú tại đây..."
+                    className="w-full bg-gray-800 text-gray-100 p-2 rounded outline-none resize-none"
+                    rows={4}
+                  />
+                  <button
+                    onClick={addNote}
+                    className="w-full bg-green-600 hover:bg-green-500 text-white py-1 rounded"
+                  >
+                    Lưu ghi chú
+                  </button>
+
+                  {notes.length > 0 && (
+                    <ul className="space-y-2">
+                      {notes.map((n, i) => (
+                        <li
+                          key={i}
+                          className="bg-gray-800/50 p-2 rounded hover:bg-gray-700 text-sm"
+                        >
+                          {n.text}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </aside>
+
 
       {showTextOptions && (
         <div className="absolute top-16 right-16 bg-gray-800 p-4 rounded-lg shadow-lg text-sm space-y-3 z-40">
@@ -239,12 +380,22 @@ export default function UserRenderBook() {
             />
           </div>
           <div>
-            <label className="block text-gray-300 mb-1">Màu nền</label>
-            <input
-              type="color"
-              value={bgColor}
-              onChange={(e) => setBgColor(e.target.value)}
-            />
+            <label className="block text-gray-300 mb-2">Màu nền</label>
+            <div className="flex gap-3">
+              {pastelColors.map((item) => (
+                <button
+                  key={item.color}
+                  type="button"
+                  onClick={() => setBgColor(item.color)}
+                  className={`w-8 h-8 rounded-md border-2 transition ${bgColor === item.color
+                    ? "border-green-400 scale-110"
+                    : "border-gray-400"
+                    }`}
+                  style={{ backgroundColor: item.color }}
+                  title={item.name}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}

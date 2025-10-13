@@ -1548,3 +1548,7 @@ span.flatpickr-weekday,
 .book-page {
   text-align: center !important;
 }
+
+.bg-customGray{
+  background: #29292B;
+}
