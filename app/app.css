@@ -1491,6 +1491,11 @@ span.flatpickr-weekday,
 .book-page ul, .book-page ol {
   list-style-position: inside;
   padding-left: 1.5rem;
+  text-align: center;
+}
+.book-page li {
+  list-style-type: none;
+  text-align: center !important;
 }
 
 .book-page h1, .book-page h2, .book-page h3 {
@@ -1513,4 +1518,33 @@ span.flatpickr-weekday,
 .book-page .ptext{
   text-align: center;
   font-size: 1.3rem;
+}
+
+.calibre1{
+  height: 0.5rem !important;
+}
+
+.book-page h2 {
+  text-align: center;
+  font-weight: bold;
+  margin: 1.5rem 0;
+}
+
+.book-page h2:contains("MỤC LỤC") ~ * {
+  text-align: center;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+.book-page ul, .book-page ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.book-page p {
+  text-align: justify !important;
+}
+.book-page {
+  text-align: center !important;
 }

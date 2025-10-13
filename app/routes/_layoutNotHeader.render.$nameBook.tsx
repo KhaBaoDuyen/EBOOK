@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "@remix-run/react";
 import { loadEpubContent } from "~/utils/epubViewerCustom";
 import {
@@ -8,7 +8,6 @@ import {
   Menu,
   Type,
   X,
-  Info,
   ChevronDown,
   ChevronRight as ChevronRightIcon,
 } from "lucide-react";
@@ -19,12 +18,13 @@ export default function UserRenderBook() {
   const [pages, setPages] = useState<string[]>([]);
   const [chapters, setChapters] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(false);
   const [showTextOptions, setShowTextOptions] = useState(false);
   const [fontSize, setFontSize] = useState(100);
   const [bgColor, setBgColor] = useState("#F5E6B3");
   const [openNodes, setOpenNodes] = useState<Record<string, boolean>>({});
+  const viewerRef = useRef<HTMLDivElement>(null);
+  const [anchorIndex, setAnchorIndex] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const cachedBook = sessionStorage.getItem("currentBook");
@@ -34,18 +34,45 @@ export default function UserRenderBook() {
   useEffect(() => {
     if (!bookInfo?.filePath && !bookInfo?.fileUrl) return;
     const epubPath = bookInfo.fileUrl || bookInfo.filePath;
-    loadEpubContent(epubPath).then((res) => {
+    const height = viewerRef.current?.clientHeight || 800;
+    loadEpubContent(epubPath, height).then((res) => {
       setPages(res.pages);
       setChapters(res.chapters);
+      setAnchorIndex(res.anchorIndex || {});
     });
   }, [bookInfo]);
 
-  const handleNext = () =>
-    setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
-  const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 0));
+  const goToHref = (href: string) => {
+    if (!href) return;
+    // Chuẩn hóa
+    const [path, frag] = href.split("#");
+    const base = path ? path.split("/").pop()! : undefined;
+    const candidates = [
+      path && frag ? `${path}#${frag}` : null,
+      base && frag ? `${base}#${frag}` : null,
+      frag ? `#${frag}` : null,
+      path || null,
+      base || null,
+    ].filter(Boolean) as string[];
 
-  const toggleNode = (id: string) =>
-    setOpenNodes((prev) => ({ ...prev, [id]: !prev[id] }));
+    for (const key of candidates) {
+      const idx = anchorIndex[key];
+      if (idx != null) {
+        setCurrentPage(Math.max(0, Math.min(idx, pages.length - 1)));
+        setShowRight(false);
+        return;
+      }
+    }
+
+    // Fallback cũ: tìm thô trong HTML (ít khi cần)
+    const safe = href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(safe, "i");
+    const found = pages.findIndex((p) => regex.test(p));
+    if (found !== -1) {
+      setCurrentPage(found);
+      setShowRight(false);
+    }
+  };
 
   const renderChapters = (list: any[]) => (
     <ul className="ml-2 space-y-1">
@@ -53,17 +80,13 @@ export default function UserRenderBook() {
         <li key={ch.id}>
           <div
             className="flex items-center gap-1 cursor-pointer hover:text-green-400"
-            onClick={() => toggleNode(ch.id)}
+            onClick={() => {
+              if (ch.subitems?.length > 0) toggleNode(ch.id);
+              if (ch.href) goToHref(ch.href);
+            }}
           >
-            {ch.subitems?.length > 0 && (
-              <>
-                {openNodes[ch.id] ? (
-                  <ChevronDown size={14} />
-                ) : (
-                  <ChevronRightIcon size={14} />
-                )}
-              </>
-            )}
+            {ch.subitems?.length > 0 &&
+              (openNodes[ch.id] ? <ChevronDown size={14} /> : <ChevronRightIcon size={14} />)}
             <span>{ch.label}</span>
           </div>
           {ch.subitems?.length > 0 && openNodes[ch.id] && (
@@ -73,6 +96,46 @@ export default function UserRenderBook() {
       ))}
     </ul>
   );
+
+  const handleNext = () =>
+    setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
+  const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 0));
+  const toggleNode = (id: string) =>
+    setOpenNodes((prev) => ({ ...prev, [id]: !prev[id] }));
+
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      const target = e.target.closest(".chapter-link");
+      if (target) {
+        e.preventDefault();
+        const href = target.getAttribute("data-href");
+        const index = pages.findIndex(p =>
+          new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(p)
+        );
+        if (index !== -1) setCurrentPage(index);
+      }
+    };
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [pages]);
+
+  useEffect(() => {
+    const el = viewerRef.current;
+    if (!el) return;
+    const handler = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement)?.closest(".chapter-link") as HTMLElement | null;
+      if (target) {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = target.getAttribute("data-href") || "";
+        goToHref(href);
+      }
+    };
+    el.addEventListener("click", handler);
+    return () => el.removeEventListener("click", handler);
+  }, [pages, anchorIndex]);
+
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[#1F2937] text-white">
@@ -100,6 +163,7 @@ export default function UserRenderBook() {
 
       <div className="absolute top-14 bottom-0 left-0 right-0 flex items-center justify-center">
         <div
+          ref={viewerRef}
           className="rounded-lg shadow-lg overflow-hidden p-6 text-black"
           style={{
             width: "60%",
@@ -118,8 +182,6 @@ export default function UserRenderBook() {
           ) : (
             "Đang tải nội dung..."
           )}
-
-
         </div>
 
         <button
