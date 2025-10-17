@@ -25,16 +25,14 @@ import {
   bookByGroupsTuTruyenHoiKy,
   bookByRandom
 } from "~/services/bookBy/bookByGroups.service";
+import { bookByCatgories } from "~/services/bookBy/bookByCategory";
+import { getAllCategory } from "~/services/category.service";
 
 const HomePage = () => {
 
   useEffect(() => {
     getBookByRating();
     bookByCreateAts();
-    getBookByThienDinh();
-    getBookByKyNang();
-    getBookByTuTruyen();
-    getBookByTrinhTham();
     getBookRandom();
   }, []);
 
@@ -64,44 +62,6 @@ const HomePage = () => {
     }
   }
 
-  //-------------------[ LAY SACH THEO GROUPS ]-----------------
-  const [bookByThienDinh, setBookByThienDinh] = useState<any>([]);
-  const [bookByKyNang, setBookByKyNang] = useState<any>([]);
-  const [bookByTuTruyen, setBookByTuTruyen] = useState<any>([]);
-  const [bookByTrinhTham, setBookByTrinhTham] = useState<any>([]);
-
-  const getBookByThienDinh = async () => {
-    try {
-      const res = await bookByGroupsThienDinh()
-      setBookByThienDinh(res.data);
-    } catch (err: any) {
-      return console.log("loi khi lay group Thien Dinh", err.message);
-    }
-  }
-  const getBookByKyNang = async () => {
-    try {
-      const res = await bookByGroupsKyNang()
-      setBookByKyNang(res.data);
-    } catch (err: any) {
-      return console.log("loi khi lay group Ky nang", err.message);
-    }
-  }
-  const getBookByTuTruyen = async () => {
-    try {
-      const res = await bookByGroupsTuTruyenHoiKy()
-      setBookByTuTruyen(res.data);
-    } catch (err: any) {
-      return console.log("loi khi lay group Tu truyen", err.message);
-    }
-  }
-  const getBookByTrinhTham = async () => {
-    try {
-      const res = await bookByGroupsTrinhThamKinhDi()
-      setBookByTrinhTham(res.data);
-    } catch (err: any) {
-      return console.log("loi khi lay group Trinh tham", err.message);
-    }
-  }
 
   //--------------------[ LAY SACH RANDOM ]----------------------
   const [random, setRandom] = useState<any>([]);
@@ -114,6 +74,74 @@ const HomePage = () => {
       console.log("loi khi lay sach random", err.message);
     }
   }
+
+  // ---------------[ LẤY TOÀN BỘ SẢN PHẨM ]------------
+  const [categories, setCategories] = useState<any[]>([]);
+  const [booksAll, setBooksAll] = useState<any[]>([]);
+  const [subCategories, setSubCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    getParentCategories();
+  }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      fetchBooksByCategories();
+    }
+  }, [categories]);
+
+  // --------------------- LẤY DANH MỤC CHA ---------------------
+  const getParentCategories = async () => {
+    try {
+      const res = await getAllCategory();
+      if (res?.data) {
+        const parentCategories = res.data.filter(
+          (cat: any) => !cat.parentId || cat.parentId === null
+        );
+        setCategories(parentCategories);
+      }
+    } catch (err: any) {
+      console.log(" Lỗi khi lấy danh mục:", err.message);
+    }
+  };
+
+  // --------------------- LẤY SÁCH THEO DANH MỤC ---------------------
+  const fetchBooksByCategories = async () => {
+    try {
+      const results = await Promise.all(
+        categories.map(async (cat: any) => {
+          try {
+            const res = await bookByCatgories(cat.slug);
+            return {
+              category: cat,
+              allBooks: res?.allBooks || [],
+              subCategories: res?.subCategories || [],
+            };
+          } catch (error: any) {
+            return { category: cat, allBooks: [], subCategories: [] };
+          }
+        })
+      );
+
+      const validResults = results.filter((r) => r.allBooks.length > 0);
+
+      const allBooksFlat = validResults.map((r) => r.allBooks).flat();
+
+      const uniqueBooks = Array.from(
+        new Map(allBooksFlat.map((b: any) => [String(b._id), b])).values()
+      );
+      
+      const allSubsFlat = validResults.map((r) => r.subCategories).flat();
+
+      setBooksAll(uniqueBooks);
+
+      setSubCategories(allSubsFlat);
+    } catch (err: any) {
+      console.log("Lỗi khi lấy sách:", err.message);
+    }
+  };
+
+
 
   return (
     <main className="relative !w-full">
@@ -139,10 +167,32 @@ const HomePage = () => {
         </div>
 
         <Section title="Mới nhất" books={bookByCreate} />
-        <Section title="Thiền Định - Tìm Bình An trong Tâm Hồn" books={bookByThienDinh} />
-        <Section title="Kỹ năng vượt qua mùa khó khăn" books={bookByKyNang} />
-        <Section title="Tự truyện và Hồi ký" books={bookByTuTruyen} />
-        <Section title="Trinh thám - Kinh dị" books={bookByTrinhTham} />
+        {categories
+          .filter(cat =>
+            booksAll.some(b =>
+              Array.isArray(b.categories) &&
+              b.categories.some(c =>
+                String(typeof c === "object" ? c._id : c) === String(cat._id)
+              )
+            )
+          )
+          .map(cat => {
+            const booksInCategory = booksAll.filter(b =>
+              Array.isArray(b.categories) &&
+              b.categories.some(c =>
+                String(typeof c === "object" ? c._id : c) === String(cat._id)
+              )
+            );
+
+            return (
+              <Section
+                key={cat._id}
+                title={cat.name}
+                books={booksInCategory}
+              />
+            );
+          })}
+
 
         <div className="!mx-auto grid md:grid-cols-4 grid-cols-2 gap-10 py-2">
           {random.slice(0, 8).map((book, i) => (

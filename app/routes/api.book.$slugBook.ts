@@ -57,23 +57,46 @@ export const action = async ({
 
     if (method === "PUT") {
       const uploadHandler = unstable_createMemoryUploadHandler({
-        maxPartSize: 15_000_000, // 15MB
+        maxPartSize: 35_000_000,
       });
 
       const formData = await unstable_parseMultipartFormData(request, uploadHandler);
 
-      const title = formData.get("title") as string;
-      const slug = formData.get("slug") as string;
-      const description = formData.get("description") as string;
-      const publisher = formData.get("publisher") as string;
-      const authorId = formData.get("authorId") as string;
-      const releaseDate = formData.get("releaseDate") as string;
-      const categoriesRaw = formData.get("categories") as string;
+      const title = formData.get("title")?.toString().trim() || "";
+      const slug = formData.get("slug")?.toString().trim().toLowerCase() || "";
+      const description = formData.get("description")?.toString().trim() || "Đang cập nhật";
+      const publisher = formData.get("publisher")?.toString().trim() || "Đang cập nhật";
+      const authorId = formData.get("authorId")?.toString().trim() || "";
+      const releaseDateStr = formData.get("releaseDate")?.toString() || "";
+      const categoriesRaw = formData.get("categories")?.toString() || "[]";
       const status = Number(formData.get("status")) || 1;
-      const categories = categoriesRaw ? JSON.parse(categoriesRaw) : [];
+
+      const releaseDate = releaseDateStr ? new Date(releaseDateStr) : new Date();
+      const categories = JSON.parse(categoriesRaw || "[]");
 
       const coverFile = formData.get("cover") as File | null;
       const bookFile = formData.get("filePath") as File | null;
+
+      const slugParam = toSlug(params.slugBook);
+      const oldBook = await Book.findOne({ slug: slugParam });
+
+      if (!oldBook) {
+        return json({ status: 404, message: "Không tìm thấy sách cần cập nhật!" }, { status: 404 });
+      }
+
+      if (title) {
+        const existingTitle = await Book.findOne({ title });
+        if (existingTitle && existingTitle._id.toString() !== oldBook._id.toString()) {
+          return json({ status: 400, message: "Tên sách đã tồn tại!" }, { status: 400 });
+        }
+      }
+
+      if (slug) {
+        const existingSlug = await Book.findOne({ slug });
+        if (existingSlug && existingSlug._id.toString() !== oldBook._id.toString()) {
+          return json({ status: 400, message: "Slug đã tồn tại, vui lòng nhập slug khác!" }, { status: 400 });
+        }
+      }
 
       const updateData: any = {
         title,
@@ -86,44 +109,32 @@ export const action = async ({
         status,
       };
 
-      if (title) {
-        const existingBook = await Book.findOne({ title });
-        if (existingBook && existingBook.slug !== params.slugBook) {
-          return json({ status: 400, message: "Tên sách đã tồn tại!" }, { status: 400 });
-        }
-      }
-
-      if (slug) {
-        const existingSlug = await Book.findOne({ slug });
-        if (existingSlug && existingSlug.slug !== params.slugBook) {
-          return json(
-            { status: 400, message: "Slug đã tồn tại, vui lòng nhập slug khác!" },
-            { status: 400 }
-          );
-        }
-      }
-
-      const slugParam = toSlug(params.slugBook);
-      const oldBook = await Book.findOne({ slug: slugParam });
-
-      if (!oldBook) {
-        return json({ status: 404, message: "Không tìm thấy sách cần cập nhật!" }, { status: 404 });
-      }
-
-      // ========== Upload Cloudinary ==========
       if (coverFile && coverFile.size > 0) {
         const buffer = Buffer.from(await coverFile.arrayBuffer());
-        const result: any = await uploadToCloudinary(buffer, "smartbook/bannerBook");
-        updateData.cover = result.secure_url;
+        const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/bannerBook");
+        updateData.cover = uploadResult.secure_url;
       } else {
-        updateData.cover = oldBook.cover; // giữ link cũ
+        updateData.cover = oldBook.cover;
       }
 
       if (bookFile && bookFile.size > 0) {
         const buffer = Buffer.from(await bookFile.arrayBuffer());
-        const result: any = await uploadToCloudinary(buffer, "smartbook/books");
-        updateData.filePath = result.secure_url;
-        updateData.mimeType = bookFile.type;
+        let originalName = bookFile.name || "book.epub";
+
+        if (!originalName.endsWith(".epub")) {
+          originalName = originalName + ".epub";
+        }
+
+        const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/books", {
+          resource_type: "raw",
+          use_filename: true,
+          filename_override: originalName.replace(/\.epub$/i, ""),
+          unique_filename: false,
+          format: "epub",
+        });
+
+        updateData.filePath = uploadResult.secure_url;
+        updateData.mimeType = bookFile.type || "application/epub+zip";
       } else {
         updateData.filePath = oldBook.filePath;
         updateData.mimeType = oldBook.mimeType;
@@ -136,10 +147,9 @@ export const action = async ({
       );
 
       if (!updatedBook) {
-        return json({ status: 404, message: "Không tìm thấy sách cần cập nhật!" }, { status: 404 });
+        return json({ status: 404, message: "Không tìm thấy sách để cập nhật!" }, { status: 404 });
       }
 
-      console.log("Cập nhật thành công:", updatedBook);
       return json({
         status: 200,
         message: "Cập nhật sách thành công!",
@@ -147,6 +157,7 @@ export const action = async ({
       });
     }
 
+    // ========== XÓA SÁCH ==========
     else if (method === "DELETE") {
       const slugParam = toSlug(params.slugBook);
       const deletedBook = await Book.findOneAndDelete({ slug: slugParam });
@@ -167,9 +178,14 @@ export const action = async ({
       return json({ status: 405, message: "Phương thức không được hỗ trợ" }, { status: 405 });
     }
   } catch (err: any) {
-    console.error("Lỗi khi cập nhật sách:", err);
+    console.error("  Lỗi khi cập nhật sách:", err);
     return json(
-      { status: 500, message: "Lỗi khi cập nhật sách", error: err.message },
+      {
+        status: 500,
+        message: "Lỗi khi cập nhật sách",
+        error: err.message,
+        stack: err.stack,
+      },
       { status: 500 }
     );
   }

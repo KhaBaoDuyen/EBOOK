@@ -194,19 +194,23 @@ export default function UserRenderBook() {
         style={{ backgroundColor: bgColor }}
       >
         <aside className="w-[26%] shadow-lg pt-[5rem] max-w-[360px] min-w-[260px] bg-customGray px-5 py-6 border-r border-white/20 overflow-y-auto">
-          <div className="pb-4 md:flex md:flex-row flex-col gap-5  mb-4 border-b border-white/20">
-            <img
-              src={bookInfo?.cover}
-              alt={bookInfo?.title}
-              className="w-[40%] h-auto rounded-md"
-            />
-            <div className="mt-4 space-y-1">
+          <div className="pb-4 md:flex md:flex-row flex-col gap-5 mb-4 border-b border-white/20">
+            <div className="md:flex-[4] md:w-2/5 w-full">
+              <img
+                src={bookInfo?.cover}
+                alt={bookInfo?.title}
+                className="w-full h-auto rounded-md object-cover"
+              />
+            </div>
+
+            <div className="md:flex-[6] md:w-3/5 w-full mt-4 space-y-1">
               <h1 className="text-lg font-semibold">{bookInfo?.title || "—"}</h1>
               <p className="text-sm text-white/70">
                 {bookInfo?.authorId?.name || "Không rõ tác giả"}
               </p>
             </div>
           </div>
+
 
           <div
             className="prose prose-invert prose-sm max-w-none text-white/90"
@@ -266,14 +270,14 @@ export default function UserRenderBook() {
           }`}
       >
         <div className="p-4 relative h-full flex flex-col">
-           <button
+          <button
             onClick={() => setShowRight(false)}
             className="absolute top-3 right-3 text-gray-400 hover:text-white"
           >
             <X size={18} />
           </button>
 
-           <div className="flex bold mb-4 border-b border-gray-700">
+          <div className="flex bold mb-4 border-b border-gray-700">
             {["Mục lục", "Dấu trang", "Ghi chú"].map((tab, i) => (
               <button
                 key={i}
@@ -288,7 +292,7 @@ export default function UserRenderBook() {
             ))}
           </div>
 
-           <div className="flex-1 overflow-y-auto pr-2 text-sm">
+          <div className="flex-1 overflow-y-auto pr-2 text-sm">
             {activeTab === 0 && (
               <>
                 <h2 className="font-medium mb-3 text-green-400">Danh mục chương</h2>

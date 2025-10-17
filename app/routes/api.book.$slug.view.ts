@@ -15,7 +15,7 @@ export async function loader({ params }: { params: { slug: string } }) {
       return json({ message: "Không tìm thấy sách" }, { status: 404 });
     }
 
-    return json({ success: true, viewCount: book.viewCount });
+    return json({ success: true, viewCount: book.viewCount }, { status: 200});
   } catch (error) {
     console.error(error);
     return json({ success: false, error: "Lỗi server" }, { status: 500 });

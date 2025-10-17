@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "@remix-run/react";
 import BookForm from "../components/admin/from/book";
 import { useNotify } from "~/context/NotifyContext";
+import CusttomLoading from "~/components/Loading";
 
 export default function UpdateBookPage() {
     const { setNotify } = useNotify();
     const { slugBook } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (formData: FormData) => {
-        console.log("from", formData);
-
+        // console.log("from", formData);
         try {
+            setLoading(true);
             const res = await fetch(`/api/book/${slugBook}`, {
                 method: "PUT",
                 body: formData,
@@ -49,12 +51,19 @@ export default function UpdateBookPage() {
                 title: "Kết nối thất bại!",
                 message: "Không thể kết nối đến máy chủ.",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="relative p-6">
+        <div className="relative min-h-screen p-6">
             <h1 className="text-2xl font-bold mb-4 text-white">Xem Sách</h1>
+            {loading && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[9999]">
+                    <CusttomLoading />
+                </div>
+            )}
 
             <BookForm key={slugBook} slugParam={slugBook} onSubmit={handleSubmit} />
         </div>

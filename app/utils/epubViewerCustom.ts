@@ -23,10 +23,12 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
   const spine: any = await book.loaded.spine;
   const spineItems = Array.isArray(spine) ? spine : spine.items;
 
+  const validSpineItems = spineItems.slice(1);
+
   const allHtml: string[] = [];
   let isFirst = true;
 
-  for (const item of spineItems) {
+  for (const item of validSpineItems) {
     try {
       const raw = await book.load(item.href);
       let html = "";
@@ -39,8 +41,7 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
         html = (raw as any).toString();
       }
 
-      // Làm sạch
-      html = html
+       html = html
         .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
         .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
         .replace(/<meta[^>]*>/gi, "")
@@ -50,17 +51,14 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
         .replace(/margin[^;]+;?/gi, "")
         .replace(/padding[^;]+;?/gi, "");
 
-      // Parse thành DOM để chèn markers
-      const dom = new DOMParser().parseFromString(html, "text/html");
+       const dom = new DOMParser().parseFromString(html, "text/html");
 
-      // marker đầu spine
-      dom.body.insertAdjacentHTML(
+       dom.body.insertAdjacentHTML(
         "afterbegin",
         `<span class="__spine-start" data-spine="${item.href}"></span>`
       );
 
-      // marker cho mọi id
-      dom.body.querySelectorAll<HTMLElement>("[id]").forEach((el) => {
+       dom.body.querySelectorAll<HTMLElement>("[id]").forEach((el) => {
         const id = el.getAttribute("id");
         if (!id) return;
         el.insertAdjacentHTML(
@@ -69,8 +67,7 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
         );
       });
 
-      // Đổi <a> → <span.chapter-link> để chặn điều hướng
-      dom.body.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((a) => {
+       dom.body.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((a) => {
         const href = a.getAttribute("href") || "";
         const span = dom.createElement("span");
         span.className = "chapter-link";
@@ -105,32 +102,29 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
   }
 
   // Trang đã style
+   
   const styledPages = pages.map((page) => `
     <div class="book-page" style="text-align:justify;line-height:1.8;">
       ${page
-        .replace(/<h[1-6][^>]*>\s*mục\s*lục\s*<\/h[1-6]>/gi,
-          `<h2 style="text-align:center;font-weight:bold;font-size:1.6em;margin:1.5rem 0;">MỤC LỤC</h2>`)
-        .replace(/<(h[1-6]|p|div)[^>]*>\s*(phần\s*\d+[^<]*)<\/\1>/gi,
-          `<h2 style="text-align:center;font-weight:bold;font-size:1.5em;margin:2rem 0;">$2</h2>`)
-        .replace(/<(h[1-6]|p|div)[^>]*>\s*(chương\s*\d+[^<]*)<\/\1>/gi,
-          `<h2 style="text-align:center;font-weight:bold;font-size:1.4em;margin:2rem 0;">$2</h2>`)}
+      .replace(/<h[1-6][^>]*>\s*mục\s*lục\s*<\/h[1-6]>/gi,
+        `<h2 style="text-align:center;font-weight:bold;font-size:1.6em;margin:1.5rem 0;">MỤC LỤC</h2>`)
+      .replace(/<(h[1-6]|p|div)[^>]*>\s*(phần\s*\d+[^<]*)<\/\1>/gi,
+        `<h2 style="text-align:center;font-weight:bold;font-size:1.5em;margin:2rem 0;">$2</h2>`)
+      .replace(/<(h[1-6]|p|div)[^>]*>\s*(chương\s*\d+[^<]*)<\/\1>/gi,
+        `<h2 style="text-align:center;font-weight:bold;font-size:1.4em;margin:2rem 0;">$2</h2>`)}
     </div>`);
 
-  // Xây anchorIndex: key → pageIndex
   const anchorIndex: Record<string, number> = {};
   styledPages.forEach((html, idx) => {
-    // spine-start
     html.replace(
       /<span[^>]+class="__spine-start"[^>]+data-spine="([^"]+)"[^>]*><\/span>/gi,
       (_m, spineHref) => {
-        // key spine đầy đủ + key basename
         if (anchorIndex[spineHref] == null) anchorIndex[spineHref] = idx;
         const base = basename(spineHref);
         if (anchorIndex[base] == null) anchorIndex[base] = idx;
         return _m;
       }
     );
-    // anchors
     html.replace(
       /<span[^>]+class="__anchor"[^>]+data-spine="([^"]+)"[^>]+data-anchor="([^"]+)"[^>]*><\/span>/gi,
       (_m, spineHref, aid) => {
@@ -143,7 +137,6 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
         return _m;
       }
     );
-    // chapter-link (để fallback theo data-href)
     html.replace(
       /<span[^>]+class="chapter-link"[^>]+data-href="([^"]+)"[^>]*>(.*?)<\/span>/gi,
       (_m, href) => {
@@ -173,8 +166,8 @@ function paginateByHeight(html: string, containerHeight: number): string[] {
   temp.style.position = "absolute";
   temp.style.visibility = "hidden";
   temp.style.width = "700px";
-  temp.style.lineHeight = "1.8";
-  temp.style.fontSize = "16px";
+  temp.style.lineHeight = "1.6";
+  temp.style.fontSize = "18px";
   temp.style.textAlign = "justify";
   temp.style.padding = "1rem 2rem";
   temp.style.boxSizing = "border-box";
