@@ -10,29 +10,10 @@ export async function loader() {
     try {
         Category;
         Author;
-        const bookByReview = await Book.aggregate([
-            {
-                $lookup:{
-                    from :"reviews",
-                    localField:"_id",
-                    foreignField: "book_id",
-                    as: "reviews",
-                },
-            },
-            {
-                $addFields:{
-                    averageRating: { $avg: "$reviews.rating"},
-                    reviewCount: {$size: "$reviews"},
-                },
-            },
-            {$match: {averageRating: { $gte: 4}}},
-            {$limit:10},
-        ]);
-
-        const books = await Book.populate(bookByReview,[
-            {path: "categories", select: "name slug"},
-            {path: "authorId", select: "name"},
-        ]);
+        const books = await Book.find()
+        .populate("categories", "name slug")
+        .populate("authorId", "name")
+        .sort({viewCount: -1});
 
         return json({
             status: 200,
