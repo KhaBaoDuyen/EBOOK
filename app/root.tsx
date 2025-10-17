@@ -18,6 +18,8 @@ import { vi } from "date-fns/locale";
 
 import { NotifyProvider } from "~/context/NotifyContext";
 
+ 
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -33,6 +35,8 @@ export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: tailwindCss },
   { rel: "stylesheet", href: mainCss },
 ];
+
+
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

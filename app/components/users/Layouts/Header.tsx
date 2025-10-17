@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
+import { json } from "@remix-run/node";
 import categoriesData from "../../../../public/data/categories.json";
 import { FaSearch } from "react-icons/fa";
 
@@ -9,7 +10,8 @@ import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
 
 
-export default function Header() {
+
+export default function Header({ user }: { user: any }) {
   const [scrolled, setScrolled] = useState(false);
   const [openMenuSlug, setOpenMenuSlug] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState("");
@@ -32,13 +34,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  function toggleSubMenu(cat: any) {
-    if (!cat.subCategories) {
-      navigate("/" + cat.slug);
-      return;
-    }
-    setOpenMenuSlug(openMenuSlug === cat.slug ? null : cat.slug);
-  }
 
   function isActive(cat: any) {
     if (currentPath === "/" + cat.slug) return true;
@@ -192,7 +187,7 @@ export default function Header() {
             </nav>
 
 
-            <div className="flex items-center space-x-3 order-3">
+            <div className="flex items-center justify-between space-x-3 order-3">
               <div className="relative items-center group">
                 <input
                   type="text"
@@ -208,17 +203,24 @@ export default function Header() {
               </div>
 
               <div className="hidden lg:block">
-                <span className="flex items-center space-x-3">
-                  <ButtonBorder
-                    text="Đăng ký"
-                    onClick={() => { setMode("register"); setIsOpen(true); }}
-                  />
-                  <Button
-                    text="Đăng nhập"
-                    onClick={() => { setMode("login"); setIsOpen(true); }}
-                  />
-                </span>
+                {user.name ? (
+                  <div className="flex items-center w-full gap-2 flex-wrap">
+                    <h5 className="font-pri font-semibold text-white">Xin chào,</h5>
+                    <Link to="/thong-tin-ca-nhan" className="text-white break-words hover:text-gray-400">{user.name}</Link>
+                  </div>
 
+                ) : (
+                  <span className="flex items-center space-x-3">
+                    <ButtonBorder
+                      text="Đăng ký"
+                      onClick={() => { setMode("register"); setIsOpen(true); }}
+                    />
+                    <Button
+                      text="Đăng nhập"
+                      onClick={() => { setMode("login"); setIsOpen(true); }}
+                    />
+                  </span>
+                )}
               </div>
             </div>
           </div>
