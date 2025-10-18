@@ -9,15 +9,15 @@ const JWT_SECRET = process.env.JWT_SECRET || "SMARTBOOK_SECRET_KEY";
  */
 export async function decodeUser(request: Request) {
   try {
-     const cookieHeader = request.headers.get("Cookie");
+    const cookieHeader = request.headers.get("Cookie");
     if (!cookieHeader) return null;
 
-     const token = await authCookie.parse(cookieHeader);
+    const token = await authCookie.parse(cookieHeader);
     if (!token) return null;
 
-    const clean = token.replace(/^"|"$/g,"");
+    const clean = token.replace(/^"|"$/g, "");
 
-     const decoded = jwt.verify(clean, JWT_SECRET) as {
+    const decoded = jwt.verify(clean, JWT_SECRET) as {
       id: string;
       name: string;
       email: string;
@@ -25,8 +25,8 @@ export async function decodeUser(request: Request) {
     };
 
     // console.log("decodeUser", decoded);
-    
-    return decoded;  
+
+    return decoded;
   } catch (error: any) {
     console.error(" Lỗi decode token:", error.message);
     return null;

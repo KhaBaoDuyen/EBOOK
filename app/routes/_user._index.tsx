@@ -44,7 +44,7 @@ const HomePage = () => {
       const rating = await bookByRating();
       setRatingBook(rating.data);
     } catch (err: any) {
-      console.log("Loi khi lay sach theo rating", err.message);
+      console.log("Loi khi lay sach theo view", err.message);
 
     }
   }

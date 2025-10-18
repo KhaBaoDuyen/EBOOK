@@ -11,9 +11,7 @@ type CardRankingsProps = {
   slug?: string;  
 };
 
-/**
- * CardRankings hiển thị sách trong bảng xếp hạng
- */
+ 
 const CardRankings: React.FC<CardRankingsProps> = ({
   number = null,
   cover = "",
@@ -39,8 +37,8 @@ const CardRankings: React.FC<CardRankingsProps> = ({
           <div
             className="absolute rounded-xl bottom-0 left-0 transition duration-300
             group-hover:opacity-0"
-          >
-            <h1 className="text-9xl label-rank">{number}</h1>
+           >
+            <h1 className="text-9xl label-rank drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">{number}</h1>
           </div>
         )}
       </div>

@@ -204,9 +204,9 @@ export default function Header({ user }: { user: any }) {
 
               <div className="hidden lg:block">
                 {user.name ? (
-                  <div className="flex items-center w-full gap-2 flex-wrap">
-                    <h5 className="font-pri font-semibold text-white">Xin chào,</h5>
-                    <Link to="/thong-tin-ca-nhan" className="text-white break-words hover:text-gray-400">{user.name}</Link>
+                  <div className="flex items-center justify-center w-full gap-2 flex-wrap">
+                    <h4 className="font-pri text-shadow-brand-25 font-semibold text-white">Xin chào,</h4>
+                    <Link to="/profile/thong-tin-ca-nhan" className="text-white break-words hover:text-gray-400">{user.name}</Link>
                   </div>
 
                 ) : (

@@ -18,7 +18,7 @@ export default function UserLayout() {
     <>
       <Header user={user}/>
       <main className="!w-full userBody py-5 !mx-auto md:p-0 p-3">
-        <Outlet />
+         <Outlet context={{ user }} />
       </main>
       <Footer />
     </>
