@@ -19,7 +19,9 @@ import type { ICategory } from "~/interfaces/category.interface";
 
 //------------------[ API ]--------------------------------
 import { bookByCatgories } from "~/services/bookBy/bookByCategory";
+import { getAllCategory } from "~/services/category.service";
 import { title } from "process";
+import { ca } from "date-fns/locale";
 
 
 interface Book {
@@ -37,24 +39,46 @@ interface Book {
 
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
+  console.log(category);
 
-  const currentCategory = categories.find((cat) => cat.slug === category);
+  const [currentCategory, setCurrentCategory] = useState<any>(null);
+  const getcategogy = async (categogy: any) => {
+    try {
+      const res = await getAllCategory();
+      const allCat = res.data;
 
+      const categories = allCat.find((cat: any) => cat.slug === categogy);
 
+      if (!categories) {
+        console.warn("loi khong tim thay danh muc", categogy);
+        setCurrentCategory(null);
+        return;
+      }
 
-  if (!currentCategory) {
-    return (
-      <div className="p-5 text-white">
-        <h1 className="text-2xl font-bold">Không tìm thấy danh mục!</h1>
-      </div>
-    );
-  }
+      const subCategories = allCat.filter(
+        (child: any) =>
+          Array.isArray(child.parentId) && child.parentId.includes(categories._id)
+      );
+
+      const fullCategory = { ...categories, subCategories };
+      setCurrentCategory(fullCategory);
+
+      console.log("danh muc hien tai", fullCategory);
+
+    } catch (error: any) {
+      console.error(" Lỗi khi lấy danh mục:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (category) {
+      getcategogy(category);
+    }
+  }, [category]);
 
   // ---------------[ LẤY TOÀN BỘ SẢN PHẨM ]------------
   const [subCategories, setSubCaregory] = useState<any[]>([]);
-
   const [booksAll, setBooksAll] = useState([]);
-
 
   useEffect(() => {
     fetchBooks();
@@ -63,14 +87,12 @@ export default function CategoryPage() {
   const fetchBooks = async () => {
     const res = await bookByCatgories(category);
     if (res?.allBooks) {
-      setBooksAll(res.allBooks)
+      setBooksAll(res.allBooks);
     }
     if (res?.subCategories) {
       setSubCaregory(res.subCategories);
-    };
-
+    }
   };
-
 
   // ---------------[ LẤY SẢN PHẨM RANDOM GẦN NHẤT ]------------
   const [projects, setProjects] = useState<Book[]>([]);
@@ -145,37 +167,43 @@ export default function CategoryPage() {
       >
         <div className="container !mx-auto flex items-center justify-center w-full">
           <div className="basis-3/5 flex flex-col gap-3">
-            <span className="flex items-center gap-5 pr-5">
-              <label
-                htmlFor="subCategory"
-                className="block text-6xl mb-2 font-semibold"
-              >
-                {String(currentCategory.name)}
-              </label>
-              {currentCategory.subCategories ? (
-                <div className="text-white">
-                  <select
-                    id="subCategory"
-                    className="px-5 py-3 bg-white/20 backdrop-blur-md border border-white/30 
+            {currentCategory ? (
+              <span className="flex items-center gap-5 pr-5">
+                <label
+                  htmlFor="subCategory"
+                  className="block text-6xl mb-2 font-semibold"
+                >
+                  {String(currentCategory.name)}
+                </label>
+
+                {currentCategory.subCategories?.length > 0 ? (
+                  <div className="text-white">
+                    <select
+                      id="subCategory"
+                      className="px-5 py-3 bg-white/20 backdrop-blur-md border border-white/30 
                       rounded-md text-white focus:outline-none focus:ring-1 focus:ring-emerald-700"
-                    defaultValue=""
-                  >
-                    <option value="">Tất cả danh mục</option>
-                    {currentCategory.subCategories.map((sub) => (
-                      <option
-                        key={sub.slug}
-                        value={String(sub.slug)}
-                        className="bg-black/80 p-5 text-white"
-                      >
-                        {String(sub.name)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <p className="italic text-gray-400"></p>
-              )}
-            </span>
+                      defaultValue=""
+                    >
+                      <option value="">Tất cả danh mục</option>
+                      {currentCategory.subCategories.map((sub: any) => (
+                        <option
+                          key={sub.slug}
+                          value={String(sub.slug)}
+                          className="bg-black/80 p-5 text-white"
+                        >
+                          {String(sub.name)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <p className="italic text-gray-400">(Không có danh mục con)</p>
+                )}
+              </span>
+            ) : (
+              <p className="text-gray-400 italic">Đang tải danh mục...</p>
+            )}
+
             <h1 className="!font-bold">
               Khám phá thế giới sách Waka với hơn 3500+ Sách điện tử, Sách nói
               và Truyện tranh
@@ -190,9 +218,13 @@ export default function CategoryPage() {
                   <h1 className="text-3xl font-bold">
                     {String(currentBook.title)}
                   </h1>
-                  <p className="text-gray-300 !w-[80%] line-clamp-5">
-                    {String(currentBook.description || "")}
-                  </p>
+                  <p
+                    className="text-gray-300 !w-[80%] line-clamp-5"
+                    dangerouslySetInnerHTML={{
+                      __html: currentBook.description || "",
+                    }}
+                  ></p>
+
                   <Button
                     text="Đọc sách"
                     icon={faBook}
@@ -222,7 +254,6 @@ export default function CategoryPage() {
           .map((sub) => (
             <Section key={sub._id} title={sub.name} books={sub.books} />
           ))}
-
       </main>
     </>
   );

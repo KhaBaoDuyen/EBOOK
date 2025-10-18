@@ -15,11 +15,11 @@ export default function ProfilePage() {
             <div className="shadow-theme-md bg-[#1e1e2d] p-6 rounded-2xl shadow-lg flex flex-col md:flex-row gap-6">
                 <div className="flex flex-col items-center md:w-1/4">
                     <img
-                        src={user.avatar || "/images/avatar-default.png"}
+                        src={user?.avatar || "/Images/Main/user.png"}
                         alt={user.name}
                         className="w-32 h-32 rounded-full object-cover border-4 border-white/20"
                     />
-                    <p className="mt-3 text-green-400 font-semibold">
+                    <p className="mt-3 text-[var(--primary)] font-semibold">
                         {user.role === "admin" ? "Quản trị viên" : "Thành viên"}
                     </p>
                     <p>
@@ -98,7 +98,7 @@ export default function ProfilePage() {
                     <div className="flex justify-end md:col-span-2">
                         <button
                             type="submit"
-                            className="bg-green-500 hover:bg-green-600 transition-colors px-6 py-2 rounded-lg text-black font-semibold"
+                            className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] transition-colors px-6 py-2 rounded-lg text-black font-semibold"
                         >
                             Lưu thay đổi
                         </button>

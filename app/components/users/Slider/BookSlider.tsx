@@ -17,7 +17,7 @@ export default function BookSlider({ projects, onSlideChange }: BookSliderProps)
 
   useEffect(() => {
     if (projects.length > 0) {
-       if (splideRef.current) {
+      if (splideRef.current) {
         splideRef.current.destroy();
       }
 
@@ -26,7 +26,7 @@ export default function BookSlider({ projects, onSlideChange }: BookSliderProps)
         perPage: 1,
         focus: "center",
         padding: { left: "20%", right: "20%" },
-        gap: "1rem",
+        gap: "0.5rem",
         arrows: true,
         pagination: false,
         autoplay: true,
@@ -53,7 +53,7 @@ export default function BookSlider({ projects, onSlideChange }: BookSliderProps)
           {projects.map((ebook, index) => (
             <li key={index} className="splide__slide h-100">
               <img
-                src={`/uploads/bannerBook/${ebook.cover}`}
+                src={ebook.cover}
                 alt={ebook.title ?? `Slide ${index}`}
                 className="rounded-xl shadow-lg h-100 w-[90%] object-cover"
               />

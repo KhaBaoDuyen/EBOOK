@@ -46,7 +46,7 @@ export default function SidebarProfile({ user }: { user: any }) {
         <aside className="w-64 bg-[#1e1e2d] text-white rounded-md p-5 flex flex-col gap-4">
             <div className="text-center border-b border-white/10 pb-4">
                 <img
-                    src={`/Images/Main/user.webp || ${user?.avatar}`}
+                    src={user?.avatar || "/Images/Main/user.png"}
                     alt="avatar"
                     className="w-20 h-20 rounded-full mx-auto"
                 />
@@ -65,8 +65,8 @@ export default function SidebarProfile({ user }: { user: any }) {
                             key={item.slug}
                             to={`/profile/${item.slug}`}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${active
-                                    ? "bg-green-500/20 text-green-400"
-                                    : "hover:bg-white/10 text-gray-300 hover:text-white"
+                                ? "bg-green-500/20 text-[var(--primary)]"
+                                : "hover:bg-white/10 text-gray-300 hover:text-white"
                                 }`}
                         >
                             {Icon && <Icon size={18} />}

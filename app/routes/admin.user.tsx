@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Eye, Trash2, Search } from "lucide-react";
 import { getAllUsers, } from "~/services/user.service";
-import type IUser from "../../interfaces/user.interface";
+import type IUser from "../interfaces/user.interface";
 
 
 export default function Users() {

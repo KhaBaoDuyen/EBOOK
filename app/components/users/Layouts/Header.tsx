@@ -3,11 +3,15 @@ import { Link, useNavigate } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import categoriesData from "../../../../public/data/categories.json";
 import { FaSearch } from "react-icons/fa";
+import { User, BookMarked, Box, Trophy, Clock, HelpCircle, LogOut } from "lucide-react";
 
 //=============[ COMPORNENT ]===================
 import Button from "../Buttons/Button";
 import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
+
+//=============[ SERVICE ]==========================
+import { getAllCategory } from "~/services/category.service";
 
 
 
@@ -23,8 +27,6 @@ export default function Header({ user }: { user: any }) {
   const navigate = useNavigate();
 
   const categories = categoriesData;
-  const mainCategories = categories.slice(0, 5);
-  const moreCategories = categories.slice(5);
 
   useEffect(() => {
     setCurrentPath(window.location.pathname);
@@ -44,6 +46,55 @@ export default function Header({ user }: { user: any }) {
       return true;
     return false;
   }
+
+  //---------------[ LAY DU LIEU MENU ]------------------------
+  const [categogy, setCategogy] = useState<any[]>([]);
+  const [moreCategories, setMoreCategories] = useState<any[]>([]);
+  const [maxVisible, setMaxVisible] = useState<number>(7);
+
+
+  async function fetchCategogy() {
+    try {
+      const res = await getAllCategory();
+      const allCategory = res.data;
+
+      const parentCat = allCategory.filter(
+        (c: any) => !c.parentId || c.parentId.length === 0
+      );
+
+      const groupCat = parentCat.map((parent: any) => {
+        const children = allCategory.filter(
+          (child: any) =>
+            Array.isArray(child.parentId) && child.parentId.includes(parent._id)
+        );
+        return { ...parent, children };
+      });
+
+      const MAX_VISIBLE = 5;
+      const visibleCategories = groupCat.slice(0, MAX_VISIBLE);
+      const moreCategories = groupCat.slice(MAX_VISIBLE);
+
+      setCategogy(visibleCategories);
+      setMoreCategories(moreCategories);
+
+      // console.log("Hiển thị menu:", visibleCategories.map((c: any) => c.name));
+      // console.log("Xem thêm:", moreCategories.map((c: any) => c.name));
+    } catch (error: any) {
+      console.log(" Lỗi khi lấy menu:", error.message);
+    }
+  }
+
+
+  useEffect(() => {
+    fetchCategogy();
+
+    const width = window.innerWidth;
+    let max = 5;
+    if (width < 1280) max = 5;
+    if (width < 1024) max = 4;
+    setMaxVisible(max);
+  }, []);
+
 
   return (
     <>
@@ -85,66 +136,42 @@ export default function Header({ user }: { user: any }) {
             </div>
 
             <nav className="hidden lg:flex flex-wrap gap-x-6 gap-y-2 order-2">
-              {mainCategories.map((cat) => (
+              {categogy.map((cat: any) => (
                 <div key={cat.slug} className="relative flex flex-col gap-3 group">
                   <a
-                    href={"/" + cat.slug}
-                    className={`py-2 px-3 font-bold transition-colors hover-font ${isActive(cat) ? "text-emerald-400" : ""
+                    href={`/${cat.slug}`}
+                    className={`py-2 px-3 font-bold transition-colors hover:text-emerald-400 ${isActive(cat) ? "text-emerald-400" : ""
                       }`}
                   >
                     {cat.name}
                   </a>
 
-                  {cat.subCategories && (
+                  {cat.children?.length > 0 && (
                     <div
                       className="absolute lg:p-5 z-[90] w-max left-0 top-full mt-1 
-                     bg-black/80 backdrop-blur-md rounded-lg shadow-lg border border-white/30 
-                     transition-all duration-200 opacity-0 invisible 
-                     group-hover:opacity-100 group-hover:visible"
+          bg-black/80 backdrop-blur-md rounded-lg shadow-lg border border-white/30 
+          transition-all duration-200 opacity-0 invisible 
+          group-hover:opacity-100 group-hover:visible"
                     >
                       <h1 className="font-bold py-2 text-xl mb-2">{cat.name}</h1>
+
                       <div
-                        className="grid auto-rows-auto gap-4 max-h-[8rem] overflow-y-auto p-5"
+                        className="grid auto-rows-auto gap-4 max-h-[10rem] overflow-y-auto p-5"
                         style={{
                           gridTemplateColumns: "repeat(4, minmax(0, max-content))",
                           gap: "1rem",
                         }}
                       >
-                        {cat.subCategories.map((sub) => (
+                        {cat.children.map((sub: any) => (
                           <a
                             key={sub.slug}
                             href={`/${cat.slug}/${sub.slug}`}
-                            className={`block px-4 py-2 text-white hover:bg-white/30 rounded-xl font-bold ${currentPath === "/" + sub.slug ? "text-emerald-400" : ""
+                            className={`block px-4 py-2 text-white hover:bg-white/30 rounded-xl font-bold ${currentPath === `/${sub.slug}` ? "text-emerald-400" : ""
                               }`}
                           >
                             {sub.name}
                           </a>
-
                         ))}
-                      </div>
-
-                      <div className="border-t-2 flex flex-col gap-4 py-5 mt-4 border-white/30">
-                        <h1 className="font-bold text-xl mb-2">Khám phá ngay</h1>
-                        <div className="flex flex-wrap gap-3">
-                          <a
-                            href="/sach-moi-nhat"
-                            className="py-2 px-3 hover:bg-white/50 bg-white/20 backdrop-blur rounded-md"
-                          >
-                            Sách mới nhất
-                          </a>
-                          <a
-                            href="/sach-da-doc"
-                            className="py-2 px-3 hover:bg-white/50 bg-white/20 backdrop-blur rounded-md"
-                          >
-                            Sách đã đọc
-                          </a>
-                          <a
-                            href="/sach-nghe"
-                            className="py-2 px-3 hover:bg-white/50 bg-white/20 backdrop-blur rounded-md"
-                          >
-                            Sách nghe
-                          </a>
-                        </div>
                       </div>
                     </div>
                   )}
@@ -155,7 +182,7 @@ export default function Header({ user }: { user: any }) {
                 <div className="relative flex flex-col gap-3 group">
                   <a
                     href="#"
-                    className="py-2 px-3 text-white/90 font-bold transition-colors hover-font"
+                    className="py-2 px-3 text-white/90 font-bold transition-colors hover:text-emerald-400"
                     onClick={(e) => e.preventDefault()}
                   >
                     Xem thêm
@@ -163,18 +190,18 @@ export default function Header({ user }: { user: any }) {
 
                   <div
                     className="absolute left-0 top-full w-max mt-1 
-                   bg-black/80 backdrop-blur-md rounded-lg shadow-lg border border-white/30 
-                   transition-all duration-200 z-50 opacity-0 invisible 
-                   group-hover:opacity-100 group-hover:visible"
+        bg-black/80 backdrop-blur-md rounded-lg shadow-lg border border-white/30 
+        transition-all duration-200 z-50 opacity-0 invisible 
+        group-hover:opacity-100 group-hover:visible"
                   >
                     <div
-                      className="grid auto-rows-auto gap-4 max-h-[12rem] overflow-y-auto p-5"
+                      className="grid auto-rows-auto gap-4 max-h-[20rem] overflow-y-auto p-5"
                       style={{ gridTemplateColumns: "repeat(1, minmax(0, max-content))" }}
                     >
-                      {moreCategories.map((cat) => (
+                      {moreCategories.map((cat: any) => (
                         <a
                           key={cat.slug}
-                          href={"/" + cat.slug}
+                          href={`/${cat.slug}`}
                           className="block px-4 py-2 text-white hover:bg-white/30 rounded-xl font-bold"
                         >
                           {cat.name}
@@ -185,6 +212,7 @@ export default function Header({ user }: { user: any }) {
                 </div>
               )}
             </nav>
+
 
 
             <div className="flex items-center justify-between space-x-3 order-3">
@@ -204,11 +232,72 @@ export default function Header({ user }: { user: any }) {
 
               <div className="hidden lg:block">
                 {user.name ? (
-                  <div className="flex items-center justify-center w-full gap-2 flex-wrap">
-                    <h4 className="font-pri text-shadow-brand-25 font-semibold text-white">Xin chào,</h4>
-                    <Link to="/profile/thong-tin-ca-nhan" className="text-white break-words hover:text-gray-400">{user.name}</Link>
-                  </div>
 
+                  <>
+                    <div className="relative group inline-block">
+                      <div className="flex items-center gap-2 cursor-pointer select-none">
+                        <img
+                          src={user?.avatar || "/Images/Main/user.png"}
+                          alt="Avatar"
+                          className="w-10 h-10 rounded-full object-cover border-2 border-[var(--primary)] transition-all duration-300 group-hover:brightness-90"
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-5 h-5 text-[var(--primary)] transition-transform duration-300 group-hover:rotate-180"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+
+                      <div
+                        className="absolute right-0 mt-3 w-58 rounded-2xl border border-white/20
+    bg-black/50 backdrop-blur-md shadow-lg 
+    opacity-0 invisible translate-y-[-10px]
+    group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+    transition-all duration-300 z-50"
+                      >
+                        <div className="px-4 py-3 border-b border-white/10 flex justify-between items-center text-white">
+                          <p className="font-semibold text-base">{user?.name || "Người dùng"}</p>
+                          <img
+                            src={user?.avatar || "/Images/Main/user.png"}
+                            alt="Avatar"
+                            className="w-10 h-10 rounded-full object-cover border-2 border-[var(--primary)] transition-all duration-300 group-hover:brightness-90"
+                          />
+                        </div>
+
+                        <div className="flex flex-col p-3  text-sm text-white">
+                          <a href="/profile/thong-tin-ca-nhan" className="flex  rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                            <User size={18} className="text-gray-300 text-md font-bold" /> Quản lý tài khoản
+                          </a>
+                          <a href="/library" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                            <BookMarked size={18} className="text-gray-300 text-md font-bold" /> Tủ sách cá nhân
+                          </a>
+                          <a href="/orders" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                            <Box size={18} className="text-gray-300 text-md font-bold" /> Quản lý đơn hàng
+                          </a>
+                          <a href="/ranking" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                            <Trophy size={18} className="text-gray-300 text-md font-bold" /> Thứ hạng đọc sách
+                          </a>
+                          <a href="/history" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                            <Clock size={18} className="text-gray-300 text-md font-bold" /> Lịch sử giao dịch
+                          </a>
+                          <a href="/support" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                            <HelpCircle size={18} className="text-gray-300 text-md font-bold" /> Hỗ trợ khách hàng
+                          </a>
+
+                          <hr className="border-white/10 my-2" />
+
+                          <button className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                            <LogOut size={18} /> Đăng xuất
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                  </>
                 ) : (
                   <span className="flex items-center space-x-3">
                     <ButtonBorder
