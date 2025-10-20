@@ -1,8 +1,18 @@
-import { json, redirect } from "@remix-run/node";
+import {
+    json, redirect,
+    unstable_composeUploadHandlers,
+    unstable_createFileUploadHandler,
+    unstable_createMemoryUploadHandler,
+    unstable_parseMultipartFormData,
+} from "@remix-run/node";
+
 import Category from "~/models/category.server";
 import { toSlug } from "~/utils/toSlug";
 import User from "~/models/user.server";
 import { authCookie } from "./api.auth.login";
+import { uploadToCloudinary } from "~/utils/uploadCloudinary.server";
+import { aW } from "node_modules/react-router/dist/development/context-BqL5Eckq.mjs";
+
 
 //----------------[ LAY DU LIEU ]-----------------------
 export async function loader({ params }: { params: { email: string } }) {
@@ -43,15 +53,44 @@ export const action = async ({
         const method = request.method.toUpperCase();
         const email = decodeURIComponent(params.email).toLowerCase();
 
+
         // ======================= [ PUT - CẬP NHẬT TÀI KHOẢN ] =======================
+
         if (method === "PUT") {
-            const formData = await request.formData();
-            const status = formData.get("status") as string;
-            const role = formData.get("role") as string;
+            const uploadSize = unstable_createMemoryUploadHandler({
+                maxPartSize: 35_000_000,
+            })
+            const formData = await unstable_parseMultipartFormData(request, uploadSize);
+
+            const status = formData.get("status")?.toString().trim();
+            const role = formData.get("role")?.toString().trim();
+            const name = formData.get("name")?.toString().trim();
+            const description = formData.get("description")?.toString().trim();
+            const birthDate = formData.get("birthdate")?.toString().trim();
+            const avatar = formData.get("avatar") as File | null;
+            const gender = formData.get("gender")?.toString()?.trim();
+
+            const oldAvatar = await User.findOne({ email: email });
+
+            const updateData: any = {
+                name,
+                description,
+                birthDate,
+                role,
+                status,
+                gender,
+            };
+            if (avatar && avatar.size > 0) {
+                const buffer = Buffer.from(await avatar.arrayBuffer());
+                const uploadResult: any = await uploadToCloudinary(buffer, "smartbook/avatar");
+                updateData.avatar = uploadResult.secure_url;
+            } else {
+                updateData.avatar = oldAvatar?.avatar;
+            }
 
             const updatedUser = await User.findOneAndUpdate(
                 { email: new RegExp(`^${email}$`, "i") },
-                { status, role },
+                updateData,
                 { new: true }
             );
 

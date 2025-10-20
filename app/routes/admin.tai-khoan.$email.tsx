@@ -14,13 +14,7 @@ export default function AuthByEmail() {
     const { email } = useParams();
     const decodeEmail = decodeURIComponent(email);
 
-    console.log("decodeEmail", decodeEmail);
-
-
-    useEffect(() => {
-        if (!email) return;
-        console.log("📩 Email param thay đổi:", email);
-    }, [email]);
+    // console.log("decodeEmail", decodeEmail);
 
     const handleSubmit = async (formData: FormData) => {
         try {
