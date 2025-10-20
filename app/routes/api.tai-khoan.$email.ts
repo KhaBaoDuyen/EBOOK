@@ -66,7 +66,7 @@ export const action = async ({
             const role = formData.get("role")?.toString().trim();
             const name = formData.get("name")?.toString().trim();
             const description = formData.get("description")?.toString().trim();
-            const birthDate = formData.get("birthdate")?.toString().trim();
+            const birthDate = formData.get("birthDate")?.toString().trim();
             const avatar = formData.get("avatar") as File | null;
             const gender = formData.get("gender")?.toString()?.trim();
 
@@ -87,7 +87,8 @@ export const action = async ({
             } else {
                 updateData.avatar = oldAvatar?.avatar;
             }
-
+            console.log("form nhan dc =>",updateData);
+            
             const updatedUser = await User.findOneAndUpdate(
                 { email: new RegExp(`^${email}$`, "i") },
                 updateData,

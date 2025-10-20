@@ -1,12 +1,12 @@
 import { useOutletContext } from "@remix-run/react";
 import type IUser from "~/interfaces/user.interface";
 import { useEffect, useState } from "react";
-import { CircleSmall } from "lucide-react";
+import { CircleSmall, Loader2 } from "lucide-react";
 
 //-----------------[ CONTEXT ]--------------------
 import { useNotify } from "~/context/NotifyContext";
 import { getAuthByEmail, updateAuth } from "~/services/user.service";
-
+import { useUser } from "~/context/UserContext";
 export default function ProfilePage() {
     const { user } = useOutletContext<{ user: IUser | null }>();
 
@@ -25,6 +25,8 @@ export default function ProfilePage() {
     const [description, setDescription] = useState<string>();
     const [isVerified, setIsVerified] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
+    const { userData, reloadUser } = useUser();
+
 
     //----------------[ LAY THONG TIN NGUOI DUNG ]------------------
     const email = user.email;
@@ -40,7 +42,7 @@ export default function ProfilePage() {
                 setRole(u.role ?? "user");
                 setAvatar(u.avatar);
                 setGender(u.gender ?? "Khác");
-                setBirthDate(u.birthDate ?? "Chưa có thông tin");
+                setBirthDate(u.birthDate ? u.birthDate.split("T")[0] : "");
                 setDescription(u.description || `Xin chào! mình tên là ${user.name}`);
                 setIsVerified(u.isVerified ?? false);
             }
@@ -74,6 +76,8 @@ export default function ProfilePage() {
             if (description) formData.append("description", description);
             if (name) formData.append("name", name);
 
+            console.log("Form gui =>", formData);
+
             const { status: code, data } = await updateAuth(email, formData);
 
             if (code === 200 || code === 201) {
@@ -83,7 +87,7 @@ export default function ProfilePage() {
                     title: "Cập nhật hồ sơ thành công!",
                     message: "Thông tin cá nhân đã được lưu lại.",
                 });
-
+                reloadUser();
                 await getOneAuth();
             } else {
                 setNotify({
@@ -160,7 +164,8 @@ export default function ProfilePage() {
                         <label className="block text-sm text-gray-400 mb-1">Họ và tên</label>
                         <input
                             type="text"
-                            defaultValue={name}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
                         />
                     </div>
@@ -206,7 +211,7 @@ export default function ProfilePage() {
                         <label className="block text-sm text-gray-400 mb-1">Ngày sinh</label>
                         <input
                             type="date"
-                            defaultValue={birthDate || ""}
+                            value={birthDate || ""}
                             onChange={(e) => setBirthDate(e.target.value)}
                             className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
                         />
@@ -215,7 +220,7 @@ export default function ProfilePage() {
                     <div className="md:col-span-2">
                         <label className="block text-sm text-gray-400 mb-1">Giới thiệu bản thân</label>
                         <textarea
-                            defaultValue={description || `Xin chào, tôi là ${name || "..."}, rất vui được gặp bạn!`}
+                            defaultValue={description || `Xin chào, tôi là ${name}, rất vui được gặp bạn!`}
                             rows={4}
                             onChange={(e) => setDescription(e.target.value)}
                             className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
@@ -225,9 +230,15 @@ export default function ProfilePage() {
                     <div className="flex justify-end md:col-span-2">
                         <button
                             type="submit"
-                            className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] transition-colors px-6 py-2 rounded-lg text-black font-semibold"
+                            disabled={loading}
+                            className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-semibold transition-colors
+    ${loading
+                                    ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+                                    : "bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-black"
+                                }`}
                         >
-                            Lưu thay đổi
+                            {loading && <Loader2 className="animate-spin w-4 h-4" />}
+                            {loading ? "Đang lưu..." : "Lưu thay đổi"}
                         </button>
                     </div>
                 </div>

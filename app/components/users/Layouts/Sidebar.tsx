@@ -18,6 +18,7 @@ import {
     Settings,
     LogOut,
 } from "lucide-react";
+import { useUser } from "~/context/UserContext";
 
 const icons = {
     user: User,
@@ -41,16 +42,18 @@ export const sider = [
 
 export default function SidebarProfile({ user }: { user: any }) {
     const location = useLocation();
+    const { userData, reloadUser } = useUser();
+
 
     return (
         <aside className="w-64 bg-[#1e1e2d] text-white rounded-md p-5 flex flex-col gap-4">
             <div className="text-center border-b border-white/10 pb-4">
                 <img
-                    src={user?.avatar || "/Images/Main/user.png"}
+                    src={userData?.avatar || "/Images/Main/user.png"}
                     alt="avatar"
                     className="w-20 h-20 rounded-full mx-auto"
                 />
-                <h3 className="mt-3 text-lg font-semibold">{user?.name}</h3>
+                <h3 className="mt-3 text-lg font-semibold">{userData?.name}</h3>
                 <p className="text-sm text-gray-400">Thành viên Bạch kim</p>
             </div>
 

@@ -2,6 +2,7 @@ import {
   Links,
   Meta,
   Outlet,
+  useLoaderData,
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
@@ -17,8 +18,9 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { vi } from "date-fns/locale";
 
 import { NotifyProvider } from "~/context/NotifyContext";
-
- 
+import { UserProvider } from "~/context/UserContext";
+import { decodeUser } from "~/utils/verifyToken.server"; 
+import { json } from "@remix-run/node";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -44,7 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Thư viện Ebook</title>
+        <title>Ebook | SmartBook</title>
         <link rel="icon" href="/Images/Main/iconUrl.png" />
         <Meta />
         <Links />
@@ -58,11 +60,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+export async function loader({ request }: { request: Request }) {
+  const user = await decodeUser(request);  
+  return json({ user });
+}
+
 export default function App() {
+  const { user } = useLoaderData<typeof loader>();
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={vi}>
       <NotifyProvider>
-        <Outlet />
+        <UserProvider initialUser={user}>
+          <Outlet />
+        </UserProvider>
       </NotifyProvider>
     </LocalizationProvider>
   );

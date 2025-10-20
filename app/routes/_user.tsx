@@ -5,7 +5,7 @@ import Footer from "~/components/users/Layouts/Footer";
 import { decodeUser } from "~/utils/verifyToken.server";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-
+import { UserProvider } from "~/context/UserContext";
 
 export async function loader({ request }: { request: Request }) {
   const user = await decodeUser(request);

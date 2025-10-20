@@ -14,8 +14,10 @@ import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
 import CategoryDropdown from "./CategoryDropdown";
 
-//=============[ SERVICE ]==========================
+//=============[ SERVICE - CONTEXT ]==========================
 import { getAllCategory } from "~/services/category.service";
+import { getAuthByEmail } from "~/services/user.service";
+import { useUser }from "~/context/UserContext";
 
 export default function Header({ user }: { user: any }) {
   const [scrolled, setScrolled] = useState(false);
@@ -25,7 +27,8 @@ export default function Header({ user }: { user: any }) {
   const [mode, setMode] = useState("login");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<"left" | "right">("left");
-
+  
+  const { userData, reloadUser } = useUser();
 
   const categories = categoriesData;
 
@@ -111,6 +114,21 @@ export default function Header({ user }: { user: any }) {
     return () => window.removeEventListener("resize", checkPosition);
   }, []);
 
+  //--------------[ LAY DULIEU NGUOI DUNG ]----------------------
+  const [users, setUsers] = useState();
+
+  const getOneUser = async () => {
+    try {
+      const res = await getAuthByEmail(user?.email);
+      setUsers(res.data);
+    } catch (error: any) {
+      console.log("loi lay dulieu nguoi dung =>", error.message);
+    }
+  }
+
+  useEffect(() => {
+    getOneUser();
+  }, [])
 
   return (
     <>
@@ -228,7 +246,7 @@ export default function Header({ user }: { user: any }) {
                     <div className="relative group inline-block">
                       <div className="flex items-center gap-2 cursor-pointer select-none">
                         <img
-                          src={user?.avatar || "/Images/Main/user.png"}
+                          src={userData?.avatar || "/Images/Main/user.png"}
                           alt="Avatar"
                           className="w-10 h-10 rounded-full object-cover border-2 border-[var(--primary)] transition-all duration-300 group-hover:brightness-90"
                         />
@@ -250,9 +268,9 @@ export default function Header({ user }: { user: any }) {
                         group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
                         transition-all duration-300 z-50" >
                         <div className="px-4 py-3 border-b border-white/10 flex justify-between items-center text-white">
-                          <p className="font-semibold text-base">{user?.name || "Người dùng"}</p>
+                          <p className="font-semibold text-base">{userData?.name || "Người dùng"}</p>
                           <img
-                            src={user?.avatar || "/Images/Main/user.png"}
+                            src={userData?.avatar || "/Images/Main/user.png"}
                             alt="Avatar"
                             className="w-10 h-10 rounded-full object-cover border-2 border-[var(--primary)] transition-all duration-300 group-hover:brightness-90"
                           />
@@ -262,7 +280,7 @@ export default function Header({ user }: { user: any }) {
                           <a href="/profile/thong-tin-ca-nhan" className="flex  rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
                             <User size={18} className="text-gray-300 text-md font-bold" /> Quản lý tài khoản
                           </a>
-                          <a href="/library" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                          <a href="/profile/thu-vien-cua-toi" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
                             <BookMarked size={18} className="text-gray-300 text-md font-bold" /> Tủ sách cá nhân
                           </a>
 
