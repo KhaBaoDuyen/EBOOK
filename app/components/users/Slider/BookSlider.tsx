@@ -57,12 +57,12 @@ export default function BookSlider({ projects, onSlideChange }: BookSliderProps)
                 alt={ebook.title ?? `Slide ${index}`}
                 className="rounded-xl shadow-lg h-100 w-[90%] object-cover"
               />
-              {(ebook.title || ebook.author) && (
+              {/* {(ebook.title || ebook.author) && (
                 <div className="absolute bottom-4 left-4 text-white drop-shadow">
                   {ebook.title && <h3 className="font-bold">{ebook.title}</h3>}
                   {ebook.author && <p className="text-sm">{ebook.author}</p>}
                 </div>
-              )}
+              )} */}
             </li>
           ))}
         </ul>

@@ -20,3 +20,10 @@ export async function getCategoryBySlug(slugCat: string) {
   console.log("Dữ liệu danh mục theo slug =>", data);
   return data;
 }
+
+export async function getCategoryGroup() {
+  const res = await fetch("/api/categoryGroup");
+  if (!res.ok) throw new Error(`Lỗi API: ${res.status}`);
+  return res.json();
+}
+

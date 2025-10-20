@@ -4,8 +4,8 @@ import Book from "~/models/book.server";
 import Category from "~/models/category.server";
 import type { ICategory } from "~/interfaces/category.interface";
 
-/* ===================== 🔹 HÀM 1: ĐỆ QUY LẤY TẤT CẢ DANH MỤC CON ===================== */
- export async function getAllChildCategories(
+/* =====================[  ĐỆ QUY LẤY TẤT CẢ DANH MỤC CON ]===================== */
+export async function getAllChildCategories(
   parentId: string,
   visited: Set<string> = new Set()
 ): Promise<ICategory[]> {
@@ -30,14 +30,14 @@ export async function getAllBooksFromCategories(categoryIds: string[]) {
   const books = await Book.find({ categories: { $in: objectIds } })
     .populate("categories")
     .populate("authorId")
-    .sort({ createdAt: -1 })  
+    .sort({ createdAt: -1 })
     .lean();
 
   return books;
 }
 
 
- export async function loader({ params }: { params: { booksByCategory?: string } }) {
+export async function loader({ params }: { params: { booksByCategory?: string } }) {
   try {
     const categorySlug = params.booksByCategory;
 
@@ -74,7 +74,6 @@ export async function getAllBooksFromCategories(categoryIds: string[]) {
       });
     }
 
-    // Nếu có danh mục con → lấy sách từng danh mục con
     const result = await Promise.all(
       subCategories.map(async (sub) => {
         const books = await getBooksByCategory(new mongoose.Types.ObjectId(sub._id));

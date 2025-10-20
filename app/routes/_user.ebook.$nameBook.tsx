@@ -70,7 +70,7 @@ export default function Ebook() {
 
     return (
         <main className="  py-10 px-5 flex flex-col gap-5 container mx-auto ">
-            <span className="mt-[7rem] flex flex-col gap-10">
+            <span className="mt-[6rem] flex flex-col gap-10">
                 <span className="text-white font-bold text-sm">
                     <Link to="/">Trang chủ</Link> / <Link to={`${book?.categories[0]?.slug}`}>{book?.categories[0].name}</Link> / <span className="text-gray-400">{book?.title || "Đang tải..."}</span>
                 </span>

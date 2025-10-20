@@ -8,6 +8,7 @@ import { useNavigate } from "@remix-run/react";
 import Button from "./users/Buttons/Button";
 import OtpVerification from "./FormOTP";
 import CusttomLoading from "./Loading";
+import { X } from "lucide-react";
 
 const Authentication = ({ isOpen, onClose, mode = "login" }) => {
     if (!isOpen) return null;
@@ -189,9 +190,13 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                 />
             ) : (
                 <div
-                    onClick={onClose}
+
                     className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]"
                 >
+                    <button className="absolute top-4 right-4 p-2 rounded-md border-1 flex- border-white/30 hover:bg-red-600 text-white"
+                        onClick={onClose}>
+                        <X size={18} />
+                    </button>
                     <div
                         className="rounded-lg backdrop-blur-lg bg-black/50 border border-white/40 p-6 shadow-lg"
                         onClick={(e) => e.stopPropagation()}
@@ -223,7 +228,8 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                                     </div>
                                 ) : <form
                                     onSubmit={handleSubmit(onSubmit)}
-                                    className="flex flex-col gap-4 items-center w-[25rem]"
+                                    className={`flex flex-col gap-3 items-center justify-center !w-[25rem]
+    ${mode === "login" ? "basis-1/2" : "basis-full"}`}
                                 >
 
                                     <div className="w-full">
@@ -303,6 +309,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                                     )}
 
                                     <Button
+                                        type="submit"
                                         text={mode === "login" ? "Đăng nhập" : "Đăng ký"}
                                         className="!w-full"
                                     />
@@ -312,7 +319,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                                     </p>
 
                                     <button
-                                        type="button"
+                                        type="submit"
                                         className="flex gap-5 !w-full bg-gray-700/40 hover:border-white 
           hover:border-1 items-center justify-center py-3 px-5 rounded-full" >
                                         <FcGoogle className="text-2xl" />

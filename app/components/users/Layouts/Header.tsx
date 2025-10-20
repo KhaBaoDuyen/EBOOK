@@ -1,30 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import categoriesData from "../../../../public/data/categories.json";
 import { FaSearch } from "react-icons/fa";
-import { User, BookMarked, Box, Trophy, Clock, HelpCircle, LogOut } from "lucide-react";
+import {
+  User, BookMarked, Box, Trophy, Clock, HelpCircle, LogOut,
+  Sparkles, BookOpen, DollarSign, Gift, Star
+} from "lucide-react";
 
 //=============[ COMPORNENT ]===================
 import Button from "../Buttons/Button";
 import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
+import CategoryDropdown from "./CategoryDropdown";
 
 //=============[ SERVICE ]==========================
 import { getAllCategory } from "~/services/category.service";
 
-
-
 export default function Header({ user }: { user: any }) {
   const [scrolled, setScrolled] = useState(false);
-  const [openMenuSlug, setOpenMenuSlug] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showMoreOpen, setShowMoreOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState("login");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<"left" | "right">("left");
 
-  const navigate = useNavigate();
 
   const categories = categoriesData;
 
@@ -83,7 +84,18 @@ export default function Header({ user }: { user: any }) {
       console.log(" Lỗi khi lấy menu:", error.message);
     }
   }
+  const checkPosition = () => {
+    if (dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      const screenWidth = window.innerWidth;
 
+      if (rect.x + rect.width > screenWidth - 50) {
+        setPosition("right");
+      } else {
+        setPosition("left");
+      }
+    }
+  }
 
   useEffect(() => {
     fetchCategogy();
@@ -93,6 +105,10 @@ export default function Header({ user }: { user: any }) {
     if (width < 1280) max = 5;
     if (width < 1024) max = 4;
     setMaxVisible(max);
+
+    checkPosition();
+    window.addEventListener("resize", checkPosition);
+    return () => window.removeEventListener("resize", checkPosition);
   }, []);
 
 
@@ -147,34 +163,9 @@ export default function Header({ user }: { user: any }) {
                   </a>
 
                   {cat.children?.length > 0 && (
-                    <div
-                      className="absolute lg:p-5 z-[90] w-max left-0 top-full mt-1 
-          bg-black/80 backdrop-blur-md rounded-lg shadow-lg border border-white/30 
-          transition-all duration-200 opacity-0 invisible 
-          group-hover:opacity-100 group-hover:visible"
-                    >
-                      <h1 className="font-bold py-2 text-xl mb-2">{cat.name}</h1>
-
-                      <div
-                        className="grid auto-rows-auto gap-4 max-h-[10rem] overflow-y-auto p-5"
-                        style={{
-                          gridTemplateColumns: "repeat(4, minmax(0, max-content))",
-                          gap: "1rem",
-                        }}
-                      >
-                        {cat.children.map((sub: any) => (
-                          <a
-                            key={sub.slug}
-                            href={`/${cat.slug}/${sub.slug}`}
-                            className={`block px-4 py-2 text-white hover:bg-white/30 rounded-xl font-bold ${currentPath === `/${sub.slug}` ? "text-emerald-400" : ""
-                              }`}
-                          >
-                            {sub.name}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
+                    <CategoryDropdown cat={cat} currentPath={currentPath} />
                   )}
+
                 </div>
               ))}
 
@@ -231,7 +222,7 @@ export default function Header({ user }: { user: any }) {
               </div>
 
               <div className="hidden lg:block">
-                {user.name ? (
+                {user?.name ? (
 
                   <>
                     <div className="relative group inline-block">
@@ -254,11 +245,10 @@ export default function Header({ user }: { user: any }) {
 
                       <div
                         className="absolute right-0 mt-3 w-58 rounded-2xl border border-white/20
-    bg-black/50 backdrop-blur-md shadow-lg 
-    opacity-0 invisible translate-y-[-10px]
-    group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
-    transition-all duration-300 z-50"
-                      >
+                        bg-black/70 backdrop-blur-md shadow-lg 
+                        opacity-0 invisible translate-y-[-10px]
+                        group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+                        transition-all duration-300 z-50" >
                         <div className="px-4 py-3 border-b border-white/10 flex justify-between items-center text-white">
                           <p className="font-semibold text-base">{user?.name || "Người dùng"}</p>
                           <img
@@ -275,19 +265,10 @@ export default function Header({ user }: { user: any }) {
                           <a href="/library" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
                             <BookMarked size={18} className="text-gray-300 text-md font-bold" /> Tủ sách cá nhân
                           </a>
-                          <a href="/orders" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
-                            <Box size={18} className="text-gray-300 text-md font-bold" /> Quản lý đơn hàng
-                          </a>
+
                           <a href="/ranking" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
                             <Trophy size={18} className="text-gray-300 text-md font-bold" /> Thứ hạng đọc sách
                           </a>
-                          <a href="/history" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
-                            <Clock size={18} className="text-gray-300 text-md font-bold" /> Lịch sử giao dịch
-                          </a>
-                          <a href="/support" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
-                            <HelpCircle size={18} className="text-gray-300 text-md font-bold" /> Hỗ trợ khách hàng
-                          </a>
-
                           <hr className="border-white/10 my-2" />
 
                           <button className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">

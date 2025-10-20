@@ -21,7 +21,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { icon: <LayoutDashboard size={20} />, name: "Bảng điều khiển", path: "/admin" },
-  { icon: <Users size={20} />, name: "Tài khoản", path: "/admin/user" },
+  { icon: <Users size={20} />, name: "Tài khoản", path: "/admin/danh-sach-tai-khoan" },
   { icon: <BookOpen size={20} />, name: "Sách", path: "/admin/books" },
   { icon: <Tags size={20} />, name: "Loại sách", path: "/admin/categories" },
   { icon: <FolderTree size={20} />, name: "Thư mục", path: "/admin/folders" },

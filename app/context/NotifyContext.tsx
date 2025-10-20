@@ -3,7 +3,7 @@ import NotificationCard from "~/components/NotificationCard";
 
 interface Notify {
   open: boolean;
-  type: "success" | "error";
+  type: "success" | "error" | "warning";
   title: string;
   message: string;
 }

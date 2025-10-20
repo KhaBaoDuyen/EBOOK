@@ -311,7 +311,6 @@ export default function BookForm({
                   : ""
               }
             />
-
           </div>
 
           <div className={`border p-3 rounded-md transition-all duration-200 ${showCategoryError ? "border-red-500" : "border-gray-700"}`}>

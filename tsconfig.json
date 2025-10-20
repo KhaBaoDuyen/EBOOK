@@ -4,7 +4,7 @@
     "**/.server/**/*",
     "**/.client/**/*",
     ".react-router/types/**/*"
-, "app/routes/admin.book/.tao-sach.tsx"  ],
+, "app/routes/admin.book/.tao-sach.tsx", "app/routes/api.tai-khoan.$email.ts"  ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["node", "vite/client"],

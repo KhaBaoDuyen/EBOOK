@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import categories from "../../public/data/categories.json";
 import Splide from "@splidejs/splide";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
-
+import { useNavigate } from "@remix-run/react";
 
 //==================[ COMPONENT ]====================
 import Button from "~/components/users/Buttons/Button";
@@ -20,26 +20,13 @@ import type { ICategory } from "~/interfaces/category.interface";
 //------------------[ API ]--------------------------------
 import { bookByCatgories } from "~/services/bookBy/bookByCategory";
 import { getAllCategory } from "~/services/category.service";
-import { title } from "process";
-import { ca } from "date-fns/locale";
 
 
-interface Book {
-  id?: number;
-  title?: string;
-  author?: string;
-  cover?: string;
-  status?: number;
-  description?: string;
-  slug?: string;
-  category?: string;
-  subCategory?: string;
-}
 
 
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
-  console.log(category);
+  const navigate = useNavigate();
 
   const [currentCategory, setCurrentCategory] = useState<any>(null);
   const getcategogy = async (categogy: any) => {
@@ -95,7 +82,7 @@ export default function CategoryPage() {
   };
 
   // ---------------[ LẤY SẢN PHẨM RANDOM GẦN NHẤT ]------------
-  const [projects, setProjects] = useState<Book[]>([]);
+  const [projects, setProjects] = useState<IBook[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -141,6 +128,7 @@ export default function CategoryPage() {
 
   const currentBook = projects[currentIndex];
 
+   
   const images = [
     "/Images/Slides/Pages/2.png",
     "/Images/Slides/Pages/3.png",
@@ -183,6 +171,12 @@ export default function CategoryPage() {
                       className="px-5 py-3 bg-white/20 backdrop-blur-md border border-white/30 
                       rounded-md text-white focus:outline-none focus:ring-1 focus:ring-emerald-700"
                       defaultValue=""
+                      onChange={(e) => {
+                        const newSlug = e.target.value;
+                        if (newSlug) {
+                          navigate(`/${category}/${newSlug}`);
+                        }
+                      }}
                     >
                       <option value="">Tất cả danh mục</option>
                       {currentCategory.subCategories.map((sub: any) => (
@@ -197,7 +191,7 @@ export default function CategoryPage() {
                     </select>
                   </div>
                 ) : (
-                  <p className="italic text-gray-400">(Không có danh mục con)</p>
+                  <p > </p>
                 )}
               </span>
             ) : (
@@ -228,9 +222,11 @@ export default function CategoryPage() {
                   <Button
                     text="Đọc sách"
                     icon={faBook}
-                    href={currentBook.slug || "#"}
+                    href={`/ebook/${currentBook.slug}`}
                     iconPosition="left"
                   />
+               
+
                 </div>
               )}
             </div>

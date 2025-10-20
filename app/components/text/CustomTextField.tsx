@@ -16,19 +16,42 @@ const CustomTextField: React.FC<TextFieldProps> = (props) => {
           color: "white",
           backgroundColor: "#1F2937",
           borderRadius: "8px",
-          "& fieldset": { borderColor: error ? "#f87171" : "#aaa" },
-          "&:hover fieldset": { borderColor: error ? "#f87171" : "#fff" },
+
+           "&.Mui-disabled fieldset": {
+            borderColor: "#ccc !important",
+          },
+
+          "& fieldset": {
+            borderColor: error ? "#f87171" : "#aaa",
+          },
+          "&:hover fieldset": {
+            borderColor: error ? "#f87171" : "#fff",
+          },
           "&.Mui-focused fieldset": {
             borderColor: error ? "#f87171" : "#4ade80",
           },
+
+           "&.Mui-disabled": {
+            "& input": {
+              WebkitTextFillColor: "#fff",
+              color: "#fff",
+              opacity: 1,
+            },
+          },
         },
-        "& .MuiInputLabel-root": {
+
+         "& .MuiInputLabel-root": {
           color: error ? "#f87171" : "#ccc",
+          "&.Mui-focused": {
+            color: error ? "#f87171" : "#4ade80",
+          },
+          "&.Mui-disabled": {
+            color: "#fff !important",
+            opacity: 1,
+          },
         },
-        "& .MuiInputLabel-root.Mui-focused": {
-          color: error ? "#f87171" : "#4ade80",
-        },
-        "& .MuiFormHelperText-root": {
+
+         "& .MuiFormHelperText-root": {
           color: error ? "#f87171" : "#ccc",
         },
       }}
