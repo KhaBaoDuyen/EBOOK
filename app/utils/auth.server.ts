@@ -11,7 +11,7 @@ export async function getUserFromToken(request: Request) {
     if (!token) return null;
 
     const decoded = jwt.verify(token, JWT_SECRET) as {
-      id: string;
+      _id: string;
       email: string;
       role: string;
     };

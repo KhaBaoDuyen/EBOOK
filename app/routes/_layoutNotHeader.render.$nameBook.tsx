@@ -13,8 +13,12 @@ import {
 } from "lucide-react";
 
 import Loading from "~/components/Loading";
+import { updateLibraryProgress } from "~/services/library.service";
+import { decodeUser } from "~/utils/verifyToken.server";
+import BookmarkButton from "~/components/users/Buttons/BookmarkButton";
 
 export default function UserRenderBook() {
+
   const { nameBook } = useParams();
   const [bookInfo, setBookInfo] = useState<any>(null);
   const [pages, setPages] = useState<string[]>([]);
@@ -31,6 +35,8 @@ export default function UserRenderBook() {
   const [bookmarks, setBookmarks] = useState<any[]>([]);
   const [notes, setNotes] = useState<any[]>([]);
   const [noteText, setNoteText] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Giả lập thêm/xoá bookmark
   function removeBookmark(index: number) {
@@ -43,7 +49,6 @@ export default function UserRenderBook() {
     setNotes((prev) => [...prev, { text: noteText }]);
     setNoteText("");
   }
-
 
   useEffect(() => {
     const cachedBook = sessionStorage.getItem("currentBook");
@@ -166,6 +171,39 @@ export default function UserRenderBook() {
     { name: "Xanh lá ", color: "#BEECC5" },
   ];
 
+  // ------------------[ LƯU TIẾN ĐỘ ĐỌC SÁCH ]------------------
+  const progressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const percent = pages.length > 0 ? (currentPage + 1) / pages.length : 0;
+  useEffect(() => {
+    if (!pages.length) return;
+    if (progressTimer.current) clearTimeout(progressTimer.current);
+
+    progressTimer.current = setTimeout(() => {
+      if (percent > 0 && isFinite(percent)) {
+        handlePageChange(percent);
+      } else {
+        console.log("percent không hợp lệ:", percent);
+      }
+    }, 1000);
+
+    return () => {
+      if (progressTimer.current) clearTimeout(progressTimer.current);
+    };
+  }, [currentPage, pages.length]);
+
+  const handlePageChange = async (percent: number) => {
+
+    try {
+      const res = await updateLibraryProgress(bookInfo._id, percent);
+      // console.log("updateLibraryProgress phản hồi:", res);
+    } catch (err: any) {
+      console.error("Lỗi trong handlePageChange:", err);
+    }
+  };
+
+
+
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[#1F2937] text-white">
       <header className="absolute shadow-xl top-0 left-0 right-0 h-14 bg-[#17171A] border-b border-gray-700 flex items-center justify-between px-4 z-20">
@@ -183,6 +221,7 @@ export default function UserRenderBook() {
             className="cursor-pointer hover:text-white"
             onClick={() => setShowTextOptions((v) => !v)}
           />
+          <BookmarkButton bookId={bookInfo?._id} />
           <Menu
             className="cursor-pointer hover:text-white"
             onClick={() => setShowRight((v) => !v)}

@@ -222,7 +222,7 @@ export default function Header({ user }: { user: any }) {
               </div>
 
               <div className="hidden lg:block">
-                {user?.name ? (
+                {user ? (
 
                   <>
                     <div className="relative group inline-block">

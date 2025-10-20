@@ -7,6 +7,7 @@ const librarySchema = new Schema<ILibrary>(
     bookId: { type: Schema.Types.ObjectId, ref: "Book", required: true },
     isSaved: { type: Boolean, default: false },
     progress: { type: Number, default: 0 },
+    hasRead: { type: Boolean, default: false },
     isFinished: { type: Boolean, default: false },
     lastReadAt: { type: Date, default: null },
   },

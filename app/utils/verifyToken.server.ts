@@ -18,7 +18,7 @@ export async function decodeUser(request: Request) {
     const clean = token.replace(/^"|"$/g, "");
 
     const decoded = jwt.verify(clean, JWT_SECRET) as {
-      id: string;
+      _id: string;
       name: string;
       email: string;
       role: string;

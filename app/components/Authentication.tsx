@@ -79,7 +79,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                     setShowOtpForm(true);
                     setNotify({
                         open: true,
-                        type: "error",
+                        type: "warning",
                         title: "Xác minh OTP",
                         message: "Tài khoản của bạn chưa xác minh. Hệ thống đã gửi lại mã OTP qua email.",
                     });
@@ -92,7 +92,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                         message: "Chào mừng trở lại!, bạn có thể sử dụng dịch vụ của chưng tôi một cách miễn phí.",
                     });
                     onClose();
-                    navigate("/");
+                    window.location.href = "/";
                 } else {
                     setNotify({
                         open: true,

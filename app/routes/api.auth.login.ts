@@ -54,7 +54,7 @@ export async function action({ request }: { request: Request }) {
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role, name: user.name },
+      { _id: user._id, email: user.email, role: user.role, name: user.name },
       JWT_SECRET,
       { expiresIn: "7d" }
     );

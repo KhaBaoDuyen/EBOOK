@@ -15,7 +15,7 @@ const profilePage = () => {
     return (
         <div className="flex !mx-auto gap-6 px-4  container md:pt-[7rem]">
             <SidebarProfile user={user} />
-            <div className="flex-1 p-4 rounded-md min-h-[70vh]">
+            <div className="flex-1 rounded-md min-h-[70vh]">
                 <Outlet context={{ user }} />
             </div>
         </div>
