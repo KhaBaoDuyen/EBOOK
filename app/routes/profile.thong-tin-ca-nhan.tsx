@@ -2,6 +2,7 @@ import { useOutletContext } from "@remix-run/react";
 import type IUser from "~/interfaces/user.interface";
 import { useEffect, useState } from "react";
 import { CircleSmall, Loader2 } from "lucide-react";
+import { UserRankCard } from "~/components/users/UserRank";
 
 //-----------------[ CONTEXT ]--------------------
 import { useNotify } from "~/context/NotifyContext";
@@ -116,7 +117,8 @@ export default function ProfilePage() {
 
             <form
                 onSubmit={handleSubmit}
-                className="shadow-theme-md bg-[#1e1e2d] p-6 rounded-2xl shadow-lg flex flex-col md:flex-row gap-6">
+                className="shadow-theme-md bg-[#1e1e2d] flex flex-col items-center
+                p-6 rounded-md shadow-lg  gap-6">
                 <div className="flex flex-col items-center md:w-1/4">
                     <div className="relative">
                         <img
@@ -158,8 +160,8 @@ export default function ProfilePage() {
                             {isVerified === true ? "Đã xác thực" : "Chưa xác thực"} </span>
                     </p>
                 </div>
-
-                <div className="flex-1 grid md:grid-cols-2 gap-5 text-gray-200">
+                <UserRankCard user={user} />
+                <div className="flex-1 w-full grid md:grid-cols-2 gap-5 text-gray-200">
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">Họ và tên</label>
                         <input

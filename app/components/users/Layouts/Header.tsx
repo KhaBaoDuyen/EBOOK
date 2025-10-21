@@ -13,11 +13,14 @@ import Button from "../Buttons/Button";
 import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
 import CategoryDropdown from "./CategoryDropdown";
+import { useNotify } from "~/context/NotifyContext";
 
 //=============[ SERVICE - CONTEXT ]==========================
 import { getAllCategory } from "~/services/category.service";
 import { getAuthByEmail } from "~/services/user.service";
-import { useUser }from "~/context/UserContext";
+import { useUser } from "~/context/UserContext";
+import { Logout } from "~/services/Auth/logout";
+
 
 export default function Header({ user }: { user: any }) {
   const [scrolled, setScrolled] = useState(false);
@@ -27,7 +30,9 @@ export default function Header({ user }: { user: any }) {
   const [mode, setMode] = useState("login");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<"left" | "right">("left");
-  
+  const { setNotify } = useNotify();
+  const navigate = useNavigate();
+
   const { userData, reloadUser } = useUser();
 
   const categories = categoriesData;
@@ -126,6 +131,31 @@ export default function Header({ user }: { user: any }) {
     }
   }
 
+  //----------------[ DANG XUAT ]-----------------------
+  const handleLogout = async () => {
+    try {
+      const res = await Logout();
+
+      if (res.status === 200) {
+        setNotify({
+          open: true,
+          type: "success",
+          title: "Đăng xuất thành công",
+          message: "Tài khoản đã được đăng xuất ra khỏi hệ thống."
+        });
+        await reloadUser();
+        navigate("/");
+      }
+
+    } catch (error) {
+      setNotify({
+        open: true,
+        type: "error",
+        title: "Đăng xuất thất bại",
+        message: "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau!!!"
+      });
+    }
+  }
   useEffect(() => {
     getOneUser();
   }, [])
@@ -289,7 +319,10 @@ export default function Header({ user }: { user: any }) {
                           </a>
                           <hr className="border-white/10 my-2" />
 
-                          <button className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                          <button
+                            type="submit"
+                            onClick={() => handleLogout()}
+                            className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
                             <LogOut size={18} /> Đăng xuất
                           </button>
                         </div>

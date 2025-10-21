@@ -19,6 +19,7 @@ import {
     LogOut,
 } from "lucide-react";
 import { useUser } from "~/context/UserContext";
+import { UserRankText } from "~/components/users/UserRank";
 
 const icons = {
     user: User,
@@ -54,7 +55,7 @@ export default function SidebarProfile({ user }: { user: any }) {
                     className="w-20 h-20 rounded-full mx-auto"
                 />
                 <h3 className="mt-3 text-lg font-semibold">{userData?.name}</h3>
-                <p className="text-sm text-gray-400">Thành viên Bạch kim</p>
+                <p className="text-sm text-gray-400"><UserRankText  rank={userData.rank}/></p>
             </div>
 
             <nav className="flex flex-col gap-2 mt-4">

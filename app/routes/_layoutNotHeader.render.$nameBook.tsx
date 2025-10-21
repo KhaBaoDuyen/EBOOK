@@ -17,6 +17,7 @@ import { updateLibraryProgress } from "~/services/library.service";
 import { decodeUser } from "~/utils/verifyToken.server";
 import BookmarkButton from "~/components/users/Buttons/BookmarkButton";
 import { getLibraryProgress } from "~/services/library.service";
+import { useNotify } from "~/context/NotifyContext";
 
 export default function UserRenderBook() {
 
@@ -38,6 +39,7 @@ export default function UserRenderBook() {
   const [noteText, setNoteText] = useState("");
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { setNotify } = useNotify();
 
   // Giả lập thêm/xoá bookmark
   function removeBookmark(index: number) {
@@ -197,7 +199,14 @@ export default function UserRenderBook() {
 
     try {
       const res = await updateLibraryProgress(bookInfo._id, percent);
-      // console.log("updateLibraryProgress phản hồi:", res);
+      if (percent >= 1) {
+        setNotify({
+          open: true,
+          type: "success",
+          title: "Chúc mừng bạn đã hoàn thành!",
+          message: "Tuyệt vời! Bạn đã hoàn tất quyển sách này. Hãy tiếp tục hành trình đọc của mình và chinh phục thêm nhiều cuốn sách thú vị nữa nhé!"
+        });
+      }
     } catch (err: any) {
       console.error("Lỗi trong handlePageChange:", err);
     }
@@ -214,23 +223,20 @@ export default function UserRenderBook() {
         const epubPath = bookInfo.fileUrl || bookInfo.filePath;
         const height = viewerRef.current?.clientHeight || 800;
 
-        // 1️⃣ Lấy cả nội dung sách và tiến độ đọc
         const [res, progressData] = await Promise.all([
           loadEpubContent(epubPath, height),
           getLibraryProgress(bookInfo._id),
         ]);
 
-        // 2️⃣ Lưu các trang và chương
         setPages(res.pages);
         setChapters(res.chapters);
         setAnchorIndex(res.anchorIndex || {});
 
-        // 3️⃣ Tính trang hiện tại dựa trên tiến độ
         const savedProgress = progressData?.progress || 0;
         if (savedProgress > 0 && res.pages?.length > 0) {
           const pageIndex = Math.floor(savedProgress * res.pages.length);
           setCurrentPage(pageIndex);
-          console.log("📖 Mở lại trang:", pageIndex + 1);
+          // console.log("Mở lại trang:", pageIndex + 1);
         } else {
           setCurrentPage(0);
         }

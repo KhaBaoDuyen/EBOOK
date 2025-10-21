@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "~/models/user.server";
 import { sendOtpEmail } from "~/utils/sendEmailOtp.server";
+import { updateLoginStreak } from "~/utils/updateLoginStreak.server";
 
 const JWT_SECRET = process.env.JWT_SECRET || "SMARTBOOK_SECRET_KEY";
 
@@ -37,6 +38,8 @@ export async function action({ request }: { request: Request }) {
     if (!isMatch) {
       return json({ message: "Sai mật khẩu" }, { status: 401 });
     }
+
+    await updateLoginStreak(user._id);
 
     if (!user.isVerified) {
       const otp = generateOTP(6);

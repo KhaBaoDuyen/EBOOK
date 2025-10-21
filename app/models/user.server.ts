@@ -5,15 +5,24 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String },
   googleId: { type: String },
-  avatar:{type: String || null},
-  gender:{type: String , enum: ["Nam", "Nữ", "Khác"], default:"Khác"},
-  birthDate:{ type: String},
-  description:{ type: String},
+  avatar: { type: String || null },
+  gender: { type: String, enum: ["Nam", "Nữ", "Khác"], default: "Khác" },
+  birthDate: { type: String },
+  description: { type: String },
   otpCode: { type: String, default: null },
   otpExpires: { type: Date, default: null },
   isVerified: { type: Boolean, default: false },
   status: { type: Number, enum: [1, 0], default: 1 },
-  role: { type: String, enum: ["user", "admin"], default: "user" }
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+  completedBooks: { type: Number, default: 0 }, // Tổng số sách đã hoàn thành
+  rank: {  // Thứ hạng hiện tại
+    type: String,
+    enum: ["đồng", "bạc", "vàng", "bạch kim", "hồng ngọc", "lục bảo", "ngọc trai"],
+    default: "đồng",
+  },
+  badges: [{ type: String, default: [] }], // Danh sách huy hiệu người dùng đạt được
+  streakDays: { type: Number, default: 0 },       // Số ngày liên tục truy cập
+  lastLoginAt: { type: Date, default: null },     // Ngày đăng nhập gần nhất (để tính streak)
 }, { timestamps: true });
 
 userSchema.set("toJSON", {

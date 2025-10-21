@@ -62,3 +62,4 @@ export async function deleteAuth(email: string) {
 
   return { status: res.status, data };
 }
+

@@ -17,10 +17,10 @@ const profilePage = () => {
     return (
         <>
             <Header user={user} />
-            <main className="!w-full userBody flex gap-5  !mx-auto  md:p-0 p-3">
+            <main className="!w-full userBody flex gap-5 py-5 !mx-auto  p-3">
                 <span className="container !mx-auto pt-[7rem] flex gap-5 rounded-md min-h-screen">
                     <SidebarProfile user={user} />
-                    <div className="flex-1">
+                    <div className="flex-1 pb-5">
                         <Outlet context={{ user }} />
                     </div>
                 </span>
