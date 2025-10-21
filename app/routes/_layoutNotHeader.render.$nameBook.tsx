@@ -16,6 +16,7 @@ import Loading from "~/components/Loading";
 import { updateLibraryProgress } from "~/services/library.service";
 import { decodeUser } from "~/utils/verifyToken.server";
 import BookmarkButton from "~/components/users/Buttons/BookmarkButton";
+import { getLibraryProgress } from "~/services/library.service";
 
 export default function UserRenderBook() {
 
@@ -57,7 +58,7 @@ export default function UserRenderBook() {
 
   }, [nameBook]);
 
-  console.log("bookInfo", bookInfo);
+  // console.log("bookInfo", bookInfo);
 
 
   useEffect(() => {
@@ -202,7 +203,47 @@ export default function UserRenderBook() {
     }
   };
 
+  //-------------------[ LAY TIEN DO DOC ]------------------------
+  useEffect(() => {
+    if (!bookInfo?.filePath && !bookInfo?.fileUrl || !bookInfo?._id) return;
 
+    const loadBookAndProgress = async () => {
+      try {
+        setLoading(true);
+
+        const epubPath = bookInfo.fileUrl || bookInfo.filePath;
+        const height = viewerRef.current?.clientHeight || 800;
+
+        // 1️⃣ Lấy cả nội dung sách và tiến độ đọc
+        const [res, progressData] = await Promise.all([
+          loadEpubContent(epubPath, height),
+          getLibraryProgress(bookInfo._id),
+        ]);
+
+        // 2️⃣ Lưu các trang và chương
+        setPages(res.pages);
+        setChapters(res.chapters);
+        setAnchorIndex(res.anchorIndex || {});
+
+        // 3️⃣ Tính trang hiện tại dựa trên tiến độ
+        const savedProgress = progressData?.progress || 0;
+        if (savedProgress > 0 && res.pages?.length > 0) {
+          const pageIndex = Math.floor(savedProgress * res.pages.length);
+          setCurrentPage(pageIndex);
+          console.log("📖 Mở lại trang:", pageIndex + 1);
+        } else {
+          setCurrentPage(0);
+        }
+
+      } catch (err: any) {
+        console.error("Lỗi khi tải sách hoặc tiến độ:", err.status, err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBookAndProgress();
+  }, [bookInfo]);
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[#1F2937] text-white">

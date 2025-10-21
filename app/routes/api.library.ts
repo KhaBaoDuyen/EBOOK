@@ -2,13 +2,73 @@ import { json } from "@remix-run/node";
 import Library from "~/models/library.server";
 import { decodeUser } from "~/utils/verifyToken.server";
 
+export const loader = async ({ request }: { request: Request }) => {
+    try {
+        // --------------[ lay usser tu cookie]---------------------
+        const user = await decodeUser(request);
+        if (!user) {
+            return json({ status: 401, message: "Chưa đăng nhập!" }, { status: 401 });
+        }
+
+        // -------------[ Lay thu vien theo nguoi dung ]-------------------
+        const libraries = await Library.find({ userId: user._id })
+            .populate({
+                path: "bookId",
+                populate: {
+                    path: "authorId",
+                    select: "name",
+                }
+            })
+            .lean()
+            .sort({lastReadAt: -1});
+            
+
+        if (!libraries || libraries.length === 0) {
+            return json({
+                status: 200,
+                message: "Người dùng chưa có sách trong thư viện.",
+                data: { reading: [], finished: [], saved: [] },
+            });
+        }
+
+        // -------------[ Phân loại thành 3 nhóm ]---------------------
+        const reading = libraries.filter(
+            (item: any) =>
+                item.hasRead === true &&
+                item.progress > 0 &&
+                item.progress < 100 &&
+                !item.isFinished
+        );
+
+        const finished = libraries.filter(
+            (item: any) => item.isFinished === true
+        );
+
+        const saved = libraries.filter(
+            (item: any) => item.isSaved === true
+        );
+
+        return json({
+            status: 200,
+            message: "Lấy thư viện thành công!",
+            data: { reading, finished, saved },
+        });
+    } catch (error: any) {
+        console.error("  Lỗi khi lấy dữ liệu thư viện:", error.message);
+        return json(
+            { status: 500, message: "Lỗi khi tải thư viện người dùng." },
+            { status: 500 }
+        );
+    }
+};
+
+
 export const action = async ({ request }: { request: Request }) => {
     try {
         const user = await decodeUser(request);
         if (!user?._id) {
             return json({ status: 401, message: "Chưa đăng nhập hoặc token không hợp lệ" }, { status: 401 });
         }
-
 
         const formData = await request.formData();
         const bookId = formData.get("bookId")?.toString();
@@ -26,6 +86,10 @@ export const action = async ({ request }: { request: Request }) => {
         if (isSaved !== null) updateFields.isSaved = isSaved === "true";
         if (hasRead !== null) updateFields.hasRead = hasRead === "true";
 
+        if (updateFields.progress > 0 || updateFields.isFinished === true) {
+            updateFields.hasRead = true;
+        }
+
         if (Object.keys(updateFields).length > 0) {
             updateFields.lastReadAt = new Date();
         }
@@ -34,7 +98,7 @@ export const action = async ({ request }: { request: Request }) => {
             { userId, bookId },
             Object.keys(updateFields).length > 0
                 ? { $set: updateFields }
-                : { $setOnInsert: { progress: 0, isFinished: false, lastReadAt: new Date() } },
+                : { $setOnInsert: { progress: 0, isFinished: false, lastReadAt: new Date(), hasRead: true, } },
             { upsert: true, new: true }
         );
 

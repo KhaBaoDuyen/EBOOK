@@ -1,25 +1,16 @@
 import { BookOpen, Bookmark, CheckCircle, Clock3 } from "lucide-react";
-
-interface ICardLibrary {
-  book: {
-    id: number | string;
-    title: string;
-    author: string;
-    cover: string;
-    progress?: number;
-    isFinished?: boolean;
-    isSaved?: boolean;
-  };
-}
+import { Link } from "@remix-run/react";
+import type ICardLibrary from "~/interfaces/components/ICardLibrary.interface";
 
 export default function CardLibrary({ book }: ICardLibrary) {
+  const urlRender = `/render/${book.slug}`;
   return (
     <div
       key={book.id}
       className="group bg-[#1E293B] rounded-2xl overflow-hidden shadow-md hover:shadow-lg 
       transition transform hover:-translate-y-1 border border-white/5 hover:border-[var(--primary-hover)]"
     >
-      {/* Ảnh bìa */}
+
       <div className="relative">
         <img
           src={book.cover}
@@ -33,12 +24,11 @@ export default function CardLibrary({ book }: ICardLibrary) {
         )}
       </div>
 
-      {/* Thông tin sách */}
+
       <div className="p-4 space-y-2">
         <h3 className="font-semibold text-base line-clamp-2">{book.title}</h3>
         <p className="text-sm text-gray-400">{book.author}</p>
 
-        {/* Thanh tiến độ */}
         {book.progress && book.progress > 0 && (
           <div className="w-full bg-gray-700 h-2 rounded-full mt-2">
             <div
@@ -48,7 +38,8 @@ export default function CardLibrary({ book }: ICardLibrary) {
           </div>
         )}
 
-         <button
+        <Link
+          to={urlRender}
           className="mt-3 w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-sm py-1.5 
           rounded-md flex items-center justify-center gap-2 transition"
         >
@@ -65,7 +56,7 @@ export default function CardLibrary({ book }: ICardLibrary) {
               <Bookmark size={16} /> Mở sách
             </>
           )}
-        </button>
+        </Link>
       </div>
     </div>
   );
