@@ -15,12 +15,13 @@ import Authentication from "../../Authentication";
 import CategoryDropdown from "./CategoryDropdown";
 import { UserSomeTime, UserRank } from "../UserRank";
 
-//=============[ SERVICE - CONTEXT ]==========================
+//=============[ SERVICE - CONTEXT - HOOK ]==========================
 import { getAllCategory } from "~/services/category.service";
 import { getAuthByEmail } from "~/services/user.service";
 import { useUser } from "~/context/UserContext";
 import { Logout } from "~/services/Auth/logout";
 import { useNotify } from "~/context/NotifyContext";
+import { useLogout } from "~/hooks/Logout";
 
 
 export default function Header({ user }: { user: any }) {
@@ -33,6 +34,7 @@ export default function Header({ user }: { user: any }) {
   const [position, setPosition] = useState<"left" | "right">("left");
   const { setNotify } = useNotify();
   const navigate = useNavigate();
+  const logout = useLogout();
 
   const { userData, reloadUser } = useUser();
 
@@ -132,31 +134,6 @@ export default function Header({ user }: { user: any }) {
     }
   }
 
-  //----------------[ DANG XUAT ]-----------------------
-  const handleLogout = async () => {
-    try {
-      const res = await Logout();
-
-      if (res.status === 200) {
-        setNotify({
-          open: true,
-          type: "success",
-          title: "Đăng xuất thành công",
-          message: "Tài khoản đã được đăng xuất ra khỏi hệ thống."
-        });
-        await reloadUser();
-        navigate("/");
-      }
-
-    } catch (error) {
-      setNotify({
-        open: true,
-        type: "error",
-        title: "Đăng xuất thất bại",
-        message: "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau!!!"
-      });
-    }
-  }
   useEffect(() => {
     getOneUser();
   }, [])
@@ -330,7 +307,7 @@ export default function Header({ user }: { user: any }) {
 
                           <button
                             type="submit"
-                            onClick={() => handleLogout()}
+                            onClick={logout}
                             className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
                             <LogOut size={18} /> Đăng xuất
                           </button>

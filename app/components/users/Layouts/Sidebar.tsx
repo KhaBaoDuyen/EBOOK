@@ -24,6 +24,7 @@ import { useNotify } from "~/context/NotifyContext";
 import { UserSomeTime } from "~/components/users/UserRank";
 
 import { Logout } from "~/services/Auth/logout";
+import { useLogout } from "~/hooks/Logout";
 
 const icons = {
     user: User,
@@ -53,30 +54,8 @@ export default function SidebarProfile({ user }: { user: any }) {
 
 
     //----------------[ DANG XUAT ]-----------------------
-    const handleLogout = async () => {
-        try {
-            const res = await Logout();
+    const handleLogout = useLogout();
 
-            if (res.status === 200) {
-                setNotify({
-                    open: true,
-                    type: "success",
-                    title: "Đăng xuất thành công",
-                    message: "Tài khoản đã được đăng xuất ra khỏi hệ thống."
-                });
-                await reloadUser();
-                navigate("/");
-            }
-
-        } catch (error) {
-            setNotify({
-                open: true,
-                type: "error",
-                title: "Đăng xuất thất bại",
-                message: "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau!!!"
-            });
-        }
-    }
     return (
         <aside className="w-64 bg-[#1e1e2d] text-white rounded-md p-5 flex flex-col gap-4">
             <div className="text-center border-b border-white/10 pb-4">

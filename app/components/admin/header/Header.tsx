@@ -4,8 +4,7 @@ import NotificationDropdown from "./NotificationDropdown";
 import UserDropdown from "./UserDropdown";
 import { Link } from "@remix-run/react";
 
-// Define the interface for the props
-interface HeaderProps {
+ interface HeaderProps {
   onClick?: () => void;  
   onToggle: () => void;
 }
