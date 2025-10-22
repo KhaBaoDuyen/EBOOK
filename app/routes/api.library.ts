@@ -20,8 +20,8 @@ export const loader = async ({ request }: { request: Request }) => {
                 }
             })
             .lean()
-            .sort({lastReadAt: -1});
-            
+            .sort({ lastReadAt: -1 });
+
 
         if (!libraries || libraries.length === 0) {
             return json({
@@ -30,6 +30,8 @@ export const loader = async ({ request }: { request: Request }) => {
                 data: { reading: [], finished: [], saved: [] },
             });
         }
+
+
 
         // -------------[ Phân loại thành 3 nhóm ]---------------------
         const reading = libraries.filter(
@@ -48,10 +50,14 @@ export const loader = async ({ request }: { request: Request }) => {
             (item: any) => item.isSaved === true
         );
 
+        const isFavorite = libraries.filter(
+            (item: any) => item.isFavorite === true
+        );
+
         return json({
             status: 200,
             message: "Lấy thư viện thành công!",
-            data: { reading, finished, saved },
+            data: { reading, finished, saved, isFavorite },
         });
     } catch (error: any) {
         console.error("  Lỗi khi lấy dữ liệu thư viện:", error.message);

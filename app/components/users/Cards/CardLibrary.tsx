@@ -1,6 +1,7 @@
 import { BookOpen, Bookmark, CheckCircle, Clock3 } from "lucide-react";
 import { Link } from "@remix-run/react";
 import type ICardLibrary from "~/interfaces/components/ICardLibrary.interface";
+import { dividerClasses } from "@mui/material";
 
 export default function CardLibrary({ book }: ICardLibrary) {
   const urlRender = `/render/${book.slug}`;
@@ -29,14 +30,16 @@ export default function CardLibrary({ book }: ICardLibrary) {
         <h3 className="font-semibold text-base line-clamp-2">{book.title}</h3>
         <p className="text-sm text-gray-400">{book.author}</p>
 
-        {book.progress && book.progress > 0 && (
+        {book.progress && book.progress > 0 ? 
           <div className="w-full bg-gray-700 h-2 rounded-full mt-2">
             <div
               className="h-2 rounded-full bg-[var(--primary)] transition-all"
               style={{ width: `${book.progress * 100}%` }}
             ></div>
           </div>
-        )}
+        : <div className="w-full bg-gray-700 h-2 rounded-full mt-2">
+
+        </div> }
 
         <Link
           to={urlRender}

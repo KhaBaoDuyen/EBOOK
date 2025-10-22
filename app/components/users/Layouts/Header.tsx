@@ -13,13 +13,13 @@ import Button from "../Buttons/Button";
 import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
 import CategoryDropdown from "./CategoryDropdown";
-import { useNotify } from "~/context/NotifyContext";
 
 //=============[ SERVICE - CONTEXT ]==========================
 import { getAllCategory } from "~/services/category.service";
 import { getAuthByEmail } from "~/services/user.service";
 import { useUser } from "~/context/UserContext";
 import { Logout } from "~/services/Auth/logout";
+import { useNotify } from "~/context/NotifyContext";
 
 
 export default function Header({ user }: { user: any }) {

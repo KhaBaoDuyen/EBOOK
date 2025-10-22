@@ -10,6 +10,7 @@ const librarySchema = new Schema<ILibrary>(
     hasRead: { type: Boolean, default: false },
     isFinished: { type: Boolean, default: false },
     lastReadAt: { type: Date, default: null },
+    isFavorite: { type: Boolean, default: false }
   },
   {
     timestamps: true,  

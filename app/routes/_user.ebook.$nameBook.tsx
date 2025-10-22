@@ -9,6 +9,8 @@ import type { IBook } from "~/interfaces/book.interface";
 import type IUser from "~/interfaces/user.interface";
 
 import Section from "../components/users/Section";
+import FavoriteButton from "~/components/users/Buttons/FavoriteButton";
+
 import { useNotify } from "~/context/NotifyContext";
 import { Link, useNavigate } from "@remix-run/react";
 import { Eye } from "lucide-react";
@@ -100,118 +102,124 @@ export default function Ebook() {
             });
         }
     }
-//-----------------[ GOI DU LIEU ]-------------------------------
+    //-----------------[ GOI DU LIEU ]-------------------------------
 
-useEffect(() => {
-    getBySlug(nameBook);
-    viewBook(nameBook);
-}, [nameBook]);
+    useEffect(() => {
+        getBySlug(nameBook);
+        viewBook(nameBook);
+    }, [nameBook]);
 
+    
 
-return (
-    <main className="  py-10 px-5 flex flex-col gap-5 container mx-auto ">
-        <span className="mt-[6rem] flex flex-col gap-10">
-            <span className="text-white font-bold text-sm">
-                <Link to="/">Trang chủ</Link> / <Link to={`${book?.categories[0]?.slug}`}>{book?.categories[0].name}</Link> / <span className="text-gray-400">{book?.title || "Đang tải..."}</span>
-            </span>
-            <div className="flex  gap-10 ">
-                <div className="flex ">
-                    <img
-                        src={book?.cover || "/images/book-default.png"}
-                        alt="Bìa sách"
-                        className="rounded-xl shadow-lg max-h-[500px] object-cover"
-                    />
-                </div>
-
-                <div className="flex flex-col h-[30rem] overflow-y-auto scrollbar-hide w-[50%] gap-3 text-white">
-                    <h1 className="text-3xl font-bold">
-                        {book?.title || "Đang tải..."}
-                    </h1>
-
-                    <span className="flex flex-col gap-5">
-                        <div className="flex gap-5">
-                            <p className="!text-gray-500">Lượt xem</p>
-                            <p className="text-white font-medium">{view || 0}</p>
-                        </div>
-
-                        <div className="grid border-b-1 py-5 border-b-white/30 grid-cols-2 gap-y-5 text-sm md:text-base">
-                            <div>
-                                <p className="!text-gray-500">Tác giả</p>
-                                <p className="text-white font-medium">{book?.authorId?.name}</p>
-                            </div>
-                            <div className="!text-gray-600">
-                                <p className="!text-gray-500">Thể loại</p>
-                                <p className="text-white font-medium">
-                                    {book?.categories?.map((cat) => cat.name).join(", ") || "Đang cập nhật"}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="!text-gray-500">Nhà xuất bản</p>
-                                <p className="text-white font-medium">{book?.publisher}</p>
-                            </div>
-
-                            <div>
-                                <p className="!text-gray-500">Phát hành</p>
-                                <p className="text-white font-medium">
-                                    {book?.releaseDate
-                                        ? new Date(book.releaseDate).toLocaleDateString("vi-VN")
-                                        : "Đang cập nhật"}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <span className="text-gray-400">Chọn nội dung</span>
-                            <div className="flex rounded-lg bg-gray-700 p-1">
-                                <button
-                                    onClick={() => setIsExpanded(true)}
-                                    className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 ${isExpanded ? "bg-pri text-white" : "text-gray-400"
-                                        }`}
-                                >
-                                    Đầy đủ
-                                </button>
-                                <button
-                                    onClick={() => setIsExpanded(false)}
-                                    className={`px-4 py-2 rounded-md font-medium transition-colors duration-200
-                                     ${!isExpanded ? "bg-pri text-white" : "text-gray-400"
-                                        }`}
-                                >
-                                    Tóm tắt
-                                </button>
-                            </div>
-                        </div>
-                        <Button
-                            text="Đọc sách"
-                            icon={faBookOpen}
-                            onClick={handleLibrary}
-                            iconPosition="left"
+    return (
+        <main className="  py-10 px-5 flex flex-col gap-5 container mx-auto ">
+            <span className="mt-[6rem] flex flex-col gap-10">
+                <span className="text-white font-bold text-sm">
+                    <Link to="/">Trang chủ</Link> / <Link to={`${book?.categories[0]?.slug}`}>{book?.categories[0].name}</Link> / <span className="text-gray-400">{book?.title || "Đang tải..."}</span>
+                </span>
+                <div className="flex  gap-10 ">
+                    <div className="flex ">
+                        <img
+                            src={book?.cover || "/images/book-default.png"}
+                            alt="Bìa sách"
+                            className="rounded-xl shadow-lg max-h-[500px] object-cover"
                         />
+                    </div>
 
-                        <div>
-                            <p
-                                className={`text-gray-200 text-justify ${isExpanded ? "" : "line-clamp-5"
-                                    }`} dangerouslySetInnerHTML={{ __html: book?.description || "Đang tải cập nhật..." }}
-                            >
-                            </p>
+                    <div className="flex flex-col h-[30rem] overflow-y-auto scrollbar-hide w-[50%] gap-3 text-white">
+                        <h1 className="text-3xl font-bold">
+                            {book?.title || "Đang tải..."}
+                        </h1>
 
-                            <button
-                                onClick={toggleExpand}
-                                className="font-pri font-bold mt-2 "
-                            >
-                                {isExpanded ? "Rút gọn" : "Xem thêm"}
-                            </button>
-                        </div>
-                    </span>
+                        <span className="flex flex-col gap-5">
+                            <div className="flex justify-between">
+                                <div className="flex gap-5">
+                                    <p className="!text-gray-500">Lượt xem</p>
+                                    <p className="text-white font-medium">{view || 0}</p>
+                                </div>
+                                <div className="">
+                                    <FavoriteButton book={book} />
+                                </div>
+                            </div>
+
+                            <div className="grid border-b-1 py-5 border-b-white/30 grid-cols-2 gap-y-5 text-sm md:text-base">
+                                <div>
+                                    <p className="!text-gray-500">Tác giả</p>
+                                    <p className="text-white font-medium">{book?.authorId?.name}</p>
+                                </div>
+                                <div className="!text-gray-600">
+                                    <p className="!text-gray-500">Thể loại</p>
+                                    <p className="text-white font-medium">
+                                        {book?.categories?.map((cat) => cat.name).join(", ") || "Đang cập nhật"}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="!text-gray-500">Nhà xuất bản</p>
+                                    <p className="text-white font-medium">{book?.publisher}</p>
+                                </div>
+
+                                <div>
+                                    <p className="!text-gray-500">Phát hành</p>
+                                    <p className="text-white font-medium">
+                                        {book?.releaseDate
+                                            ? new Date(book.releaseDate).toLocaleDateString("vi-VN")
+                                            : "Đang cập nhật"}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-gray-400">Chọn nội dung</span>
+                                <div className="flex rounded-lg bg-gray-700 p-1">
+                                    <button
+                                        onClick={() => setIsExpanded(true)}
+                                        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 ${isExpanded ? "bg-pri text-white" : "text-gray-400"
+                                            }`}
+                                    >
+                                        Đầy đủ
+                                    </button>
+                                    <button
+                                        onClick={() => setIsExpanded(false)}
+                                        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200
+                                     ${!isExpanded ? "bg-pri text-white" : "text-gray-400"
+                                            }`}
+                                    >
+                                        Tóm tắt
+                                    </button>
+                                </div>
+                            </div>
+                            <Button
+                                text="Đọc sách"
+                                icon={faBookOpen}
+                                onClick={handleLibrary}
+                                iconPosition="left"
+                            />
+
+                            <div>
+                                <p
+                                    className={`text-gray-200 text-justify ${isExpanded ? "" : "line-clamp-5"
+                                        }`} dangerouslySetInnerHTML={{ __html: book?.description || "Đang tải cập nhật..." }}
+                                >
+                                </p>
+
+                                <button
+                                    onClick={toggleExpand}
+                                    className="font-pri font-bold mt-2 "
+                                >
+                                    {isExpanded ? "Rút gọn" : "Xem thêm"}
+                                </button>
+                            </div>
+                        </span>
 
 
 
+                    </div>
                 </div>
-            </div>
 
-            <span>
-                {authorBooks.length > 0 &&
-                    (<Section title="Cùng tác giả" books={authorBooks} />)}
-                <Section title="Các sách khác" books={books} />
+                <span>
+                    {authorBooks.length > 0 &&
+                        (<Section title="Cùng tác giả" books={authorBooks} />)}
+                    <Section title="Các sách khác" books={books} />
+                </span>
             </span>
-        </span>
-    </main>
-);
+        </main>
+    );
 }

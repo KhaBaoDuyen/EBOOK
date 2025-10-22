@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@remix-run/react";
+import { Link, useLocation, useNavigate } from "@remix-run/react";
 
 type UserContext = {
     user: {
@@ -20,6 +20,9 @@ import {
 } from "lucide-react";
 import { useUser } from "~/context/UserContext";
 import { UserRankText } from "~/components/users/UserRank";
+import { useNotify } from "~/context/NotifyContext";
+
+import { Logout } from "~/services/Auth/logout";
 
 const icons = {
     user: User,
@@ -43,9 +46,36 @@ export const sider = [
 
 export default function SidebarProfile({ user }: { user: any }) {
     const location = useLocation();
+    const { setNotify } = useNotify();
+    const navigate = useNavigate();
     const { userData, reloadUser } = useUser();
 
 
+    //----------------[ DANG XUAT ]-----------------------
+    const handleLogout = async () => {
+        try {
+            const res = await Logout();
+
+            if (res.status === 200) {
+                setNotify({
+                    open: true,
+                    type: "success",
+                    title: "Đăng xuất thành công",
+                    message: "Tài khoản đã được đăng xuất ra khỏi hệ thống."
+                });
+                await reloadUser();
+                navigate("/");
+            }
+
+        } catch (error) {
+            setNotify({
+                open: true,
+                type: "error",
+                title: "Đăng xuất thất bại",
+                message: "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau!!!"
+            });
+        }
+    }
     return (
         <aside className="w-64 bg-[#1e1e2d] text-white rounded-md p-5 flex flex-col gap-4">
             <div className="text-center border-b border-white/10 pb-4">
@@ -55,7 +85,7 @@ export default function SidebarProfile({ user }: { user: any }) {
                     className="w-20 h-20 rounded-full mx-auto"
                 />
                 <h3 className="mt-3 text-lg font-semibold">{userData?.name}</h3>
-                <p className="text-sm text-gray-400"><UserRankText  rank={userData.rank}/></p>
+                <p className="text-sm text-gray-400"><UserRankText rank={userData.rank} /></p>
             </div>
 
             <nav className="flex flex-col gap-2 mt-4">
@@ -64,20 +94,31 @@ export default function SidebarProfile({ user }: { user: any }) {
                     const active =
                         location.pathname.includes(item.slug) && item.slug !== "logout";
 
-                    return (
+                    return item.slug === "logout" ? (
+                        <button
+                            key={item.slug}
+                            onClick={handleLogout}
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-all"
+                        >
+                            {Icon && <Icon size={18} />}
+                            <span>{item.title}</span>
+                        </button>
+                    ) : (
                         <Link
                             key={item.slug}
                             to={`/profile/${item.slug}`}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${active
-                                ? "bg-green-500/20 text-[var(--primary)]"
-                                : "hover:bg-white/10 text-gray-300 hover:text-white"
+                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${location.pathname.includes(item.slug)
+                                    ? "bg-green-500/20 text-[var(--primary)]"
+                                    : "hover:bg-white/10 text-gray-300 hover:text-white"
                                 }`}
                         >
                             {Icon && <Icon size={18} />}
                             <span>{item.title}</span>
                         </Link>
                     );
+
                 })}
+
             </nav>
         </aside>
     );
