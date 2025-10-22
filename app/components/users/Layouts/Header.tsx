@@ -323,7 +323,7 @@ export default function Header({ user }: { user: any }) {
                             <BookMarked size={18} className="text-gray-300 text-md font-bold" /> Tủ sách cá nhân
                           </a>
 
-                          <a href="/ranking" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
+                          <a href="/profile/thanh-tich" className="flex rounded-xl items-center gap-2 px-4 py-3 text-md hover:bg-white/10 transition-all">
                             <Trophy size={18} className="text-gray-300 text-md font-bold" /> Thứ hạng đọc sách
                           </a>
                           <hr className="border-white/10 my-2" />

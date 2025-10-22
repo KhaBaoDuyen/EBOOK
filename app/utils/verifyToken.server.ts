@@ -1,3 +1,4 @@
+import { redirect } from "@remix-run/react";
 import jwt from "jsonwebtoken";
 import { authCookie } from "~/routes/api.auth.login";
 
@@ -35,7 +36,8 @@ export async function decodeUser(request: Request) {
 
 export async function requireAdmin(request: Request) {
   const user = await decodeUser(request);
-  if (!user || user.role !== "admin") throw new Response("Không có quyền truy cập", { status: 403 });
+  if (!user || user.role !== "admin"){
+     throw redirect("/?error=unauthorized");}
   return user;
 }
 
