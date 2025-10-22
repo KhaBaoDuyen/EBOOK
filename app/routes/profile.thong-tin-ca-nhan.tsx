@@ -2,14 +2,16 @@ import { useOutletContext } from "@remix-run/react";
 import type IUser from "~/interfaces/user.interface";
 import { useEffect, useState } from "react";
 import { CircleSmall, Loader2 } from "lucide-react";
-import { UserRankCard } from "~/components/users/UserRank";
+import { UserRankCard, UserRank, UserStreak } from "~/components/users/UserRank";
 
 //-----------------[ CONTEXT ]--------------------
 import { useNotify } from "~/context/NotifyContext";
 import { getAuthByEmail, updateAuth } from "~/services/user.service";
 import { useUser } from "~/context/UserContext";
+
 export default function ProfilePage() {
     const { user } = useOutletContext<{ user: IUser | null }>();
+
 
     if (!user) {
         return <p className="text-gray-200">Bạn chưa đăng nhập.</p>;
@@ -27,6 +29,7 @@ export default function ProfilePage() {
     const [isVerified, setIsVerified] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
     const { userData, reloadUser } = useUser();
+    // console.log("dulieu userData", userData);
 
 
     //----------------[ LAY THONG TIN NGUOI DUNG ]------------------
@@ -119,7 +122,7 @@ export default function ProfilePage() {
                 onSubmit={handleSubmit}
                 className="shadow-theme-md bg-[#1e1e2d] flex flex-col items-center
                 p-6 rounded-md shadow-lg  gap-6">
-                <div className="flex flex-col items-center md:w-1/4">
+                <div className="flex flex-col items-center py-5 rounded-md w-full bg-green-600/20">
                     <div className="relative">
                         <img
                             src={
@@ -160,90 +163,110 @@ export default function ProfilePage() {
                             {isVerified === true ? "Đã xác thực" : "Chưa xác thực"} </span>
                     </p>
                 </div>
-                <UserRankCard user={user} />
-                <div className="flex-1 w-full grid md:grid-cols-2 gap-5 text-gray-200">
-                    <div>
-                        <label className="block text-sm text-gray-400 mb-1">Họ và tên</label>
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
-                        />
-                    </div>
 
-                    <div>
-                        <label className="block text-sm text-gray-400 mb-1">Email</label>
-                        <input
-                            type="email"
-                            value={email}
-                            disabled
-                            className="w-full bg-transparent border border-white/20 rounded-lg p-2 text-gray-400"
-                        />
-                    </div>
+                <div className="mx-auto w-full">
+                    <h2 className="text-2xl font-bold text-white mb-4">Thống kê</h2>
 
-                    <div>
-                        <label className="block text-sm text-gray-400 mb-1">Giới tính</label>
-                        <select
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="  w-full bg-[#1e1e2d] text-gray-100 border border-white/20 
-                            rounded-lg  p-2  outline-none focus:border-green-400 appearance-none">
-                            <option
-                                value="Nam"
-                                className="bg-[#1e1e2d] text-gray-100 hover:bg-green-600 hover:text-white">
-                                Nam
-                            </option>
-                            <option
-                                value="Nữ"
-                                className="bg-[#1e1e2d] text-gray-100 hover:bg-pink-600 hover:text-white">
-                                Nữ
-                            </option>
-                            <option
-                                value="Khác"
-                                className="bg-[#1e1e2d] text-gray-100 hover:bg-yellow-600 hover:text-black">
-                                Khác
-                            </option>
-                        </select>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+                        <div className="relative rounded-2xl border border-white/10 bg-[#0f1a1f] p-5">
+                            <UserStreak user={userData} mode="card" />
+                        </div>
 
+                        <div className="relative rounded-2xl border border-white/10 bg-[#0f1a1f]   p-5">
+                            <UserRank user={userData} mode="text" sizeImg="16" />
+                        </div>
 
-                    </div>
-
-                    <div>
-                        <label className="block text-sm text-gray-400 mb-1">Ngày sinh</label>
-                        <input
-                            type="date"
-                            value={birthDate || ""}
-                            onChange={(e) => setBirthDate(e.target.value)}
-                            className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
-                        />
-                    </div>
-
-                    <div className="md:col-span-2">
-                        <label className="block text-sm text-gray-400 mb-1">Giới thiệu bản thân</label>
-                        <textarea
-                            defaultValue={description || `Xin chào, tôi là ${name}, rất vui được gặp bạn!`}
-                            rows={4}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
-                        ></textarea>
-                    </div>
-
-                    <div className="flex justify-end md:col-span-2">
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-semibold transition-colors
-    ${loading
-                                    ? "bg-gray-500 text-gray-300 cursor-not-allowed"
-                                    : "bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-black"
-                                }`}
-                        >
-                            {loading && <Loader2 className="animate-spin w-4 h-4" />}
-                            {loading ? "Đang lưu..." : "Lưu thay đổi"}
-                        </button>
                     </div>
                 </div>
+
+                <div className="w-full">
+                    <h2 className="text-2xl font-bold text-white mb-4">Hồ sơ cá nhân</h2>
+                    <div className="flex-1 w-full grid md:grid-cols-2 gap-5 text-gray-200">
+
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1">Họ và tên</label>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                disabled
+                                className="w-full bg-transparent border border-white/20 rounded-lg p-2 text-gray-400"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1">Giới tính</label>
+                            <select
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                                className="  w-full bg-[#1e1e2d] text-gray-100 border border-white/20 
+                            rounded-lg  p-2  outline-none focus:border-green-400 appearance-none">
+                                <option
+                                    value="Nam"
+                                    className="bg-[#1e1e2d] text-gray-100 hover:bg-green-600 hover:text-white">
+                                    Nam
+                                </option>
+                                <option
+                                    value="Nữ"
+                                    className="bg-[#1e1e2d] text-gray-100 hover:bg-pink-600 hover:text-white">
+                                    Nữ
+                                </option>
+                                <option
+                                    value="Khác"
+                                    className="bg-[#1e1e2d] text-gray-100 hover:bg-yellow-600 hover:text-black">
+                                    Khác
+                                </option>
+                            </select>
+
+
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1">Ngày sinh</label>
+                            <input
+                                type="date"
+                                value={birthDate || ""}
+                                onChange={(e) => setBirthDate(e.target.value)}
+                                className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
+                            />
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block text-sm text-gray-400 mb-1">Giới thiệu bản thân</label>
+                            <textarea
+                                defaultValue={description || `Xin chào, tôi là ${name}, rất vui được gặp bạn!`}
+                                rows={4}
+                                onChange={(e) => setDescription(e.target.value)}
+                                className="w-full bg-transparent border border-white/20 rounded-lg p-2 outline-none focus:border-green-400"
+                            ></textarea>
+                        </div>
+
+                        <div className="flex justify-end md:col-span-2">
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-semibold transition-colors
+    ${loading
+                                        ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+                                        : "bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-black"
+                                    }`}
+                            >
+                                {loading && <Loader2 className="animate-spin w-4 h-4" />}
+                                {loading ? "Đang lưu..." : "Lưu thay đổi"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </form>
 
 

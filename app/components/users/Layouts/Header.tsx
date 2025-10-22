@@ -13,6 +13,7 @@ import Button from "../Buttons/Button";
 import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
 import CategoryDropdown from "./CategoryDropdown";
+import { UserSomeTime, UserRank } from "../UserRank";
 
 //=============[ SERVICE - CONTEXT ]==========================
 import { getAllCategory } from "~/services/category.service";
@@ -298,11 +299,19 @@ export default function Header({ user }: { user: any }) {
                         group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
                         transition-all duration-300 z-50" >
                         <div className="px-4 py-3 border-b border-white/10 flex justify-between items-center text-white">
-                          <p className="font-semibold text-base">{userData?.name || "Người dùng"}</p>
+                          <div className="flex flex-col gap-3 ">
+                            <p className="font-semibold w-max text-base">{userData?.name || "Người dùng"}</p>
+                            <span className="flex gap-1">
+                              {userData.streakDays >= 5 && (
+                                <UserSomeTime user={userData} sizeImg="6" />
+                              )}
+                              <UserRank user={userData} sizeImg="6" />
+                            </span>
+                          </div>
                           <img
                             src={userData?.avatar || "/Images/Main/user.png"}
                             alt="Avatar"
-                            className="w-10 h-10 rounded-full object-cover border-2 border-[var(--primary)] transition-all duration-300 group-hover:brightness-90"
+                            className="w-12 h-12 rounded-full object-cover border-2 border-[var(--primary)] transition-all duration-300 group-hover:brightness-90"
                           />
                         </div>
 

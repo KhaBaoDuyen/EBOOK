@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   completedBooks: { type: Number, default: 0 }, // Tổng số sách đã hoàn thành
   rank: {  // Thứ hạng hiện tại
     type: String,
-    enum: ["đồng", "bạc", "vàng", "bạch kim", "hồng ngọc", "lục bảo", "ngọc trai"],
+    enum: ["đồng", "bạc", "vàng", "thiên thanh", "thạch anh tím", "hồng ngọc", "lục bảo", "ngọc trai"],
     default: "đồng",
   },
   badges: [{ type: String, default: [] }], // Danh sách huy hiệu người dùng đạt được

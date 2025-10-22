@@ -21,6 +21,7 @@ import {
 import { useUser } from "~/context/UserContext";
 import { UserRankText } from "~/components/users/UserRank";
 import { useNotify } from "~/context/NotifyContext";
+import { UserSomeTime } from "~/components/users/UserRank";
 
 import { Logout } from "~/services/Auth/logout";
 
@@ -84,8 +85,15 @@ export default function SidebarProfile({ user }: { user: any }) {
                     alt="avatar"
                     className="w-20 h-20 rounded-full mx-auto"
                 />
-                <h3 className="mt-3 text-lg font-semibold">{userData?.name}</h3>
-                <p className="text-sm text-gray-400"><UserRankText rank={userData.rank} /></p>
+                <div className="mt-3 text-lg flex items-center justify-center gap-2 font-semibold">
+                    <h3>{userData?.name} </h3>
+                    {userData.streakDays >= 5 && (
+                        <UserSomeTime user={userData} sizeImg="6" />
+                    )}
+                </div>
+                <p className="text-sm  mt-2 text-gray-400">
+                    <UserRankText rank={userData.rank} />
+                </p>
             </div>
 
             <nav className="flex flex-col gap-2 mt-4">
@@ -108,8 +116,8 @@ export default function SidebarProfile({ user }: { user: any }) {
                             key={item.slug}
                             to={`/profile/${item.slug}`}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${location.pathname.includes(item.slug)
-                                    ? "bg-green-500/20 text-[var(--primary)]"
-                                    : "hover:bg-white/10 text-gray-300 hover:text-white"
+                                ? "bg-green-500/20 text-[var(--primary)]"
+                                : "hover:bg-white/10 text-gray-300 hover:text-white"
                                 }`}
                         >
                             {Icon && <Icon size={18} />}
