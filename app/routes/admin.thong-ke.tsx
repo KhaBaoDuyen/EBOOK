@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { getAllBook } from "~/services/book.service";
 import { getStatistical } from "~/services/User/count.user.service";
-import { User, UserCheck, ShieldUser, Book, BookMarked ,BookHeart   } from "lucide-react";
+import { User, UserCheck, ShieldUser, Book, BookMarked, BookHeart } from "lucide-react";
 
 import StatCard from "~/components/admin/ui/card/StatCard";
 
@@ -27,7 +27,7 @@ export default function QuanTriIndex() {
   const [countUser, setCountUser] = useState<any>();
   const [activeUser, setActiveUser] = useState<any>();
   const [verifiedRate, setVerifiedRate] = useState<any>();
-  const [countBook, setCountBook ] = useState<any>();
+  const [countBook, setCountBook] = useState<any>();
   const [countLike, setCountLike] = useState<any>();
   const [countSaveBook, setCountSaveBook] = useState<any>();
 
@@ -57,20 +57,47 @@ export default function QuanTriIndex() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex gap-6 w-full">
-        <section className="flex-[0.7] bg-[#0f1a1f] p-5 rounded-xl">
+        <section className="flex-[0.7] bg-white shadow-xl dark:bg-[#0f1a1f] p-5 rounded-xl transition-colors duration-300">
           <div className="p-5 rounded-2xl w-full h-[400px]">
-            <h2 className="text-white text-lg font-semibold mb-4">Top 10 sách có lượt xem cao nhất</h2>
+            <h2 className="text-gray-800 dark:text-white text-lg font-semibold mb-4">
+              Top 10 sách có lượt xem cao nhất
+            </h2>
             <ResponsiveContainer width="100%" height="100%">
               {books.length > 0 ? (
-                <BarChart data={books} margin={{ top: 10, right: 20, left: 0, bottom: 60 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#2f3c48" />
-                  <XAxis dataKey="title" stroke="#ccc" tick={{ fill: "#ccc", fontSize: 10 }} angle={-30} textAnchor="end" />
-                  <YAxis stroke="#ccc" tick={{ fill: "#ccc" }} />
-                  <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "none" }} itemStyle={{ color: "#15B088" }} />
+                <BarChart
+                  data={books}
+                  margin={{ top: 10, right: 20, left: 0, bottom: 60 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="var(--chart-grid)"
+                  />
+                  <XAxis
+                    dataKey="title"
+                    stroke="var(--chart-text)"
+                    tick={{ fill: "var(--chart-text)", fontSize: 10 }}
+                    angle={-30}
+                    textAnchor="end"
+                  />
+                  <YAxis
+                    stroke="var(--chart-text)"
+                    tick={{ fill: "var(--chart-text)" }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "var(--chart-tooltip-bg)",
+                      border: "none",
+                      borderRadius: "8px",
+                      color: "var(--chart-tooltip-text)",
+                    }}
+                    itemStyle={{ color: "#15B088" }}
+                  />
                   <Bar dataKey="viewCount" fill="#15B088" radius={[6, 6, 0, 0]} />
                 </BarChart>
               ) : (
-                <p className="text-center text-gray-400 mt-20">Không có dữ liệu hiển thị</p>
+                <p className="text-center text-gray-400 dark:text-gray-500 mt-20">
+                  Không có dữ liệu hiển thị
+                </p>
               )}
             </ResponsiveContainer>
           </div>
@@ -85,8 +112,8 @@ export default function QuanTriIndex() {
 
       <div className="grid grid-cols-3 gap-5">
         <StatCard icon={Book} value={countBook} label="Tổng số sách trong hệ thống" />
-        <StatCard icon={BookMarked } value={countLike} label="Tổng lượt tym (yêu thích) trên toàn hệ thống." />
-        <StatCard icon={BookHeart } value={countSaveBook} label="Tổng số sách được lưu trong hệ thống" />
+        <StatCard icon={BookMarked} value={countLike} label="Tổng lượt tym (yêu thích) trên toàn hệ thống." />
+        <StatCard icon={BookHeart} value={countSaveBook} label="Tổng số sách được lưu trong hệ thống" />
 
       </div>
     </div>

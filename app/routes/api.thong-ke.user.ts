@@ -18,10 +18,13 @@ export async function loader() {
         //-------------------[ BOOK ]-------------------------------
 
         const totalBooks = await Book.countDocuments();
-        const totalLikes = await Book.aggregate([
-            { $group: { _id: null, total: { $sum: "$favoriteCount" } } }
+        const totalLikes = await Library.aggregate([
+            { $match: { isFavorite: true } },
+            { $group: { _id: "$bookId" } },
+            { $count: "total" }
         ]);
         const totalLikesCount = totalLikes[0]?.total || 0;
+        
         const totalUniqueBooksSaved = await Library.aggregate([
             { $match: { isSaved: true } },
             { $group: { _id: "$bookId" } },
