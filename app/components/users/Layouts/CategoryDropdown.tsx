@@ -28,7 +28,7 @@ export default function CategoryDropdown({ cat, currentPath }: any) {
         transition-all duration-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible
         ${position === "right" ? "right-0" : "left-0"}`}
     >
-      <h1 className="font-bold py-2 text-xl mb-2">{cat.name}</h1>
+      <h1 className="font-bold py-2 text-white text-xl mb-2">{cat.name}</h1>
 
       <div
         className="grid auto-rows-auto gap-4 max-h-[10rem] overflow-y-auto p-5"
@@ -50,7 +50,7 @@ export default function CategoryDropdown({ cat, currentPath }: any) {
       <hr className="border-white/10 my-2" />
 
       <div>
-        <h1 className="font-bold py-2 text-xl mb-2">KHÁM PHÁ NGAY</h1>
+        <h1 className="font-bold py-2 text-white text-xl mb-2">KHÁM PHÁ NGAY</h1>
 
         <span className="flex flex-wrap gap-4 mt-5">
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">

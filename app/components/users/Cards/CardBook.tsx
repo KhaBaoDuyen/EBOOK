@@ -66,17 +66,17 @@ const CardBook = ({
                   <span className="inline-block bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-sm font-medium">
                     {author}
                   </span>
-                  <span className="flex lg:flex-row flex-col gap-2">
+                  {/* <span className="flex lg:flex-row flex-col gap-2">
                     <Button
                       text="Đọc sách"
                       icon={faBook}
                       href={linkRender}
                       iconPosition="left"
                     />
-                    <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition">
-                      ♥
-                    </button>
-                  </span>
+                    <span className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition">
+                     <FavoriteButton book={_id} />
+                    </span>
+                  </span> */}
                 </div>
                 <p
                   className="text-sm text-gray-300 leading-relaxed mt-4 !line-clamp-5 "

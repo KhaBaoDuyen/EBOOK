@@ -182,7 +182,7 @@ export default function Header({ user }: { user: any }) {
                 <div key={cat.slug} className="relative flex flex-col gap-3 group">
                   <a
                     href={`/${cat.slug}`}
-                    className={`py-2 px-3 font-bold transition-colors hover:text-emerald-400 ${isActive(cat) ? "text-emerald-400" : ""
+                    className={`py-2 px-3 font-bold text-white transition-colors hover:text-emerald-400 ${isActive(cat) ? "text-emerald-400" : ""
                       }`}
                   >
                     {cat.name}
@@ -237,7 +237,7 @@ export default function Header({ user }: { user: any }) {
                 <input
                   type="text"
                   placeholder="Tìm kiếm sách, tác giả..."
-                  className="absolute right-12 w-0 opacity-0 px-0 py-2 rounded-xl bg-pri text-white
+                  className="absolute !bg-gray-200 right-12 w-0 opacity-0 px-0 py-2 rounded-xl text-gray-700
                    placeholder-gray-400 border border-gray-600 focus:outline-none 
                    focus:w-64 focus:px-4 focus:opacity-100 transition-all duration-300 
                    group-hover:w-64 group-hover:opacity-100 group-hover:px-4 focus:ring-emerald-600"
