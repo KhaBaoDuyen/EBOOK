@@ -12,7 +12,7 @@ export async function getAllUsers() {
 export async function getAuthByEmail(email: string) {
   const res = await fetch(`/api/tai-khoan/${email}`);
 
-  console.log("dulieu api", res);
+  // console.log("dulieu api", res);
 
   if (!res.ok) {
     const text = await res.text();

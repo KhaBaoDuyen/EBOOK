@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, redirect, useLoaderData } from "@remix-run/react";
 import { SidebarProvider, useSidebar } from "~/context/SidebarContext";
 import { ThemeProvider } from "~/context/ThemeContext";
 import AppSidebar from "~/components/admin/layout/AppSidebar";
@@ -10,12 +10,19 @@ import { UserProvider } from "~/context/UserContext";
 
 
 export async function loader({ request }: { request: Request }) {
-  const user = await requireAdmin(request); 
+  const url = new URL(request.url);
+  if (url.pathname === "/admin") {
+    throw redirect("/admin/thong-ke");
+  }
+
+  const user = await requireAdmin(request);
   return { initialUser: user };
 }
 
+
 function LayoutContent() {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+
   return (
     <div className="min-h-screen xl:flex">
       <div>
@@ -41,7 +48,7 @@ export default function AdminLayout() {
     <ThemeProvider>
       <SidebarProvider>
         <UserProvider initialUser={initialUser}>
-        <LayoutContent />
+          <LayoutContent />
         </UserProvider>
       </SidebarProvider>
     </ThemeProvider>
