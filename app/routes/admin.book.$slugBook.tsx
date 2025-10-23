@@ -58,9 +58,9 @@ export default function UpdateBookPage() {
 
     return (
         <div className="relative min-h-screen p-6">
-            <h1 className="text-2xl font-bold mb-4 text-white">Xem Sách</h1>
+            <h1 className="text-2xl font-bold mb-4 text-[var(--input-text)]">Xem Sách</h1>
             {loading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[9999]">
+                <div className="fixed inset-0 flex items-center justify-center bg-[var(--input-bg)] backdrop-blur-sm z-[9999]">
                     <CusttomLoading />
                 </div>
             )}

@@ -59,7 +59,7 @@ export default function UpdateCatPage() {
 
   return (
     <div className="p-6 ">
-      <h1 className="text-2xl font-bold mb-4 text-white">Xem thể loại</h1>
+      <h1 className="text-2xl font-bold mb-4 text-[var(--input-text)]">Xem thể loại</h1>
       <CategogyForm key={slugCat} slugParam={slugCat} onSubmit={handleSubmit} />
     </div>
   );

@@ -6,14 +6,45 @@
   --primary:#15B088;
   --primary-hover:#14a17e;
   --text-light: white;
+  --chart-grid: #e5e7eb;
+  --chart-text: #374151;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-text: #111827;
+  --input-bg: #ffffff;
+  --input-text: #111827;
+  --input-text-disabled: #6b7280;
+  --input-border: #aaa;
+  --input-border-hover: #333;
+  --input-border-focus: #22c55e;
+  --input-border-disabled: #ccc;
+  --input-border-error: #f10303;
+  --input-label-default: #555;
+  --input-label-focus: #22c55e;
+  --input-label-disabled: #3d3e41;
+  --input-label-error: #b60d0d;
+  --input-helper-default: #6b7280;
+  --input-helper-error: #eb2525;
 }
 
-[data-theme=light] {
-  --bg: #010101;
-  --text: #080f1f;
-  --surface: #ffffff;
-  --font-family: Netflix Sans, sans-serif;
-  --mouse:#010101;
+.dark {
+  --chart-grid: #2f3c48;
+  --chart-text: #d1d5db;
+  --chart-tooltip-bg: #1f2937;
+  --chart-tooltip-text: #f3f4f6;
+  --input-bg: #1f2937;
+  --input-text: #f9fafb;
+  --input-text-disabled: #ffffff;
+  --input-border: #aaa;
+  --input-border-hover: #ffffff;
+  --input-border-focus: #4ade80;
+  --input-border-disabled: #ccc;
+  --input-border-error: #ff0000;
+  --input-label-default: #ccc;
+  --input-label-focus: #4ade80;
+  --input-label-disabled: #fff;
+  --input-label-error: #b60d0d;
+  --input-helper-default: #ccc;
+  --input-helper-error: #eb2525;
 }
 
 h1,

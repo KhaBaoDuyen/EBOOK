@@ -1,4 +1,5 @@
-import { TextField, TextFieldProps } from "@mui/material";
+import type { TextFieldProps } from "@mui/material";
+import  { TextField } from "@mui/material";
 import React from "react";
 
 const CustomTextField: React.FC<TextFieldProps> = (props) => {
@@ -13,46 +14,59 @@ const CustomTextField: React.FC<TextFieldProps> = (props) => {
       variant="outlined"
       sx={{
         "& .MuiOutlinedInput-root": {
-          color: "white",
-          backgroundColor: "#1F2937",
+          color: "var(--input-text)",
+          backgroundColor: "var(--input-bg)",
           borderRadius: "8px",
-
-           "&.Mui-disabled fieldset": {
-            borderColor: "#ccc !important",
-          },
+          transition: "all 0.3s ease",
 
           "& fieldset": {
-            borderColor: error ? "#f87171" : "#aaa",
+            borderColor: error
+              ? "var(--input-border-error)"
+              : "var(--input-border)",
           },
           "&:hover fieldset": {
-            borderColor: error ? "#f87171" : "#fff",
+            borderColor: error
+              ? "var(--input-border-error)"
+              : "var(--input-border-hover)",
           },
           "&.Mui-focused fieldset": {
-            borderColor: error ? "#f87171" : "#4ade80",
+            borderColor: error
+              ? "var(--input-border-error)"
+              : "var(--input-border-focus)",
           },
 
-           "&.Mui-disabled": {
+          "&.Mui-disabled fieldset": {
+            borderColor: "var(--input-border-disabled) !important",
+          },
+
+          "&.Mui-disabled": {
             "& input": {
-              WebkitTextFillColor: "#fff",
-              color: "#fff",
+              WebkitTextFillColor: "var(--input-text-disabled)",
+              color: "var(--input-text-disabled)",
               opacity: 1,
             },
           },
         },
 
-         "& .MuiInputLabel-root": {
-          color: error ? "#f87171" : "#ccc",
+        "& .MuiInputLabel-root": {
+          color: error
+            ? "var(--input-label-error)"
+            : "var(--input-label-default)",
           "&.Mui-focused": {
-            color: error ? "#f87171" : "#4ade80",
+            color: error
+              ? "var(--input-label-error)"
+              : "var(--input-label-focus)",
           },
           "&.Mui-disabled": {
-            color: "#fff !important",
+            color: "var(--input-label-disabled) !important",
             opacity: 1,
           },
         },
 
-         "& .MuiFormHelperText-root": {
-          color: error ? "#f87171" : "#ccc",
+        "& .MuiFormHelperText-root": {
+          color: error
+            ? "var(--input-helper-error)"
+            : "var(--input-helper-default)",
         },
       }}
     />

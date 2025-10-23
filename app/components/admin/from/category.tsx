@@ -159,9 +159,9 @@ export default function CategogyForm({
     };
 
     return (
-        <form onSubmit={handleSubmit} className="text-white p-6 rounded-md">
+        <form onSubmit={handleSubmit} className="text-[var(--input-text)] p-6 rounded-md">
             <div className="flex gap-5">
-                <div className="p-5 border border-gray-500 rounded-md w-full bg-[#1F2937] space-y-6 h-auto">
+                <div className="p-5   rounded-md w-full bg- bg-[var(--input-bg)] border border-[var(--input-border)] space-y-6 h-auto">
                     <CustomTextField
                         value={name}
                         label="Tên loại"
@@ -182,10 +182,10 @@ export default function CategogyForm({
                             {categories.map((cat) => (
                                 <Box
                                     key={cat._id}
-                                    className="p-2 rounded-md bg-[#111827] border border-gray-700 flex items-center justify-between"
+                                    className="p-2 rounded-md  bg-[var(--input-bg)] border border-[var(--input-border)] flex items-center justify-between"
                                 >
                                     <FormControlLabel
-                                        label={<span className="text-white">{cat.name}</span>}
+                                        label={<span className="text-[var(--input-text)]">{cat.name}</span>}
                                         control={
                                             <Checkbox
                                                 checked={!!checked[cat._id]}
@@ -207,7 +207,7 @@ export default function CategogyForm({
                         <select
                             value={status}
                             onChange={(e) => setStatus(Number(e.target.value))}
-                            className="w-full p-2 rounded-md border border-gray-400 bg-[#111827] text-white focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none"
+                            className="w-full p-2 rounded-md  bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none"
                         >
                             <option value={1}>Hiển thị</option>
                             <option value={0}>Ẩn</option>
@@ -217,7 +217,7 @@ export default function CategogyForm({
                     <div className="text-center pt-4">
                         <button
                             type="submit"
-                            className="px-6 w-full py-2 bg-green-700 hover:bg-green-800 text-white rounded-md transition"
+                            className="px-6 w-full py-2 bg-green-700 hover:bg-green-800  text-[var(--input-text)] rounded-md transition"
                         >
                             Lưu Thể Loại
                         </button>

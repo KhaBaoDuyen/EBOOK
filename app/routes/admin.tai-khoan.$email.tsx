@@ -64,7 +64,7 @@ export default function AuthByEmail() {
     return (
         <div className="relative min-h-screen p-6">
             {loading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-[9999]">
+                <div className="fixed inset-0 flex items-center justify-center shadow-xl bg-gray-300 dark:bg-black/50 backdrop-blur-sm z-[9999]">
                     <CusttomLoading />
                 </div>
             )}

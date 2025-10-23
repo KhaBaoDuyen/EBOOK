@@ -1434,8 +1434,7 @@ span.flatpickr-weekday,
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #fff;
-}
+ }
 
 .ProseMirror:focus {
   border: none;
@@ -1443,8 +1442,7 @@ span.flatpickr-weekday,
 }
 
 .ProseMirror {
-  background-color: #1F2937;
-  border-radius: 0.375rem;
+   border-radius: 0.375rem;
 }
 
 .book-content h1,

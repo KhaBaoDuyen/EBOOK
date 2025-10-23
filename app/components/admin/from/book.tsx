@@ -240,9 +240,9 @@ export default function BookForm({
   };
 
   return (
-    <div className="text-white p-6 rounded-md">
+    <div className="text-[var(--input-text)] p-6 rounded-md">
       <form className="flex gap-5" onSubmit={Submit}>
-        <div className="basis-[70%] p-5 border border-gray-500 rounded-md bg-[#1F2937] space-y-6">
+        <div className="basis-[70%] p-5 border border-[var(--input-border)] rounded-md bg-[var(--input-bg)] space-y-6">
           <div className="grid grid-cols-1 gap-5">
             <div>
               <CustomTextField
@@ -313,7 +313,7 @@ export default function BookForm({
             />
           </div>
 
-          <div className={`border p-3 rounded-md transition-all duration-200 ${showCategoryError ? "border-red-500" : "border-gray-700"}`}>
+          <div className={`border p-3 rounded-md transition-all duration-200 ${showCategoryError ? "border-red-500" : "border-[var(--input-border)]"}`}>
             <h1>Danh mục</h1>
             <Box>
               {categories.map((parent) => {
@@ -325,10 +325,10 @@ export default function BookForm({
                 return (
                   <Box
                     key={parent._id}
-                    className="mb-4 p-3 rounded-md bg-[#1F2937] shadow-md border border-gray-700"
+                    className="mb-4 p-3 rounded-md bg-[var(--input-bg)] shadow-md border border-[var(--input-border)]"
                   >
                     <FormControlLabel
-                      label={<span className="font-semibold text-white">{parent.name}</span>}
+                      label={<span className="font-semibold text-[var(--input-text)]">{parent.name}</span>}
                       control={
                         <Checkbox
                           checked={
@@ -348,8 +348,8 @@ export default function BookForm({
                             }
                           }}
                           sx={{
-                            color: "#ccc",
-                            "&.Mui-checked": { color: "#4ade80" },
+                            color: "var(--input-text)",
+                            "&.Mui-checked": { color: "var(--input-border-focus)", },
                           }}
                         />
                       }
@@ -371,7 +371,7 @@ export default function BookForm({
                         {children.map((child: any) => (
                           <FormControlLabel
                             key={child._id}
-                            label={<span className="text-sm text-gray-200">{child.name}</span>}
+                            label={<span className="text-sm text-[var(--input-text)]">{child.name}</span>}
                             control={
                               <Checkbox
                                 checked={!!checked[child._id]}
@@ -402,7 +402,7 @@ export default function BookForm({
             <select
               value={status}
               onChange={(e) => setStatus(Number(e.target.value))}
-              className="w-full p-2 rounded-md border border-gray-400 bg-[#111827] text-white focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none"
+              className="w-full p-2 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--input-text)] focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none"
             >
               <option value={1}>Hiển thị</option>
               <option value={0}>Ẩn</option>
@@ -419,7 +419,7 @@ export default function BookForm({
           </div>
         </div>
 
-        <aside className="basis-[30%] p-5 bg-[#1F2937] border border-gray-500
+        <aside className="basis-[30%] p-5 bg-[var(--input-bg)] border border-[var(--input-border)]
          shadow-gray-700 flex rounded-md flex-col justify-start items-center space-y-6">
           <div className="w-full flex flex-col gap-3 text-center">
             <label className="block mb-2 text-sm font-medium">Ảnh bìa sách</label>
@@ -433,7 +433,7 @@ export default function BookForm({
               type="file"
               accept="image/*"
               onChange={handleCover}
-              className="w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+              className="w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-[var(--input-text)] hover:file:bg-blue-700"
             />
             {!cover && !preview && (
               <p className="text-red-400 text-sm">* Vui lòng chọn ảnh bìa</p>
@@ -443,7 +443,7 @@ export default function BookForm({
           <div className="w-full text-center">
             <label className="block mb-2 text-sm font-medium">Tải file sách</label>
             {oldFile && !allowUpload ? (
-              <div className="bg-gray-800 p-3 rounded-md text-sm">
+              <div className="bg-[var(--input-bg)] p-3 rounded-md text-sm">
                 <p>{oldFile}</p>
                 <button
                   type="button"
@@ -459,7 +459,7 @@ export default function BookForm({
                 accept=".pdf,.epub"
                 onChange={(e) => setFileBook(e.target.files?.[0] || null)}
                 className={`w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold ${!fileBook ? "file:bg-red-700" : "file:bg-blue-600"
-                  } file:text-white hover:file:bg-blue-700`}
+                  } file:text-[var(--input-text)] hover:file:bg-blue-700`}
               />)}
             {!fileBook && !oldFile && (
               <p className="text-red-400 text-sm">* Vui lòng tải file sách</p>

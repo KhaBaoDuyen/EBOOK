@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Autocomplete, TextField, Box } from "@mui/material";
-import { Paper, autocompleteClasses } from "@mui/material";
+import { Autocomplete, TextField, Box, Paper } from "@mui/material";
 
 interface CustomComboBoxProps<T> {
   label?: string;
@@ -12,7 +11,7 @@ interface CustomComboBoxProps<T> {
   onBlur?: () => void;
   error?: boolean;
   helperText?: string;
-  onAddNew?: () => void;  
+  onAddNew?: () => void;
 }
 
 export default function CustomComboBox<T>({
@@ -27,14 +26,12 @@ export default function CustomComboBox<T>({
   helperText,
   onAddNew,
 }: CustomComboBoxProps<T>) {
-
   const extendedOptions = React.useMemo(() => {
     if (onAddNew) {
       return [{ _id: "__add_new__", name: "+ Thêm mới" } as any, ...options];
     }
     return options;
   }, [options, onAddNew]);
-
 
   return (
     <Box sx={{ ...sx }}>
@@ -52,7 +49,7 @@ export default function CustomComboBox<T>({
             className="w-5 h-5"
             fill="none"
             viewBox="0 0 24 24"
-            stroke={error ? "#f87171" : "#fff"}
+            stroke={error ? "#f87171" : "var(--input-text)"}
             strokeWidth={2}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -68,38 +65,32 @@ export default function CustomComboBox<T>({
         renderOption={(props, option: any) => (
           <li
             {...props}
-            className={`
-    flex items-center justify-between gap-3
-    px-4 py-2.5 rounded-md transition-all duration-200
-    ${option._id === "__add_new__"
-                ? "text-green-400 font-semibold hover:bg-green-500/10"
-                : "text-gray-100 hover:bg-gray-700/40"
-              }
-  `}
+            className={`flex items-center justify-between gap-3 px-4 py-2.5 rounded-md transition-all duration-200
+              ${option._id === "__add_new__"
+                ? "text-green-500 font-semibold hover:bg-green-500/10"
+                : "text-[var(--input-text)] hover:bg-[var(--input-border)]/10"
+              }`}
           >
             <span className="truncate text-[15px] tracking-wide">
               {option.name || getOptionLabel?.(option) || String(option)}
             </span>
-
             {option._id === "__add_new__" && (
-              <span className="text-green-400 text-lg font-bold flex items-center">＋</span>
+              <span className="text-green-500 text-lg font-bold flex items-center">
+                ＋
+              </span>
             )}
           </li>
-
         )}
-
         PaperComponent={(props) => (
           <Paper
             {...props}
             sx={{
-              backgroundColor: "rgba(0, 0, 0, 0.45)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              color: "white !important",
-              padding: "10px",
+              backgroundColor: "var(--input-bg)",
+              color: "var(--input-text)",
+              border: "1px solid var(--input-border)",
+              backdropFilter: "blur(8px)",
               borderRadius: "10px",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
               "& .MuiAutocomplete-listbox": {
                 paddingY: "6px",
                 paddingX: "2px",
@@ -114,7 +105,6 @@ export default function CustomComboBox<T>({
             }}
           />
         )}
-
         renderInput={(params) => (
           <TextField
             {...params}
@@ -124,38 +114,40 @@ export default function CustomComboBox<T>({
             fullWidth
             sx={{
               "& .MuiInputBase-root": {
-                color: "#fff",
-                backgroundColor: "#1F2937",
+                color: "var(--input-text)",
+                backgroundColor: "var(--input-bg)",
                 borderRadius: "8px",
+                transition: "all 0.3s ease",
               },
               "& .MuiInputLabel-root": {
-                color: error ? "#f87171" : "rgba(255,255,255,0.7)",
+                color: error ? "#f87171" : "var(--input-text-disabled)",
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: error ? "#f87171" : "#ffffff",
+                color: error ? "#f87171" : "#22c55e",
               },
               "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: error ? "#f87171" : "rgba(255,255,255,0.4)",
+                borderColor: error ? "#f87171" : "var(--input-border)",
               },
               "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: error ? "#f87171" : "#fff",
+                borderColor: error ? "#f87171" : "var(--input-text)",
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: error ? "#f87171" : "#4ade80",
+                borderColor: error ? "#f87171" : "#22c55e",
                 borderWidth: "2px",
               },
               "& input": {
-                color: "#fff",
+                color: "var(--input-text)",
               },
               "& svg": {
-                color: error ? "#f87171" : "#fff",
+                color: error ? "#f87171" : "var(--input-text)",
+              },
+              "& .MuiFormHelperText-root": {
+                color: error ? "#f87171" : "var(--input-text-disabled)",
               },
             }}
           />
         )}
-
       />
-
     </Box>
   );
 }

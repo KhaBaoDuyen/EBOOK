@@ -21,7 +21,7 @@ export default function AuthForm({
   const [avatar, setAvatar] = useState<any>();
   const [gender, setGender] = useState<string>("Khác");
   const [birthDate, setBirthDate] = useState<string>();
- 
+
   const [loading, setLoading] = useState(false);
 
   console.log(email);
@@ -38,7 +38,7 @@ export default function AuthForm({
           setAvatar(res.data.avatar);
           setGender(res.data.gender ?? "Khác");
           setBirthDate(res.data.birthDate ?? "Chưa có thông tin");
-         }
+        }
         // console.log("dulieu res",res);
 
       } catch (err: any) {
@@ -105,7 +105,7 @@ export default function AuthForm({
   if (!user) {
     return (
       <div className="p-6  rounded-md">
-        <CusttomLoading/>
+        <CusttomLoading />
         <p>Đang tải thông tin người dùng...</p>
       </div>
     );
@@ -114,7 +114,7 @@ export default function AuthForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="text-white p-6 bg-[#1F2937] border border-gray-600 rounded-md space-y-6"
+      className=" shadow-xl text-[var(--input-text)] bg-[var(--input-bg)] border border-white/20 dark:border-gray-600 rounded-md space-y-6"
     >
       <div className="w-full flex gap-4 flex-col justify-center items-center">
         <img src={user.avatar || "/Images/main/user.png"} alt="Ảnh người dùng"
@@ -127,7 +127,7 @@ export default function AuthForm({
           {user.name}
         </p>
       </div>
-      <div className="grid gap-6 text-white grid-cols-2">
+      <div className="grid gap-6 text-[var(--input-text)] grid-cols-2">
         <div>
           <CustomTextField
             label="Tên người dùng"
@@ -161,8 +161,8 @@ export default function AuthForm({
           <select
             value={status}
             onChange={(e) => setStatus(Number(e.target.value))}
-            className="w-full p-2 rounded-md border border-gray-400 bg-[#111827] text-white focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none"
-          >
+            className="w-full p-2 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] 
+             dark:text-white focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none">
             <option value={1}>Hoạt động</option>
             <option value={0}>Khóa</option>
           </select>
@@ -173,8 +173,8 @@ export default function AuthForm({
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full p-2 rounded-md border border-gray-400 bg-[#111827] text-white focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none"
-          >
+            className="w-full p-2 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] 
+             dark:text-white focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none">
             <option value="user">Người dùng</option>
             <option value="admin">Quản trị viên</option>
           </select>

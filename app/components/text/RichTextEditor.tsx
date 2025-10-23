@@ -3,7 +3,16 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
-import { Bold, Italic, Underline as UnderlineIcon, AlignLeft, AlignCenter, AlignRight, AlignJustify, Type } from "lucide-react";
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  Type,
+} from "lucide-react";
 
 export default function RichTextEditor({
   label = "Nội dung mô tả",
@@ -21,16 +30,7 @@ export default function RichTextEditor({
   const [isClient, setIsClient] = useState(false);
   const [showHeadings, setShowHeadings] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value || "");
-    }
-  }, [value]);
-
+  useEffect(() => setIsClient(true), []);
 
   const editor = useEditor({
     extensions: [
@@ -40,54 +40,67 @@ export default function RichTextEditor({
     ],
     content: value,
     immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      onChange && onChange(editor.getHTML());
-    },
+    onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || "");
+    }
+  }, [value]);
 
   if (!isClient || !editor) return null;
 
   const buttonBase =
-    "p-1.5 rounded transition hover:bg-gray-600 bg-gray-700 flex items-center justify-center";
-  const activeStyle = "bg-green-700";
+    "p-1.5 rounded transition flex items-center justify-center";
+  const activeStyle = "bg-[var(--input-border-focus)] text-white";
 
   return (
     <div className="w-full">
-      <label className="block mb-1 text-sm font-medium text-gray-200">
+      <label
+        className="block mb-1 text-sm font-medium"
+        style={{ color: error ? "var(--input-label-error)" : "var(--input-label-default)" }}
+      >
         {label}
       </label>
 
-      <div className="flex flex-wrap items-center gap-2 p-2 bg-[#111827] rounded-t-md border border-gray-600">
-        <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`${buttonBase} ${editor.isActive("bold") ? activeStyle : ""}`}
-          type="button"
-        >
-          <Bold className="text-white w-4 h-4" />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`${buttonBase} ${editor.isActive("italic") ? activeStyle : ""}`}
-          type="button"
-        >
-          <Italic className="text-white w-4 h-4" />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`${buttonBase} ${editor.isActive("underline") ? activeStyle : ""}`}
-          type="button"
-        >
-          <UnderlineIcon className="text-white w-4 h-4" />
-        </button>
+       <div
+        className="flex flex-wrap items-center gap-2 p-2 rounded-t-md border"
+        style={{
+          backgroundColor: "var(--input-bg)",
+          borderColor: error ? "var(--input-border-error)" : "var(--input-border)",
+        }}
+      >
+        {[
+          { icon: Bold, command: () => editor.chain().focus().toggleBold().run(), isActive: editor.isActive("bold") },
+          { icon: Italic, command: () => editor.chain().focus().toggleItalic().run(), isActive: editor.isActive("italic") },
+          { icon: UnderlineIcon, command: () => editor.chain().focus().toggleUnderline().run(), isActive: editor.isActive("underline") },
+        ].map(({ icon: Icon, command, isActive }, i) => (
+          <button
+            key={i}
+            onClick={command}
+            className={`${buttonBase} ${isActive ? activeStyle : "hover:bg-[var(--input-border-hover)]/20"}`}
+            type="button"
+          >
+            <Icon
+              className="w-4 h-4"
+              style={{
+                color: error
+                  ? "var(--input-label-error)"
+                  : "var(--input-text)",
+              }}
+            />
+          </button>
+        ))}
 
-        <div className="h-6 border-l border-gray-600 mx-1" />
+        <div className="h-6 border-l mx-1" style={{ borderColor: "var(--input-border)" }} />
 
-        <button
+         <button
           onClick={() => setShowHeadings(!showHeadings)}
-          className={`${buttonBase} ${showHeadings ? activeStyle : ""}`}
+          className={`${buttonBase} ${showHeadings ? activeStyle : "hover:bg-[var(--input-border-hover)]/20"}`}
           type="button"
         >
-          <Type className="text-white w-4 h-4" />
+          <Type className="w-4 h-4" style={{ color: "var(--input-text)" }} />
         </button>
 
         {showHeadings && (
@@ -96,66 +109,80 @@ export default function RichTextEditor({
               <button
                 key={level}
                 onClick={() =>
-                  editor.chain().focus().setHeading({ level: level as 1 | 2 | 3 | 4 | 5 | 6 }).run()
+                  editor.chain().focus().setHeading({ level }).run()
                 }
-                className={`${buttonBase} ${editor.isActive("heading", { level: level as 1 | 2 | 3 | 4 | 5 | 6 }) ? activeStyle : ""
-                  }`}
+                className={`${buttonBase} ${
+                  editor.isActive("heading", { level })
+                    ? activeStyle
+                    : "hover:bg-[var(--input-border-hover)]/20"
+                }`}
                 type="button"
               >
-                <span className="text-white text-xs font-bold">H{level}</span>
+                <span
+                  className="text-xs font-bold"
+                  style={{ color: "var(--input-text)" }}
+                >
+                  H{level}
+                </span>
               </button>
             ))}
-
           </div>
         )}
 
-        <div className="h-6 border-l border-gray-600 mx-1" />
+        <div className="h-6 border-l mx-1" style={{ borderColor: "var(--input-border)" }} />
 
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("left").run()}
-          className={`${buttonBase} ${editor.isActive({ textAlign: "left" }) ? activeStyle : ""
+         {[
+          { icon: AlignLeft, align: "left" },
+          { icon: AlignCenter, align: "center" },
+          { icon: AlignRight, align: "right" },
+          { icon: AlignJustify, align: "justify" },
+        ].map(({ icon: Icon, align }) => (
+          <button
+            key={align}
+            onClick={() => editor.chain().focus().setTextAlign(align).run()}
+            className={`${buttonBase} ${
+              editor.isActive({ textAlign: align })
+                ? activeStyle
+                : "hover:bg-[var(--input-border-hover)]/20"
             }`}
-          type="button"
-        >
-          <AlignLeft className="text-white w-4 h-4" />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("center").run()}
-          className={`${buttonBase} ${editor.isActive({ textAlign: "center" }) ? activeStyle : ""
-            }`}
-          type="button"
-        >
-          <AlignCenter className="text-white w-4 h-4" />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("right").run()}
-          className={`${buttonBase} ${editor.isActive({ textAlign: "right" }) ? activeStyle : ""
-            }`}
-          type="button"
-        >
-          <AlignRight className="text-white w-4 h-4" />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-          className={`${buttonBase} ${editor.isActive({ textAlign: "justify" }) ? activeStyle : ""
-            }`}
-          type="button"
-        >
-          <AlignJustify className="text-white w-4 h-4" />
-        </button>
+            type="button"
+          >
+            <Icon
+              className="w-4 h-4"
+              style={{ color: "var(--input-text)" }}
+            />
+          </button>
+        ))}
       </div>
 
-      <div
-        className={`p-3 bg-[#1F2937] border ${error ? "border-red-500" : "border-gray-700"
-          } text-white rounded-md outline-none`}
+       <div
+        className={`p-3 border rounded-b-md min-h-[200px] prose max-w-none`}
+        style={{
+          backgroundColor: "var(--input-bg)",
+          color: "var(--input-text)",
+          borderColor: error
+            ? "var(--input-border-error)"
+            : "var(--input-border)",
+        }}
       >
         <EditorContent
           editor={editor}
-          className="w-full min-h-[200px] prose prose-invert [&_p]:leading-relaxed [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_h4]:text-base [&_h5]:text-sm [&_h6]:text-xs"
+          className="w-full prose-sm [&_p]:leading-relaxed [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg"
         />
       </div>
 
-      {error && <p className="text-red-400 text-sm mt-1">{helperText}</p>}
+      {helperText && (
+        <p
+          className="text-sm mt-1"
+          style={{
+            color: error
+              ? "var(--input-helper-error)"
+              : "var(--input-helper-default)",
+          }}
+        >
+          {helperText}
+        </p>
+      )}
     </div>
   );
 }
