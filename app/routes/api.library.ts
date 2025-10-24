@@ -73,13 +73,53 @@ export const action = async ({ request }: { request: Request }) => {
     try {
         const user = await decodeUser(request);
         if (!user?._id) {
-            return json({ status: 401, message: "Chưa đăng nhập hoặc token không hợp lệ" }, { status: 401 });
+            return json(
+                { status: 401, message: "Chưa đăng nhập hoặc token không hợp lệ" },
+                { status: 401 }
+            );
         }
 
         const formData = await request.formData();
         const bookId = formData.get("bookId")?.toString();
         const userId = user._id;
+        const actionType = formData.get("actionType")?.toString();  
+        const pageIndex = Number(formData.get("pageIndex"));
 
+        //------------------ [ THÊM / XÓA BOOKMARK ] ------------------
+        if (actionType === "addBookmark") {
+            const updated = await Library.findOneAndUpdate(
+                { userId, bookId },
+                {
+                    $addToSet: {
+                        bookmarks: { pageIndex, createdAt: new Date() },
+                    },
+                    $setOnInsert: { userId, bookId },
+                },
+                { upsert: true, new: true }
+            );
+
+            return json({
+                status: 200,
+                message: "Đã thêm bookmark thành công",
+                data: updated,
+            });
+        }
+
+        if (actionType === "removeBookmark") {
+            const updated = await Library.findOneAndUpdate(
+                { userId, bookId },
+                { $pull: { bookmarks: { pageIndex } } },
+                { new: true }
+            );
+
+            return json({
+                status: 200,
+                message: "Đã xóa bookmark thành công",
+                data: updated,
+            });
+        }
+
+        //---------------- [ CẬP NHẬT TIẾN ĐỘ / TRẠNG THÁI ] ----------------
         const updateFields: Record<string, any> = {};
 
         const progress = formData.get("progress");
@@ -104,7 +144,14 @@ export const action = async ({ request }: { request: Request }) => {
             { userId, bookId },
             Object.keys(updateFields).length > 0
                 ? { $set: updateFields }
-                : { $setOnInsert: { progress: 0, isFinished: false, lastReadAt: new Date(), hasRead: true, } },
+                : {
+                    $setOnInsert: {
+                        progress: 0,
+                        isFinished: false,
+                        lastReadAt: new Date(),
+                        hasRead: true,
+                    },
+                },
             { upsert: true, new: true }
         );
 
@@ -117,9 +164,13 @@ export const action = async ({ request }: { request: Request }) => {
             data: record,
         });
     } catch (err: any) {
-        console.error("  Lỗi khi tạo/cập nhật Library:", err);
+        console.error("Lỗi khi tạo/cập nhật Library:", err);
         return json(
-            { status: 500, message: "Lỗi khi tạo hoặc cập nhật Library", error: err.message },
+            {
+                status: 500,
+                message: "Lỗi khi tạo hoặc cập nhật Library",
+                error: err.message,
+            },
             { status: 500 }
         );
     }

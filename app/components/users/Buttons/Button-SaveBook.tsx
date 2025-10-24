@@ -2,7 +2,7 @@ import { Bookmark, BookmarkCheck } from "lucide-react";
 import { useState } from "react";
 import { updateLibraryProgress } from "~/services/library.service";
 
-export default function BookmarkButton({ bookId }: { bookId: string }) {
+export default function SaveButton({ bookId }: { bookId: string }) {
     const [isSaved, setIsSaved] = useState(false);
     const [loading, setLoading] = useState(false);
 

@@ -1,60 +1,96 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { updateIsFavorite } from "~/services/userIsFavorite.service";
+import React, { useEffect, useState } from "react";
+import { updateIsFavorite, IsFavorite } from "~/services/userIsFavorite.service";
 
 export default function FavoriteButton({ book }: { book: any }) {
-  const [isFavorite, setIsFavorite] = useState(!!book?.isFavorite);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteCount, setFavoriteCount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
 
+  const getFavorite = async () => {
+    try {
+      if (!book?._id) return;
+      const id = book._id.trim();
+
+      const res = await IsFavorite(id);
+
+      const fav = res?.isFavorite  ??  false;
+      const count = res?.favoriteCount  ??  0;
+
+      setIsFavorite(fav);
+      setFavoriteCount(count);
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getFavorite();
+  }, [book?._id]);
+
   const handleToggleFavorite = async () => {
-    if (loading) return;
+    if (loading || !book?._id) return;
     setLoading(true);
     try {
-      const res = await updateIsFavorite(book._id, !isFavorite);
-      setIsFavorite(!isFavorite);
-      console.log(res.message);
+      const id = book._id.trim();
+      const newState = !isFavorite;
+      const res = await updateIsFavorite(id, newState);
+      setIsFavorite(newState);
+      setFavoriteCount((prev) => prev + (newState ? 1 : -1));
     } catch (error: any) {
-      console.log("Lỗi handleToggleFavorite =>", error.message);
+      console.error(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <label className="relative inline-flex items-center justify-center cursor-pointer">
+    <div
+      className="relative cursor-pointer flex h-12 w-40 px-2 shadow-gray-700 rounded-xl border-none bg-[#1d1d1d]
+      overflow-hidden  " >
       <input
         type="checkbox"
-        onChange={handleToggleFavorite}
+        id={`heart-${book?._id}`}
+        className="hidden peer"
         checked={isFavorite}
-        className="hidden"
+        onChange={handleToggleFavorite}
+        disabled={loading}
       />
-      <motion.div
-        className={`flex items-center justify-center w-7 h-7 transition-all duration-200 ${
-          isFavorite ? "text-red-500" : "text-gray-500 hover:text-gray-600"
-        }`}
-        animate={isFavorite ? { scale: [1, 0.6, 1.2, 1] } : { scale: 1 }}
-        transition={{ duration: 0.3 }}
+      <label
+        htmlFor={`heart-${book?._id}`}
+        className="w-[70%] border-r-2 px-1 border-gray-300/40 h-full flex items-center justify-evenly cursor-pointer"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 16 16"
-          fill="currentColor"
-          className="w-6 h-6"
+          viewBox="0 0 24 24"
+          className={`h-7 w-7 transition-all duration-200 ${
+            isFavorite ? "fill-[#fc4e4e] animate-pulse" : "fill-[#505050]"
+          }`}
         >
-          <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-        </svg>
-      </motion.div>
-      <AnimatePresence>
-        {isFavorite && (
-          <motion.span
-            className="absolute rounded-full border border-red-500"
-            initial={{ opacity: 1, scale: 0 }}
-            animate={{ opacity: [1, 0.7, 0], scale: [0, 2, 2.8] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+          <path
+            d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 
+            25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 
+            2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 
+            5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 
+            0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 
+            15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 
+            0 0 1-.704 0l-.003-.001Z"
           />
-        )}
-      </AnimatePresence>
-    </label>
+        </svg>
+        <span className="text-[#fcfcfc] px-2 min-w-max text-sm font-[Segoe UI]">
+          {isFavorite ? "Đã thích" : "Thích"}
+        </span>
+      </label>
+      <span
+        className={`absolute right-0 w-[30%] h-full flex justify-center items-center 
+        text-[16px] font-semibold  transition-all duration-500 
+        ${
+          isFavorite
+            ? "translate-y-0 text-[#fcfcfc]"
+            : "translate-y-10 text-[#717070]"
+        }`}
+      >
+        {favoriteCount || 0}
+      </span>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 export default interface ILibrary {
-  _id?: string;
+  _id?: Types.ObjectId;
   userId: Types.ObjectId;
   bookId: Types.ObjectId;
   isSaved?: boolean;      // đã lưu hay chưa
@@ -10,4 +10,8 @@ export default interface ILibrary {
   lastReadAt?: Date;      // lần đọc gần nhất
   updatedAt?: Date;
   isFavorite?: boolean;
+  bookmarks?: {
+    pageIndex: number;
+    createdAt: Date;
+  }[];
 }

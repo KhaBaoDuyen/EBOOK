@@ -78,10 +78,10 @@ export default function UserLibrary() {
                     title: lib.bookId?.title,
                     author: lib.bookId?.authorId.name || "Không rõ tác giả",
                     cover: lib.bookId?.cover || "/Images/Main/book-default.png",
-                    progress: lib.progress || 0,
-                    isFinished: lib.isFinished,
-                    isSaved: lib.isSaved,
-                    slug: lib.bookId.slug,
+                    progress: lib?.progress || 0,
+                    isFinished: lib?.isFinished,
+                    isSaved: lib?.isSaved,
+                    slug: lib?.bookId?.slug,
                   }}
                 />
               ))}

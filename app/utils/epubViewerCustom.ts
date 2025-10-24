@@ -41,7 +41,7 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
         html = (raw as any).toString();
       }
 
-       html = html
+      html = html
         .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
         .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
         .replace(/<meta[^>]*>/gi, "")
@@ -51,14 +51,14 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
         .replace(/margin[^;]+;?/gi, "")
         .replace(/padding[^;]+;?/gi, "");
 
-       const dom = new DOMParser().parseFromString(html, "text/html");
+      const dom = new DOMParser().parseFromString(html, "text/html");
 
-       dom.body.insertAdjacentHTML(
+      dom.body.insertAdjacentHTML(
         "afterbegin",
         `<span class="__spine-start" data-spine="${item.href}"></span>`
       );
 
-       dom.body.querySelectorAll<HTMLElement>("[id]").forEach((el) => {
+      dom.body.querySelectorAll<HTMLElement>("[id]").forEach((el) => {
         const id = el.getAttribute("id");
         if (!id) return;
         el.insertAdjacentHTML(
@@ -67,7 +67,7 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
         );
       });
 
-       dom.body.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((a) => {
+      dom.body.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((a) => {
         const href = a.getAttribute("href") || "";
         const span = dom.createElement("span");
         span.className = "chapter-link";
@@ -101,18 +101,30 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
     paginateByHeight(seg, containerHeight).forEach(p => p.trim() && pages.push(p));
   }
 
-  // Trang đã style
-   
+
   const styledPages = pages.map((page) => `
-    <div class="book-page" style="text-align:justify;line-height:1.8;">
-      ${page
-      .replace(/<h[1-6][^>]*>\s*mục\s*lục\s*<\/h[1-6]>/gi,
-        `<h2 style="text-align:center;font-weight:bold;font-size:1.6em;margin:1.5rem 0;">MỤC LỤC</h2>`)
-      .replace(/<(h[1-6]|p|div)[^>]*>\s*(phần\s*\d+[^<]*)<\/\1>/gi,
-        `<h2 style="text-align:center;font-weight:bold;font-size:1.5em;margin:2rem 0;">$2</h2>`)
-      .replace(/<(h[1-6]|p|div)[^>]*>\s*(chương\s*\d+[^<]*)<\/\1>/gi,
-        `<h2 style="text-align:center;font-weight:bold;font-size:1.4em;margin:2rem 0;">$2</h2>`)}
-    </div>`);
+  <div class="book-page" style="text-align:justify;line-height:1.9;font-family:'Times New Roman',serif;font-size:19px;">
+    ${page
+      // CHƯƠNG
+      .replace(
+        /<(h[1-6]|p|div)[^>]*>\s*(chương\s*\d+[^<]*)<\/\1>/gi,
+        `<h2 style="text-align:center;font-weight:bold;font-size:1.6em;margin:2.5rem 0;color:#222;">$2</h2>`
+      )
+      // PHẦN
+      .replace(
+        /<(h[1-6]|p|div)[^>]*>\s*(phần\s*\d+[^<]*)<\/\1>/gi,
+        `<h2 style="text-align:center;font-weight:bold;font-size:1.5em;margin:2.2rem 0;color:#222;">$2</h2>`
+      )
+      // MỤC LỤC
+      .replace(
+        /<h[1-6][^>]*>\s*mục\s*lục\s*<\/h[1-6]>/gi,
+        `<h2 style="text-align:center;font-weight:bold;font-size:1.7em;margin:2rem 0;">MỤC LỤC</h2>`
+      )
+      .replace(/<p([^>]*)>/gi, `<p$1 style="margin:1rem 0;">`)
+    }
+  </div>
+`);
+
 
   const anchorIndex: Record<string, number> = {};
   styledPages.forEach((html, idx) => {
@@ -162,31 +174,73 @@ export async function loadEpubContent(filePath: string, containerHeight = 800) {
 }
 
 function paginateByHeight(html: string, containerHeight: number): string[] {
-  const temp = document.createElement("div");
-  temp.style.position = "absolute";
-  temp.style.visibility = "hidden";
-  temp.style.width = "700px";
-  temp.style.lineHeight = "1.6";
-  temp.style.fontSize = "18px";
-  temp.style.textAlign = "justify";
-  temp.style.padding = "1rem 2rem";
-  temp.style.boxSizing = "border-box";
-  document.body.appendChild(temp);
+  const frame = document.createElement("div");
+  frame.style.position = "absolute";
+  frame.style.visibility = "hidden";
+  frame.style.width = "640px";
+  frame.style.lineHeight = "1.9";
+  frame.style.fontSize = "19px";
+  frame.style.fontFamily = "'Times New Roman', serif";
+  frame.style.textAlign = "justify";
+  frame.style.padding = "2rem 2.5rem";
+  frame.style.boxSizing = "border-box";
+  frame.style.wordBreak = "break-word";
+  frame.style.whiteSpace = "normal";
+  document.body.appendChild(frame);
 
-  const tokens = html.split(/(<[^>]+>|[^<]+)/g).filter(Boolean);
   const pages: string[] = [];
   let buffer = "";
 
-  for (const tok of tokens) {
-    temp.innerHTML = buffer + tok;
-    if (temp.scrollHeight > containerHeight) {
-      if (buffer.trim()) pages.push(buffer);
-      buffer = tok;
+  // ✳️ Chia đoạn theo khối (p/div/br)
+  const segments = html
+    .split(/(<\/p>|<\/div>|<br\s*\/?>)/gi)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  for (const seg of segments) {
+    const block = seg.endsWith("</p>") ? seg : `<p>${seg}</p>`;
+    frame.innerHTML = buffer + block;
+
+    if (frame.scrollHeight > containerHeight - 40) {
+       frame.innerHTML = block;
+      if (frame.scrollHeight > containerHeight - 40) {
+        const sentences = block.split(/(?<=[.!?。？！])\s+/g);
+        let temp = "";
+        for (const sentence of sentences) {
+          frame.innerHTML = temp + sentence;
+          if (frame.scrollHeight > containerHeight - 40) {
+            pages.push(temp.trim());
+            temp = sentence;
+          } else {
+            temp += " " + sentence;
+          }
+        }
+        if (temp.trim()) pages.push(temp.trim());
+        buffer = "";
+      } else {
+        pages.push(buffer.trim());
+        buffer = block;
+      }
     } else {
-      buffer += tok;
+      buffer += block;
     }
   }
-  if (buffer.trim()) pages.push(buffer);
-  document.body.removeChild(temp);
-  return pages;
+
+  if (buffer.trim()) pages.push(buffer.trim());
+  document.body.removeChild(frame);
+
+   return pages.map(
+    (p) => `
+      <div style="
+        height:${containerHeight}px;
+        padding:2rem 2.5rem;
+        font-size:19px;
+        line-height:1.8;
+        font-family:'Times New Roman',serif;
+        text-align:justify;
+        color:#1A1A1A;
+        box-sizing:border-box;">
+        ${p}
+      </div>`
+  );
 }

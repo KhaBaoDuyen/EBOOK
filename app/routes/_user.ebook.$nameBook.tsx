@@ -15,6 +15,7 @@ import { useNotify } from "~/context/NotifyContext";
 import { Link, useNavigate } from "@remix-run/react";
 import { Eye } from "lucide-react";
 import { createLibrary } from "~/services/library.service";
+import SaveButton from "~/components/users/Buttons/Button-SaveBook";
 
 export default function Ebook() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -108,7 +109,6 @@ export default function Ebook() {
         getBySlug(nameBook);
         viewBook(nameBook);
     }, [nameBook]);
-
     
 
     return (
@@ -132,12 +132,13 @@ export default function Ebook() {
                         </h1>
 
                         <span className="flex flex-col gap-5">
-                            <div className="flex justify-between">
-                                <div className="flex gap-5">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center justify-center gap-5">
                                     <p className="!text-gray-500">Lượt xem</p>
                                     <p className="text-white font-medium">{view || 0}</p>
                                 </div>
-                                <div className="">
+                                <div className="flex items-center justify-center gap-5">
+                                    <SaveButton bookId={book?._id} />
                                     <FavoriteButton book={book} />
                                 </div>
                             </div>

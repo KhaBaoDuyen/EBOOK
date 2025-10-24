@@ -10,14 +10,21 @@ const librarySchema = new Schema<ILibrary>(
     hasRead: { type: Boolean, default: false },
     isFinished: { type: Boolean, default: false },
     lastReadAt: { type: Date, default: null },
-    isFavorite: { type: Boolean, default: false }
+    isFavorite: { type: Boolean, default: false },
+    bookmarks: [
+      {
+        pageIndex: Number,
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+
   },
   {
-    timestamps: true,  
+    timestamps: true,
   }
 );
 
- librarySchema.index({ userId: 1, bookId: 1 }, { unique: true });
+librarySchema.index({ userId: 1, bookId: 1 }, { unique: true });
 
 const Library =
   mongoose.models.Library || model<ILibrary>("Library", librarySchema);
