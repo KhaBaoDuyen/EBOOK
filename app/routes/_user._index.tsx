@@ -204,7 +204,6 @@ const HomePage = () => {
               link={book.slug}
               description={book.description || ""}
             />
-
           ))}
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Sparkles, BookOpen, Gift, Star } from "lucide-react";
+import { Link } from "@remix-run/react";
 
 export default function CategoryDropdown({ cat, currentPath }: any) {
   const ref = useRef<HTMLDivElement>(null);
@@ -52,15 +53,16 @@ export default function CategoryDropdown({ cat, currentPath }: any) {
         <h1 className="font-bold py-2 text-white text-xl mb-2">KHÁM PHÁ NGAY</h1>
 
         <span className="flex flex-wrap gap-4 mt-5">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
+          <Link to={"/sach-noi-bat?type=sach-moi-nhat"} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
             <Sparkles size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
             <span>Sách mới nhất</span>
-          </button>
+          </Link>
 
-          <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
+          <Link 
+             to={"/sach-noi-bat?type=doc-nhieu-nhat"} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
             <BookOpen size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
             <span>Sách đọc nhiều</span>
-          </button>
+          </Link>
 
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
             <Gift size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />

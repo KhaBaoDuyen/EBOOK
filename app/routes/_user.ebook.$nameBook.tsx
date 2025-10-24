@@ -1,7 +1,6 @@
 import Button from "../components/users/Buttons/Button";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import books from "../../public/data/listBook.json";
 import { useOutletContext, useParams } from "@remix-run/react";
 
 import { getBookBySlug } from "~/services/book.service";
@@ -16,6 +15,7 @@ import { Link, useNavigate } from "@remix-run/react";
 import { Eye } from "lucide-react";
 import { createLibrary } from "~/services/library.service";
 import SaveButton from "~/components/users/Buttons/Button-SaveBook";
+import { getAllIsBook } from "~/services/book.service";
 
 export default function Ebook() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -50,6 +50,22 @@ export default function Ebook() {
             return null;
         }
     }
+
+    //----------------[ LAY TAT CA SACH ]------------------------
+    const [books, setBooks] = useState<any[]>([]);
+    const getSearchBook = async () => {
+        try {
+            const res = await getAllIsBook();
+            setBooks(res.data.slice(0, 10) || []);
+            // console.log(res);
+        } catch (error: any) {
+            console.log("loi getSearchBook", error.message);
+        }
+    }
+
+    useEffect(() => {
+        getSearchBook();
+    }, []);
 
     //-----------------[ HIEN THI COUNT VIEW ]-------------------------
     const [view, setView] = useState<number | null>(0);
@@ -109,7 +125,7 @@ export default function Ebook() {
         getBySlug(nameBook);
         viewBook(nameBook);
     }, [nameBook]);
-    
+
 
     return (
         <main className="  py-10 px-5 flex flex-col gap-5 container mx-auto ">

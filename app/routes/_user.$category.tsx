@@ -156,7 +156,7 @@ export default function CategoryPage() {
         <div className="container !mx-auto flex items-center justify-center w-full">
           <div className="basis-3/5 flex flex-col gap-3">
             {currentCategory ? (
-              <span className="flex items-start justify-center gap-5 pr-5">
+              <span className="flex items-start gap-5 pr-5">
                 <label
                   htmlFor="subCategory"
                   className="block text-6xl mb-2 font-semibold"

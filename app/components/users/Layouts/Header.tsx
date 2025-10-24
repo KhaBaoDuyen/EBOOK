@@ -14,6 +14,7 @@ import ButtonBorder from "../Buttons/Button-Border";
 import Authentication from "../../Authentication";
 import CategoryDropdown from "./CategoryDropdown";
 import { UserSomeTime, UserRank } from "../UserRank";
+import { FormSearchBook } from "~/components/users/Ui/FormSearchBook";
 
 //=============[ SERVICE - CONTEXT - HOOK ]==========================
 import { getAllCategory } from "~/services/category.service";
@@ -22,6 +23,7 @@ import { useUser } from "~/context/UserContext";
 import { Logout } from "~/services/Auth/logout";
 import { useNotify } from "~/context/NotifyContext";
 import { useLogout } from "~/hooks/Logout";
+import { getAllIsBook } from "~/services/book.service";
 
 
 export default function Header({ user }: { user: any }) {
@@ -138,6 +140,33 @@ export default function Header({ user }: { user: any }) {
     getOneUser();
   }, [])
 
+  // ------------------[ LAY DU LIEU SACH - SEARCH ]---------------------
+  const [books, setBooks] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
+  const keyword = search.trim().toLowerCase();
+
+  const getSearchBook = async () => {
+    try {
+      const res = await getAllIsBook();
+      setBooks(res.data);
+      console.log(res);
+
+    } catch (error: any) {
+      console.log("loi getSearchBook", error.message);
+    }
+  }
+
+  useEffect(() => {
+    getSearchBook();
+  }, []);
+
+  const searchBook = books.filter((b) =>
+    keyword
+      ? b.title?.toLowerCase().includes(keyword) ||
+      b.authorId?.name?.toLowerCase().includes(keyword)
+      : true
+  );
+
   return (
     <>
       <header
@@ -169,13 +198,14 @@ export default function Header({ user }: { user: any }) {
               </svg>
             </button>
 
-            <div className="hidden lg:flex items-center space-x-3 max-w-[13rem] order-2 lg:order-1">
+            <Link
+              to={"/"} className="hidden lg:flex items-center space-x-3 max-w-[13rem] order-2 lg:order-1">
               <img
                 src="/Images/Main/logo-light.png"
                 alt="Logo"
                 className="w-full rounded-xl drop-shadow-2xl"
               />
-            </div>
+            </Link >
 
             <nav className="hidden lg:flex flex-wrap gap-x-6 gap-y-2 order-2">
               {categogy.map((cat: any) => (
@@ -233,19 +263,7 @@ export default function Header({ user }: { user: any }) {
 
 
             <div className="flex items-center justify-between space-x-3 order-3">
-              <div className="relative items-center group">
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm sách, tác giả..."
-                  className="absolute !bg-gray-200 right-12 w-0 opacity-0 px-0 py-2 rounded-xl text-gray-700
-                   placeholder-gray-400 border border-gray-600 focus:outline-none 
-                   focus:w-64 focus:px-4 focus:opacity-100 transition-all duration-300 
-                   group-hover:w-64 group-hover:opacity-100 group-hover:px-4 focus:ring-emerald-600"
-                />
-                <button className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-emerald-500 transition-colors duration-300">
-                  <FaSearch className="w-5 h-5 text-white" />
-                </button>
-              </div>
+              <FormSearchBook />
 
               <div className="hidden lg:block">
                 {user ? (
