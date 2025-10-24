@@ -191,7 +191,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
             ) : (
                 <div
 
-                    className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]"
+                    className="fixed text-white inset-0 bg-black/70 flex items-center justify-center z-[999]"
                 >
                     <button className="absolute top-4 right-4 p-2 rounded-md border-1 flex- border-white/30 hover:bg-red-600 text-white"
                         onClick={onClose}>
@@ -202,7 +202,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="p-5 flex flex-col items-center justify-center gap-5">
-                            <span className="text-center">
+                            <span className="text-center text-white">
                                 <h2 className="text-2xl font-bold mb-4">
                                     {mode === "login" ? "Đăng nhập tài khoản" : "Đăng ký tài khoản"}
                                 </h2>
@@ -212,7 +212,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                                         : "Đăng ký để mua và theo dõi quá trình đọc sách"}
                                 </p>
                             </span>
-                            <div className="flex gap-5">
+                            <div className="flex text-white gap-5">
                                 {mode === "login" && (
                                     <div className="basis-1/2 border-r-1 border-white/40">
                                         <img
@@ -228,7 +228,7 @@ const Authentication = ({ isOpen, onClose, mode = "login" }) => {
                                     </div>
                                 ) : <form
                                     onSubmit={handleSubmit(onSubmit)}
-                                    className={`flex flex-col gap-3 items-center justify-center !w-[25rem]
+                                    className={`flex flex-col gap-3 text-white items-center justify-center !w-[25rem]
     ${mode === "login" ? "basis-1/2" : "basis-full"}`}
                                 >
 

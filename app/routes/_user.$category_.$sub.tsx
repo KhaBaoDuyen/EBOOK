@@ -8,7 +8,7 @@ import BookSlider from "~/components/users/Slider/BookSlider";
 import { getCategoryGroup } from "~/services/category.service";
 import { bookByCatgories } from "~/services/bookBy/bookByCategory";
 import type { IBook } from "~/interfaces/book.interface";
- 
+
 
 export default function SubCategoryPage() {
   const { category, sub } = useParams();
@@ -30,6 +30,10 @@ export default function SubCategoryPage() {
   const fetchBooksBySubCategory = async (slug: string) => {
     const res = await bookByCatgories(slug);
     if (res?.allBooks) {
+      if (!res.allBooks || Object.keys(res.allBooks).length === 0) {
+        navigate("/404", { replace: true });
+        return;
+      }
       setBooksAll(res.allBooks);
       const shuffled = [...res.allBooks].sort(() => 0.5 - Math.random());
       setProjects(shuffled.slice(0, 5));
@@ -117,15 +121,15 @@ export default function SubCategoryPage() {
                 <div className="space-y-3">
                   <h1 className="text-3xl font-bold">{currentBook.title}</h1>
                   <p className="text-gray-300 line-clamp-5 w-[80%]"
-                  dangerouslySetInnerHTML={{
-                    __html: currentBook.description || ""
-                  }}>
+                    dangerouslySetInnerHTML={{
+                      __html: currentBook.description || ""
+                    }}>
                   </p>
 
                   <Button
                     text="Đọc sách"
                     icon={faBook}
-                   href={`/ebook/${currentBook.slug}`}
+                    href={`/ebook/${currentBook.slug}`}
                     iconPosition="left"
                   />
                 </div>
@@ -140,9 +144,9 @@ export default function SubCategoryPage() {
       </div>
 
       <main className="container !mx-auto">
-        {booksAll.length > 0 ? (
+        {/* {booksAll.length > 0 ? (
           <Section title="Mới nhất" books={booksAll} />
-        ) : null}
+        ) : null} */}
 
         <section>
           <h1 className="text-xl mt-5 !font-bold">Tất cả các sách</h1>

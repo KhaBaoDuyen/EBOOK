@@ -9,12 +9,14 @@ export async function loader() {
   try {
     Category;
     Author;
-    const books = await Book.find()
+    const books = await Book.find({
+      status: 1
+    })
       .populate("categories", "name slug")
       .populate("authorId", "name")
       .sort({ createAt: -1 })
       .limit(10);
-    
+
     return json({
       status: 200,
       message: "Lấy dữ liệu thành công",

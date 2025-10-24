@@ -207,6 +207,17 @@ export default function BookForm({
     console.log("slugParam", slugParam);
   }, [slugParam]);
 
+  //----------------[ SREACH DANH MUC ]-----------------
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredCategories = categories.filter((parent) => {
+    const nameMatch = parent.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const childrenMatch = parent.children?.some((child: any) =>
+      child.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    return nameMatch || childrenMatch;
+  });
+
   // ----------------[ Thêm tác giả  ]----------------------
   const [open, setOpen] = useState(false);
 
@@ -314,82 +325,97 @@ export default function BookForm({
           </div>
 
           <div className={`border p-3 rounded-md transition-all duration-200 ${showCategoryError ? "border-red-500" : "border-[var(--input-border)]"}`}>
-            <h1>Danh mục</h1>
-            <Box>
-              {categories.map((parent) => {
-                const children = parent.children || [];
-                const allChildrenChecked = children.every((c: any) => checked[c._id]);
-                const someChildrenChecked =
-                  children.some((c: any) => checked[c._id]) && !allChildrenChecked;
+            <h1 className="font-semibold mb-2">Danh mục</h1>
+            <div className="mb-3">
+              <input
+                type="text"
+                placeholder="Tìm kiếm danh mục..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-2 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--input-text)] focus:border-[var(--input-border-focus)] outline-none"
+              />
+            </div>
+            <div
+              className="overflow-y-auto transition-all duration-300"
+              style={{ maxHeight: "20rem" }}
+            >
+              <Box>
+                {filteredCategories.map((parent) => {
+                  const children = parent.children || [];
+                  const allChildrenChecked = children.every((c: any) => checked[c._id]);
+                  const someChildrenChecked =
+                    children.some((c: any) => checked[c._id]) && !allChildrenChecked;
 
-                return (
-                  <Box
-                    key={parent._id}
-                    className="mb-4 p-3 rounded-md bg-[var(--input-bg)] shadow-md border border-[var(--input-border)]"
-                  >
-                    <FormControlLabel
-                      label={<span className="font-semibold text-[var(--input-text)]">{parent.name}</span>}
-                      control={
-                        <Checkbox
-                          checked={
-                            children.length === 0
-                              ? !!checked[parent._id]
-                              : allChildrenChecked
-                          }
-                          indeterminate={children.length > 0 && someChildrenChecked}
-                          onChange={() => {
-                            if (children.length === 0) {
-                              setChecked((prev) => ({
-                                ...prev,
-                                [parent._id]: !prev[parent._id],
-                              }));
-                            } else {
-                              handleParentChange(parent._id, children);
+                  return (
+                    <Box
+                      key={parent._id}
+                      className="mb-4 p-3 rounded-md bg-[var(--input-bg)] shadow-md border border-[var(--input-border)]"
+                    >
+                      <FormControlLabel
+                        label={<span className="font-semibold text-[var(--input-text)]">{parent.name}</span>}
+                        control={
+                          <Checkbox
+                            checked={
+                              children.length === 0
+                                ? !!checked[parent._id]
+                                : allChildrenChecked
                             }
-                          }}
-                          sx={{
-                            color: "var(--input-text)",
-                            "&.Mui-checked": { color: "var(--input-border-focus)", },
-                          }}
-                        />
-                      }
-                    />
-
-                    {children.length > 0 && (
-                      <FormGroup
-                        className="pl-8 grid md:grid-cols-3 grid-cols-2 gap-1 mt-2 overflow-y-auto"
-                        sx={{
-                          maxHeight: "100px",
-                          scrollbarWidth: "thin",
-                          "&::-webkit-scrollbar": { width: "6px" },
-                          "&::-webkit-scrollbar-thumb": {
-                            backgroundColor: "#4ade80",
-                            borderRadius: "10px",
-                          },
-                        }}
-                      >
-                        {children.map((child: any) => (
-                          <FormControlLabel
-                            key={child._id}
-                            label={<span className="text-sm text-[var(--input-text)]">{child.name}</span>}
-                            control={
-                              <Checkbox
-                                checked={!!checked[child._id]}
-                                onChange={() => handleChildChange(child._id)}
-                                sx={{
-                                  color: "#ccc",
-                                  "&.Mui-checked": { color: "#4ade80" },
-                                }}
-                              />
-                            }
+                            indeterminate={children.length > 0 && someChildrenChecked}
+                            onChange={() => {
+                              if (children.length === 0) {
+                                setChecked((prev) => ({
+                                  ...prev,
+                                  [parent._id]: !prev[parent._id],
+                                }));
+                              } else {
+                                handleParentChange(parent._id, children);
+                              }
+                            }}
+                            sx={{
+                              color: "var(--input-text)",
+                              "&.Mui-checked": { color: "var(--input-border-focus)", },
+                            }}
                           />
-                        ))}
-                      </FormGroup>
-                    )}
-                  </Box>
-                );
-              })}
-            </Box>
+                        }
+                      />
+
+                      {children.length > 0 && (
+                        <FormGroup
+                          className="pl-8 grid md:grid-cols-3 grid-cols-2 gap-1 mt-2 overflow-y-auto"
+                          sx={{
+                            maxHeight: "100px",
+                            scrollbarWidth: "thin",
+                            "&::-webkit-scrollbar": { width: "6px" },
+                            "&::-webkit-scrollbar-thumb": {
+                              backgroundColor: "#4ade80",
+                              borderRadius: "10px",
+                            },
+                          }}
+                        >
+                          {children.map((child: any) => (
+                            <FormControlLabel
+                              key={child._id}
+                              label={<span className="text-sm text-[var(--input-text)]">{child.name}</span>}
+                              control={
+                                <Checkbox
+                                  checked={!!checked[child._id]}
+                                  onChange={() => handleChildChange(child._id)}
+                                  sx={{
+                                    color: "#ccc",
+                                    "&.Mui-checked": { color: "#4ade80" },
+                                  }}
+                                />
+                              }
+                            />
+                          ))}
+                        </FormGroup>
+                      )}
+                    </Box>
+                  );
+                })}
+              </Box>
+            </div>
+
             {showCategoryError && (
               <p className="text-red-400 text-sm mt-1">
                 * Vui lòng chọn ít nhất một danh mục
@@ -402,8 +428,7 @@ export default function BookForm({
             <select
               value={status}
               onChange={(e) => setStatus(Number(e.target.value))}
-              className="w-full p-2 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--input-text)] focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none"
-            >
+              className="w-full p-2 rounded-md border border-[var(--input-border)] bg-[var(--input-bg)] text-[var(--input-text)] focus:border-blue-400 focus:ring focus:ring-blue-500/30 outline-none">
               <option value={1}>Hiển thị</option>
               <option value={0}>Ẩn</option>
             </select>

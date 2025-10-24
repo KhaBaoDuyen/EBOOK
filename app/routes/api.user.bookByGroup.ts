@@ -10,11 +10,15 @@ export async function loader() {
         Category;
         Author;
 
-        const count = await Book.countDocuments();
+        const count = await Book.countDocuments({
+            status:1
+        });
         const random = await Math.floor(Math.random() * Math.max(count - 10, 1));
 
 
-        const books = await Book.find()
+        const books = await Book.find({
+            status:1
+        })
             .skip(random)
             .populate("categories", "name slug")
             .populate("authorId", "name")
@@ -55,6 +59,7 @@ export async function action({ request }: { request: Request }) {
         const categoryIds = categories.map((c) => c._id);
 
         const books = await Book.find({
+            status:1,
             $or: [
                 { categories: { $in: categoryIds } }, // nếu là ObjectId  
                 { categories: { $in: categoryIds.map((id) => id.toString()) } }, // nếu dạng string

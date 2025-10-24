@@ -128,7 +128,7 @@ export default function CategoryPage() {
 
   const currentBook = projects[currentIndex];
 
-   
+
   const images = [
     "/Images/Slides/Pages/2.png",
     "/Images/Slides/Pages/3.png",
@@ -156,7 +156,7 @@ export default function CategoryPage() {
         <div className="container !mx-auto flex items-center justify-center w-full">
           <div className="basis-3/5 flex flex-col gap-3">
             {currentCategory ? (
-              <span className="flex items-center gap-5 pr-5">
+              <span className="flex items-start justify-center gap-5 pr-5">
                 <label
                   htmlFor="subCategory"
                   className="block text-6xl mb-2 font-semibold"
@@ -168,8 +168,9 @@ export default function CategoryPage() {
                   <div className="text-white">
                     <select
                       id="subCategory"
-                      className="px-5 py-3 bg-white/20 backdrop-blur-md border border-white/30 
-                      rounded-md text-white focus:outline-none focus:ring-1 focus:ring-emerald-700"
+                      className="px-5 py-3 bg-gray-800/80 backdrop-blur-md border-2 border-white/20 
+               rounded-xl text-white focus:outline-none focus:ring-2 
+               focus:ring-emerald-600 transition-all duration-200 cursor-pointer"
                       defaultValue=""
                       onChange={(e) => {
                         const newSlug = e.target.value;
@@ -183,13 +184,14 @@ export default function CategoryPage() {
                         <option
                           key={sub.slug}
                           value={String(sub.slug)}
-                          className="bg-black/80 p-5 text-white"
+                          className="bg-black/80 text-white hover:bg-white/40 hover:text-black rounded-lg cursor-pointer"
                         >
                           {String(sub.name)}
                         </option>
                       ))}
                     </select>
                   </div>
+
                 ) : (
                   <p > </p>
                 )}
@@ -225,7 +227,7 @@ export default function CategoryPage() {
                     href={`/ebook/${currentBook.slug}`}
                     iconPosition="left"
                   />
-               
+
 
                 </div>
               )}

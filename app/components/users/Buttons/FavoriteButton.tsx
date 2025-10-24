@@ -3,28 +3,29 @@ import { updateIsFavorite, IsFavorite } from "~/services/userIsFavorite.service"
 
 export default function FavoriteButton({ book }: { book: any }) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState<number>(0);
+  const [favoriteCount, setFavoriteCount] = useState<number>();
   const [loading, setLoading] = useState(false);
-
+  const [isLoaded, setIsLoaded] = useState(false);
   const getFavorite = async () => {
     try {
       if (!book?._id) return;
       const id = book._id.trim();
-
       const res = await IsFavorite(id);
 
-      const fav = res?.isFavorite  ??  false;
-      const count = res?.favoriteCount  ??  0;
+      console.log("Kết quả yêu thích:", res);
 
-      setIsFavorite(fav);
-      setFavoriteCount(count);
+      setIsFavorite(res?.isFavorite ?? false);
+      setFavoriteCount(res?.favoriteCount ?? 0);
+      setIsLoaded(true);
     } catch (error: any) {
-      console.error(error.message);
+      console.error("Lỗi lấy yêu thích:", error.message);
     }
   };
 
   useEffect(() => {
-    getFavorite();
+    if (book && book._id) {
+      getFavorite();
+    }
   }, [book?._id]);
 
   const handleToggleFavorite = async () => {
@@ -33,7 +34,7 @@ export default function FavoriteButton({ book }: { book: any }) {
     try {
       const id = book._id.trim();
       const newState = !isFavorite;
-      const res = await updateIsFavorite(id, newState);
+      await updateIsFavorite(id, newState);
       setIsFavorite(newState);
       setFavoriteCount((prev) => prev + (newState ? 1 : -1));
     } catch (error: any) {
@@ -45,8 +46,8 @@ export default function FavoriteButton({ book }: { book: any }) {
 
   return (
     <div
-      className="relative cursor-pointer flex h-12 w-40 px-2 shadow-gray-700 rounded-xl border-none bg-[#1d1d1d]
-      overflow-hidden  " >
+      className="relative cursor-pointer flex h-12 w-40 px-2 shadow-gray-700 rounded-xl border-none bg-[#1d1d1d] overflow-hidden"
+    >
       <input
         type="checkbox"
         id={`heart-${book?._id}`}
@@ -62,9 +63,8 @@ export default function FavoriteButton({ book }: { book: any }) {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-          className={`h-7 w-7 transition-all duration-200 ${
-            isFavorite ? "fill-[#fc4e4e] animate-pulse" : "fill-[#505050]"
-          }`}
+          className={`h-7 w-7 transition-all duration-200 ${isFavorite ? "fill-[#fc4e4e] animate-pulse" : "fill-[#505050]"
+            }`}
         >
           <path
             d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 
@@ -80,17 +80,20 @@ export default function FavoriteButton({ book }: { book: any }) {
           {isFavorite ? "Đã thích" : "Thích"}
         </span>
       </label>
+
       <span
         className={`absolute right-0 w-[30%] h-full flex justify-center items-center 
-        text-[16px] font-semibold  transition-all duration-500 
-        ${
-          isFavorite
-            ? "translate-y-0 text-[#fcfcfc]"
-            : "translate-y-10 text-[#717070]"
-        }`}
+  text-[16px] font-semibold transition-all duration-500
+  ${isLoaded
+            ? isFavorite
+              ? "translate-y-[-4px] scale-110 text-[#fcfcfc]"
+              : "translate-y-0 text-[#d1d1d1]"
+            : "translate-y-10 opacity-0 text-[#717070]"
+          }`}
       >
-        {favoriteCount || 0}
+        {favoriteCount}
       </span>
+
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { decodeUser } from "~/utils/verifyToken.server";
 
 export const loader = async ({ request }: { request: Request }) => {
     try {
-        // --------------[ lay usser tu cookie]---------------------
         const user = await decodeUser(request);
         if (!user) {
             return json({ status: 401, message: "Chưa đăng nhập!" }, { status: 401 });

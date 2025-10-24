@@ -69,7 +69,7 @@ export const action = async ({
       const authorId = formData.get("authorId")?.toString().trim() || "";
       const releaseDateStr = formData.get("releaseDate")?.toString() || "";
       const categoriesRaw = formData.get("categories")?.toString() || "[]";
-      const status = Number(formData.get("status")) || 1;
+      const status = Number(formData.get("status"));
 
       const releaseDate = releaseDateStr ? new Date(releaseDateStr) : new Date();
       const categories = JSON.parse(categoriesRaw || "[]");

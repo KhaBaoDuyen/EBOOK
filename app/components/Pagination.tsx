@@ -9,8 +9,6 @@ const PaginationComponent: React.FC<TPagination> = ({
   onPageChange,
 }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  // Nếu tổng số trang <= 6 hiển thị toàn bộ
   const siblingCount = totalPages > 6 ? 1 : totalPages;
   const boundaryCount = totalPages > 6 ? 1 : totalPages;
 
@@ -20,7 +18,6 @@ const PaginationComponent: React.FC<TPagination> = ({
         count={totalPages}
         page={currentPage}
         onChange={(_, value) => onPageChange(value)}
-        color="primary"
         siblingCount={siblingCount}
         boundaryCount={boundaryCount}
         showFirstButton
@@ -29,20 +26,30 @@ const PaginationComponent: React.FC<TPagination> = ({
           <PaginationItem
             {...item}
             sx={{
-              color: "white",
+              color: "var(--input-text)",
+              backgroundColor: "var(--input-bg)",
+              border: "1px solid var(--input-border)",
+              transition: "all 0.3s ease",
               "&.Mui-selected": {
-                backgroundColor: "rgba(255,255,255,0.2)",
-                color: "white",
+                backgroundColor: "var(--input-border-focus)",
+                color: "#fff",
+                borderColor: "var(--input-border-focus)",
+              },
+              "&:hover": {
+                backgroundColor: "var(--input-border-hover)",
+                color: "#fff",
               },
               "&.MuiPaginationItem-ellipsis": {
-                color: "#9ca3af",
+                color: "var(--input-text-disabled)",
+                backgroundColor: "transparent",
+                border: "none",
               },
             }}
           />
         )}
         sx={{
-          "& .MuiPaginationItem-ellipsis": {
-            color: "#9ca3af",
+          "& .MuiPaginationItem-root": {
+            borderRadius: "8px",
           },
         }}
       />

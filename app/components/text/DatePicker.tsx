@@ -27,6 +27,38 @@ export default function CustomDatePicker({
         label={label}
         value={value}
         onChange={onChange}
+        sx={{
+          "& .MuiPickersDay-root": {
+            color: "var(--input-text)",
+          },
+          "& .MuiPickersDay-root.Mui-selected": {
+            backgroundColor: "var(--input-border-focus)",
+            color: "#fff",
+          },
+          "& .MuiDayCalendar-weekDayLabel": {
+            color: "var(--input-label-default)",
+          },
+          "& .MuiPickersCalendarHeader-label": {
+            color: "var(--input-text)",
+          },
+          "& .MuiPickersArrowSwitcher-button": {
+            color: "var(--input-text)",
+          },
+          "& .MuiPaper-root": {
+            backgroundColor: "var(--input-bg)",
+            color: "var(--input-text)",
+          },
+          "& .MuiPickersCalendarHeader-switchViewButton": {
+            color: "var(--input-text)",
+          },
+          "& .MuiPickersYear-root, & .MuiPickersMonth-root, & .MuiPickersMonth-monthButton": {
+            color: "var(--input-text)",
+          },
+          "& .MuiPickersYear-yearButton.Mui-selected, & .MuiPickersMonth-monthButton.Mui-selected": {
+            backgroundColor: "var(--input-border-focus)",
+            color: "#fff",
+          },
+        }}
         slotProps={{
           textField: {
             variant: "outlined",
@@ -38,63 +70,42 @@ export default function CustomDatePicker({
               borderRadius: "8px",
               backgroundColor: "var(--input-bg)",
               transition: "all 0.3s ease",
-
-               "& .MuiInputBase-input, & .MuiOutlinedInput-input, & .MuiPickersInputBase-input":
-                {
-                  color: "var(--input-text)",
-                  caretColor: "var(--input-border-focus)",
-                },
+              "& .MuiInputBase-input, & .MuiOutlinedInput-input, & .MuiPickersInputBase-input": {
+                color: "var(--input-text)",
+                caretColor: "var(--input-border-focus)",
+              },
               "& input::placeholder": {
                 color: "var(--input-text-disabled)",
                 opacity: 0.8,
               },
-
-               "& svg": {
-                color: error
-                  ? "var(--input-border-error)"
-                  : "var(--input-text)",
+              "& svg": {
+                color: error ? "var(--input-border-error)" : "var(--input-text)",
               },
-
-               "& fieldset": {
-                borderColor: error
-                  ? "var(--input-border-error)"
-                  : "var(--input-border)",
+              "& fieldset": {
+                borderColor: error ? "var(--input-border-error)" : "var(--input-border)",
                 borderWidth: "1px",
                 borderStyle: "solid",
               },
               "&:hover fieldset": {
-                borderColor: error
-                  ? "var(--input-border-error)"
-                  : "var(--input-border-hover)",
+                borderColor: error ? "var(--input-border-error)" : "var(--input-border-hover)",
               },
               "&.Mui-focused fieldset": {
-                borderColor: error
-                  ? "var(--input-border-error)"
-                  : "var(--input-border-focus)",
+                borderColor: error ? "var(--input-border-error)" : "var(--input-border-focus)",
                 borderWidth: "2px",
               },
-
-               "& .MuiInputLabel-root": {
-                color: error
-                  ? "var(--input-label-error)"
-                  : "var(--input-label-default)",
+              "& .MuiInputLabel-root": {
+                color: error ? "var(--input-label-error)" : "var(--input-label-default)",
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: error
-                  ? "var(--input-label-error)"
-                  : "var(--input-label-focus)",
+                color: error ? "var(--input-label-error)" : "var(--input-label-focus)",
               },
               "& .MuiInputLabel-root.Mui-disabled": {
                 color: "var(--input-label-disabled)",
               },
-
-               "& .MuiFormHelperText-root": {
-                color: error
-                  ? "var(--input-helper-error)"
-                  : "var(--input-helper-default)",
+              "& .MuiFormHelperText-root": {
+                color: error ? "var(--input-helper-error)" : "var(--input-helper-default)",
               },
-
-               "&.Mui-disabled fieldset": {
+              "&.Mui-disabled fieldset": {
                 borderColor: "var(--input-border-disabled)",
               },
               "&.Mui-disabled .MuiInputBase-input": {
@@ -104,6 +115,7 @@ export default function CustomDatePicker({
           },
         }}
       />
+
     </LocalizationProvider>
   );
 }

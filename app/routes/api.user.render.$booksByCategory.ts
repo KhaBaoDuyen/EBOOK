@@ -27,7 +27,10 @@ export async function getAllChildCategories(
 export async function getAllBooksFromCategories(categoryIds: string[]) {
   const objectIds = categoryIds.map((id) => new mongoose.Types.ObjectId(id));
 
-  const books = await Book.find({ categories: { $in: objectIds } })
+  const books = await Book.find({
+    categories: { $in: objectIds },
+    status: 1
+  })
     .populate("categories")
     .populate("authorId")
     .sort({ createdAt: -1 })
@@ -55,7 +58,10 @@ export async function loader({ params }: { params: { booksByCategory?: string } 
 
     //lấy sách theo 1 danh mục  
     const getBooksByCategory = async (categoryId: mongoose.Types.ObjectId) => {
-      return await Book.find({ categories: categoryId })
+      return await Book.find({ 
+        categories: categoryId,
+        status:1
+       })
         .populate("categories")
         .populate("authorId")
         .lean();

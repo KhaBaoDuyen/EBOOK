@@ -1,9 +1,12 @@
 import { json } from "@remix-run/node";
 import Category from "~/models/category.server";
+import Book from "~/models/book.server";
 
 export async function loader() {
     try {
-        const categories = await Category.find()
+        const categories = await Category.find({
+            status: 1
+        })
             .sort({ createdAt: -1 })
             .lean();
         return json({

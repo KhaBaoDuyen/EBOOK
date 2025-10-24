@@ -153,9 +153,6 @@ textarea {
   background: linear-gradient(180deg, rgba(255, 55, 95, 0), rgba(255, 55, 95, 0.66));
 }
 
-.css-vycme6-MuiPickersInputBase-root-MuiPickersOutlinedInput-root {
-  color: white !important;
-}
 
 .css-1his472-MuiFormControl-root-MuiPickersTextField-root {
   width: 100% !important;

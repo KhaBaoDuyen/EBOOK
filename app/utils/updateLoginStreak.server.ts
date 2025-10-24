@@ -4,21 +4,39 @@ export async function updateLoginStreak(userId: string) {
   const user = await User.findById(userId);
   if (!user) return;
 
-  const today = new Date();
-  const diffDays = user.lastLoginAt
-    ? Math.floor((today.getTime() - user.lastLoginAt.getTime()) / (1000 * 3600 * 24))
-    : null;
+  const now = new Date();
+  const last = user.lastLoginAt ? new Date(user.lastLoginAt) : null;
 
-  if (diffDays === 1) user.streakDays += 1;
-  else if (diffDays > 1 || diffDays === null) user.streakDays = 1;
+  //------[ Nếu chưa có ngày đăng nhập => streak = 1]-------
+  if (!last) {
+    user.streakDays = 1;
+    user.lastLoginAt = now;
+    await user.save();
+    return;
+  }
 
-  user.lastLoginAt = today;
+  //-----------------------[ Lấy phần ngày]-------------------------
+  const todayStr = now.toISOString().split("T")[0];
+  const lastStr = last.toISOString().split("T")[0];
 
-   if (user.streakDays >= 7 && !user.badges.includes("docgia_chamchi"))
-    user.badges.push("docgia_chamchi");
+  const today = new Date(todayStr);
+  const lastDay = new Date(lastStr);
 
-  if (user.streakDays >= 20 && !user.badges.includes("docgia_thang"))
-    user.badges.push("docgia_thang");
+  //-----------------[ Tính khoảng cách ngày ]------------------
+  const diffDays = Math.round((today.getTime() - lastDay.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    
+  } else if (diffDays === 1) {
+
+    user.streakDays += 1;
+    user.lastLoginAt = now;
+
+  } else if (diffDays > 1) {
+
+    user.streakDays = 1;
+    user.lastLoginAt = now;
+  }
 
   await user.save();
 }

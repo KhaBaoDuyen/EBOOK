@@ -59,11 +59,11 @@ const CardBook = ({
             transition-all duration-400 delay-100 text-white group-hover:opacity-100
             group-hover:visible group-hover:translate-x-0"
             >
-              <div>
+              <div className="">
                 <h1 className="text-xl font-bold leading-snug mb-2">{title}</h1>
-                <p className="text-gray-400 mb-4">{categoryText}</p>
+                <p className="text-gray-400 mb-3 line-clamp-1">{categoryText}</p>
                 <div className="!flex items-center justify-between">
-                  <span className="inline-block bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-sm font-medium">
+                  <span className="inline-block bg-emerald-500/10 text-emerald-500 px-3 py-1 line-clamp-1 rounded-full text-sm font-medium">
                     {author}
                   </span>
                   {/* <span className="flex lg:flex-row flex-col gap-2">
@@ -79,7 +79,7 @@ const CardBook = ({
                   </span> */}
                 </div>
                 <p
-                  className="text-sm text-gray-300 leading-relaxed mt-4 !line-clamp-5 "
+                  className="text-sm text-gray-300 leading-relaxed mt-3 !line-clamp-5 "
                   dangerouslySetInnerHTML={{ __html: description }}
                 ></p>
 

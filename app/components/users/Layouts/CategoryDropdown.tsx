@@ -38,9 +38,8 @@ export default function CategoryDropdown({ cat, currentPath }: any) {
           <a
             key={sub.slug}
             href={`/${cat.slug}/${sub.slug}`}
-            className={`block px-4 py-2 text-white hover:bg-white/30 rounded-xl font-bold ${
-              currentPath === `/${sub.slug}` ? "text-emerald-400" : ""
-            }`}
+            className={`block px-4 py-2 text-white hover:bg-white/30 rounded-xl font-bold ${currentPath === `/${sub.slug}` ? "text-emerald-400" : ""
+              }`}
           >
             {sub.name}
           </a>
@@ -54,22 +53,22 @@ export default function CategoryDropdown({ cat, currentPath }: any) {
 
         <span className="flex flex-wrap gap-4 mt-5">
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
-            <Sparkles size={18} className="text-[var(--primary)]" />
+            <Sparkles size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
             <span>Sách mới nhất</span>
           </button>
 
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
-            <BookOpen size={18} className="text-[var(--primary)]" />
+            <BookOpen size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
             <span>Sách đọc nhiều</span>
           </button>
 
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
-            <Gift size={18} className="text-[var(--primary)]" />
+            <Gift size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
             <span>Sách miễn phí</span>
           </button>
 
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
-            <Star size={18} className="text-[var(--primary)]" />
+            <Star size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
             <span>Sách đề cử</span>
           </button>
         </span>
