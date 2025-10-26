@@ -10,6 +10,7 @@ import Book from "~/models/book.server";
 import { bookDir, coverDir } from "~/utils/path.server";
 import { toSlug } from "~/utils/toSlug";
 import { uploadToCloudinary } from "~/utils/uploadCloudinary.server";
+import Review from "~/models/review.server";
 
 
 //----------------[ LAY DU LIEU ]-----------------------
@@ -25,6 +26,11 @@ export async function loader({ params }: { params: { slugBook: string } }) {
       return json({ status: 404, message: "Không tìm thấy sách" }, { status: 404 });
     }
 
+    const reviews = await Review.find({ bookId: book._id })
+      .populate("userId", "name avatar")
+      .sort({ createdAt: -1 })
+      .lean();
+
     const relateBook = await Book.find({
       authorId: book.authorId._id,
       _id: { $ne: book._id },
@@ -37,6 +43,7 @@ export async function loader({ params }: { params: { slugBook: string } }) {
       status: 200,
       data: book,
       relateBook: relateBook || [],
+      reviews: reviews || [],
     });
   } catch (err: any) {
     console.error("Lỗi lấy dữ liệu sách:", err);
@@ -166,7 +173,7 @@ export const action = async ({
         return json({ status: 404, message: "Không tìm thấy sách cần xóa!" }, { status: 404 });
       }
 
-      console.log("🗑️ Xóa thành công:", deletedBook);
+      // console.log("Xóa thành công:", deletedBook);
       return json({
         status: 200,
         message: "Xóa sách thành công!",

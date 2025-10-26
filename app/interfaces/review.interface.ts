@@ -1,9 +1,8 @@
 import { Types } from "mongoose";
 
 export interface IReview { 
-  user_id:Types.ObjectId;
-  book_id:Types.ObjectId;
+  userId:Types.ObjectId;
+  bookId:Types.ObjectId;
   rating: number;
   comment: string;
-  createdAt?: Date;
 }
