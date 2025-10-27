@@ -16,6 +16,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import type IRatingComment from "./RatingComment.interface";
 import { createReview } from "~/services/review.service";
+import { useNotify } from "~/context/NotifyContext";
 
 export default function RatingCommentDialog({
     open,
@@ -28,6 +29,8 @@ export default function RatingCommentDialog({
     const [error, setError] = React.useState<string | null>(null);
     const [loading, setLoading] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
+    const [userData, setUserData] = React.useState();
+    const { setNotify } = useNotify();
     const maxChars = 300;
 
     React.useEffect(() => {
@@ -44,10 +47,18 @@ export default function RatingCommentDialog({
             setError("Vui lòng chọn số sao đánh giá");
             return;
         }
+        if (!userData) {
+            setNotify({
+                open: true,
+                type: "warning",
+                title: "Vui lòng đăng nhập",
+                message: "Vui lòng đăng nhập để có thể bình luận sách. Xin cảm ơn!!!"
+            })
+        }
         setError(null);
         setLoading(true);
         try {
-            const res = await createReview({
+            await createReview({
                 bookId,
                 rating,
                 comment,
@@ -57,7 +68,7 @@ export default function RatingCommentDialog({
             setComment("");
             onSubmit?.(rating, comment);
         } catch (err: any) {
-            setError(err.message || "Không thể gửi đánh giá. Vui lòng thử lại!");
+            console.log(err.message || "Không thể gửi đánh giá. Vui lòng thử lại!");
         } finally {
             setLoading(false);
         }
@@ -138,7 +149,7 @@ export default function RatingCommentDialog({
                         }}
                     />
                 </Box>
-                
+
                 <Typography sx={{ mb: 1, fontWeight: 500 }}>Nhận xét</Typography>
                 <TextField
                     multiline

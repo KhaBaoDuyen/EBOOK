@@ -321,7 +321,6 @@ export default function ReviewTabsLayout({ bookInfo }: IReview) {
                         onConfirmDelete={handleConfirmDelete}
                         title="bình luận này"
                     />
-
                 </Box>
             )}
 
