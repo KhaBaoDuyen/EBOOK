@@ -27,3 +27,8 @@ export async function createReview(data: {
 
     return res.json();
 }
+
+export const deleteReview = async (reviewId: string) => {
+  const res = await fetch(`/api/delete/${reviewId}/review`, { method: "DELETE" });
+  return res.json();
+};

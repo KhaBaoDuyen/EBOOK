@@ -8,6 +8,8 @@ import {
   isRouteErrorResponse,
 } from "@remix-run/react";
 import type { Route } from "./+types/root";
+import db from "~/utils/db.server";
+
 
 import appCss from "./app.css?url";
 import tailwindCss from "./styles/tailwind.css?url";
@@ -61,6 +63,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export async function loader({ request }: { request: Request }) {
+    await db;
+
   const user = await decodeUser(request);  
   return json({ user });
 }

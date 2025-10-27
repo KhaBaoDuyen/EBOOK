@@ -17,7 +17,7 @@ export async function loader({ params }: { params: { slugBook: string } }) {
         }
 
         const reviews = await Review.find({ bookId: book._id })
-            .populate("userId", "name avatar")
+            .populate("userId", "name avatar role")
             .sort({ createdAt: -1 })
             .lean();
 

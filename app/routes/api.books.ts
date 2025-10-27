@@ -132,7 +132,7 @@ export const action = async ({ request }: { request: Request }) => {
       data: newBook,
     });
   } catch (err: any) {
-    console.error("❌ Lỗi khi thêm sách:", err);
+    console.error("  Lỗi khi thêm sách:", err);
     return json(
       {
         status: 500,

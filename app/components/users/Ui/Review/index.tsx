@@ -9,26 +9,85 @@ import {
     Avatar,
     LinearProgress,
     Stack,
-    Divider,
     Fade,
 } from "@mui/material";
 import RateReviewIcon from "@mui/icons-material/RateReview";
-import RatingCommentDialog from "../CommentDialog/index";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useState, useEffect } from "react";
+import { useUser } from "~/context/UserContext";
+import { getIsReviews, deleteReview } from "~/services/review.service";
+import RatingCommentDialog from "../CommentDialog";
+import ConfirmDeleteDialog from "~/components/FromDelete";
 import type IReview from "./Review.interface";
 
+export default function ReviewTabsLayout({ bookInfo }: IReview) {
+    const [tab, setTab] = useState(1);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(5);
+    const [review, setReview] = useState<any[]>([]);
+    const { userData } = useUser();
 
-export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
-    const [tab, setTab] = React.useState(1);
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const [visibleCount, setVisibleCount] = React.useState(5);
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
-    const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-        setTab(newValue);
+    const nameBook = bookInfo?.slug;
+
+    //---------------[ Lấy danh sách review]----------------------
+    const getAllReview = async (slug: string) => {
+        if (!slug) return;
+        try {
+            const res = await getIsReviews(slug);
+            setReview(res.reviews || []);
+            console.log("review", res.reviews);
+
+        } catch (error) {
+            console.error("Lỗi khi gọi API REVIEW:", error);
+        }
     };
 
-    const handleSubmitReview = (newReview: any) => {
+    //------------------[ Tinh trung binh review]--------------------
+    const totalReview = review.length;
+
+    const averageRating =
+        totalReview > 0
+            ? (review.reduce((sum, item) => sum + (item.rating || 0), 0) / totalReview).toFixed(1)
+            : 0;
+
+    const starPercent = [5, 4, 3, 2, 1].map((star) => {
+        const count = review.filter((r) => r.rating === star).length;
+        const percent = totalReview ? (count / totalReview) * 100 : 0;
+        return { star, percent };
+    });
+
+    useEffect(() => {
+        getAllReview(nameBook);
+    }, [nameBook]);
+
+    //--------------- [ Hàm mở/xác nhận dialog xóa]-----------------
+    const handleOpenConfirm = (id: string) => {
+        setSelectedId(id);
+        setOpenConfirm(true);
+    };
+    const handleCloseConfirm = () => setOpenConfirm(false);
+
+    const handleConfirmDelete = async () => {
+        if (!selectedId) return;
+        try {
+            await deleteReview(selectedId);
+            await getAllReview(nameBook);
+        } catch (error) {
+            console.error("Lỗi khi xóa đánh giá:", error);
+        } finally {
+            setOpenConfirm(false);
+            setSelectedId(null);
+        }
+    };
+
+    const handleSubmitReview = () => {
+        getAllReview(nameBook);
         setOpenDialog(false);
     };
+
     return (
         <Box sx={{
             color: "#fff",
@@ -36,9 +95,10 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
             borderRadius: 3, p: 2,
 
         }}>
+            <p>{userData?.name}</p>
             <Tabs
                 value={tab}
-                onChange={handleTabChange}
+                onChange={(_, v) => setTab(v)}
                 textColor="inherit"
                 TabIndicatorProps={{
                     style: {
@@ -60,7 +120,7 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                 }}
             >
                 <Tab label="Bình luận (1)" value={0} />
-                <Tab label={`Đánh giá & nhận xét (${reviews.length})`} value={1} />
+                <Tab label={`Đánh giá & nhận xét (${review.length})`} value={1} />
             </Tabs>
 
             {tab === 0 && (
@@ -93,10 +153,11 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                         >
                             <Box sx={{ textAlign: "center", width: { xs: "100%", sm: "30%" } }}>
                                 <Typography variant="h3" fontWeight={700} color="#fff">
-                                    5.0
+                                    {averageRating}
                                 </Typography>
                                 <Rating
-                                    value={5}
+                                    value={Number(averageRating)}
+                                    precision={0.5}
                                     readOnly
                                     sx={{
                                         "& .MuiRating-iconFilled": { color: "#FFD700" },
@@ -104,31 +165,34 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                                     }}
                                 />
                                 <Typography variant="body2" color="#9ca3af">
-                                    4 đánh giá
+                                    {totalReview} đánh giá
                                 </Typography>
                             </Box>
 
                             <Box sx={{ width: { xs: "100%", sm: "65%" } }}>
                                 {[5, 4, 3, 2, 1].map((star) => (
-                                    <Stack
+                                    <Box
                                         key={star}
-                                        direction="row"
-                                        alignItems="center"
-                                        spacing={1}
-                                        sx={{ mb: 0.5 }}
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            mb: 0.8,
+                                        }}
                                     >
                                         <Rating
                                             value={star}
                                             readOnly
                                             size="small"
                                             sx={{
+                                                minWidth: 110,
                                                 "& .MuiRating-iconFilled": { color: "#FFD700" },
                                                 "& .MuiRating-iconEmpty": { color: "#ffffff" },
                                             }}
                                         />
                                         <LinearProgress
                                             variant="determinate"
-                                            value={star === 5 ? 100 : 0}
+                                            value={starPercent.find((s) => s.star === star)?.percent || 0}
                                             sx={{
                                                 flexGrow: 1,
                                                 height: 8,
@@ -137,9 +201,10 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                                                 "& .MuiLinearProgress-bar": { backgroundColor: "#FFD700" },
                                             }}
                                         />
-                                    </Stack>
+                                    </Box>
                                 ))}
                             </Box>
+
                         </Box>
 
                         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -162,9 +227,8 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                         </Box>
                     </Box>
 
-
                     <Stack spacing={2}>
-                        {reviews.slice(0, visibleCount).map((item) => (
+                        {review.slice(0, visibleCount).map((item) => (
                             <Fade in key={item._id}>
                                 <Box
                                     sx={{
@@ -173,17 +237,13 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                                         backgroundColor: "#1C1C1E",
                                         p: 2,
                                         borderRadius: 2,
+                                        position: "relative",
+                                        "&:hover .delete-icon": { opacity: 1, transform: "translateY(0)" },
                                     }}
                                 >
                                     <Avatar
                                         src={item.userId?.avatar}
-                                        sx={{
-                                            width: 42,
-                                            height: 42,
-                                            bgcolor: "#10b981",
-                                            mr: 2,
-                                            fontSize: 14,
-                                        }}
+                                        sx={{ width: 42, height: 42, bgcolor: "#10b981", mr: 2 }}
                                     >
                                         {!item.userId?.avatar
                                             ? item.userId?.name?.charAt(0)?.toUpperCase()
@@ -191,11 +251,7 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                                     </Avatar>
 
                                     <Box sx={{ flexGrow: 1 }}>
-                                        <Stack
-                                            direction="row"
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
+                                        <Stack direction="row" justifyContent="space-between" alignItems="center">
                                             <Typography fontWeight={600}>
                                                 {item.userId?.name || "Người dùng ẩn danh"}
                                             </Typography>
@@ -203,23 +259,40 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                                                 {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                                             </Typography>
                                         </Stack>
-
                                         <Typography sx={{ mt: 0.5 }}>{item.comment}</Typography>
                                         <Rating
                                             value={item.rating}
                                             readOnly
                                             size="small"
-                                            sx={{
-                                                mt: 0.5,
-                                                "& .MuiRating-iconFilled": { color: "#FFD700" },
-                                            }}
+                                            sx={{ mt: 0.5, "& .MuiRating-iconFilled": { color: "#FFD700" } }}
                                         />
                                     </Box>
+
+                                    {(String(userData?._id) === String(item.userId?._id) ||
+                                        userData?.role === "admin") && (
+                                            <DeleteOutlineIcon
+                                                onClick={() => handleOpenConfirm(item._id)}
+                                                className="delete-icon"
+                                                sx={{
+                                                    position: "absolute",
+                                                    bottom: 10,
+                                                    right: 10,
+                                                    fontSize: 22,
+                                                    color: "#9ca3af",
+                                                    cursor: "pointer",
+                                                    opacity: 0,
+                                                    transform: "translateY(-5px)",
+                                                    transition: "all 0.25s ease",
+                                                    "&:hover": { color: "#ef4444", transform: "scale(1.1)" },
+                                                }}
+                                                titleAccess="Xóa bình luận"
+                                            />
+                                        )}
                                 </Box>
                             </Fade>
                         ))}
 
-                        {visibleCount < reviews.length && (
+                        {visibleCount < review.length && (
                             <Box sx={{ textAlign: "center", mt: 2 }}>
                                 <Button
                                     onClick={() => setVisibleCount((prev) => prev + 5)}
@@ -242,6 +315,12 @@ export default function ReviewTabsLayout({ bookInfo, reviews }: IReview) {
                         )}
                     </Stack>
 
+                    <ConfirmDeleteDialog
+                        open={openConfirm}
+                        onClose={handleCloseConfirm}
+                        onConfirmDelete={handleConfirmDelete}
+                        title="bình luận này"
+                    />
 
                 </Box>
             )}

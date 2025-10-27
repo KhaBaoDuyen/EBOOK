@@ -1,25 +1,30 @@
-import Button from "../components/users/Buttons/Button";
+import React from "react";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "@remix-run/react";
+import StickyBox from "react-sticky-box";
+import { Link, useNavigate } from "@remix-run/react";
+import { Eye } from "lucide-react";
 
+//----------------[ HOOK - SERVICE - CONTEXT - TYPE ]----------------
+import { useNotify } from "~/context/NotifyContext";
+import { createLibrary } from "~/services/library.service";
+import { getAllIsBook } from "~/services/book.service";
 import { getBookBySlug } from "~/services/book.service";
 import type { IBook } from "~/interfaces/book.interface";
 import type IUser from "~/interfaces/user.interface";
 
+//---------------------[ COMPONENT ]----------------------------
 import Section from "../components/users/Section";
 import FavoriteButton from "~/components/users/Buttons/FavoriteButton";
-
-import { useNotify } from "~/context/NotifyContext";
-import { Link, useNavigate } from "@remix-run/react";
-import { Eye } from "lucide-react";
-import { createLibrary } from "~/services/library.service";
+import ReviewTabsLayout from "~/components/users/Ui/Review";
 import SaveButton from "~/components/users/Buttons/Button-SaveBook";
-import { getAllIsBook } from "~/services/book.service";
+import Button from "../components/users/Buttons/Button";
 
 export default function Ebook() {
     const [isExpanded, setIsExpanded] = useState(false);
     const { user } = useOutletContext<{ user: IUser | null }>();
+    const rightRef = React.useRef<HTMLDivElement>(null);
 
     const toggleExpand = () => setIsExpanded(!isExpanded);
     const { nameBook } = useParams();
@@ -37,6 +42,8 @@ export default function Ebook() {
         try {
             const res = await getBookBySlug(nameBook);
             if (res.status === 200) {
+                console.log(res);
+
                 setBook(res.data);
                 setAuthorBooks(res.relateBook || []);
                 sessionStorage.setItem("currentBook", JSON.stringify(res.data));
@@ -98,7 +105,6 @@ export default function Ebook() {
             });
             return;
         }
-
         console.log("tai khoan", user);
 
         const userId = user._id;
@@ -119,6 +125,9 @@ export default function Ebook() {
             });
         }
     }
+
+
+
     //-----------------[ GOI DU LIEU ]-------------------------------
 
     useEffect(() => {
@@ -126,23 +135,23 @@ export default function Ebook() {
         viewBook(nameBook);
     }, [nameBook]);
 
-
     return (
         <main className="  py-10 px-5 flex flex-col gap-5 container mx-auto ">
             <span className="mt-[6rem] flex flex-col gap-10">
                 <span className="text-white font-bold text-sm">
                     <Link to="/">Trang chủ</Link> / <Link to={`${book?.categories[0]?.slug}`}>{book?.categories[0].name}</Link> / <span className="text-gray-400">{book?.title || "Đang tải..."}</span>
                 </span>
-                <div className="flex  gap-10 ">
-                    <div className="flex ">
+                <div className=" flex  gap-10 relative items-start">
+                    <div className="flex sticky top-[7rem] pt-[1rem]">
+
                         <img
                             src={book?.cover || "/images/book-default.png"}
                             alt="Bìa sách"
-                            className="rounded-xl shadow-lg max-h-[500px] object-cover"
+                            className="rounded-xl shadow-lg max-h-[500px] object-cover w-full"
                         />
                     </div>
 
-                    <div className="flex flex-col h-[30rem] overflow-y-auto scrollbar-hide w-[50%] gap-3 text-white">
+                    <div className="flex flex-col w-[50%] gap-3 text-white">
                         <h1 className="text-3xl font-bold">
                             {book?.title || "Đang tải..."}
                         </h1>
@@ -210,11 +219,12 @@ export default function Ebook() {
                                 iconPosition="left"
                             />
 
-                            <div>
+                            <div className="flex flex-col items-start gap-4">
+                                <h2 > Smartbook trân trọng giới thiệu <strong className="italic">{book?.title} </strong>
+                                    - tác giả <strong className="italic">{book?.authorId?.name}</strong>.</h2>
                                 <p
                                     className={`text-gray-200 text-justify ${isExpanded ? "" : "line-clamp-5"
-                                        }`} dangerouslySetInnerHTML={{ __html: book?.description || "Đang tải cập nhật..." }}
-                                >
+                                        }`} dangerouslySetInnerHTML={{ __html: book?.description || "Đang tải cập nhật..." }}>
                                 </p>
 
                                 <button
@@ -224,9 +234,16 @@ export default function Ebook() {
                                     {isExpanded ? "Rút gọn" : "Xem thêm"}
                                 </button>
                             </div>
+                            <span className="flex flex-col gap-13">
+                                <h1 className="text-3xl font-bold text-white">
+                                    Độc giả nói gì về "{book?.title}"
+                                </h1>
+                                <div className="">
+                                    <ReviewTabsLayout bookInfo={book} />
+                                </div>
+                            </span>
+
                         </span>
-
-
 
                     </div>
                 </div>
