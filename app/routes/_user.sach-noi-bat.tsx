@@ -8,6 +8,9 @@ import CardRanking from "~/components/users/Cards/CardRanking";
 export default function SachNoiBatPages() {
     const [bookNew, setBookNew] = useState<any[]>([]);
     const [bookRead, setBookRead] = useState<any[]>([]);
+    const [bookFavorite, setBookFavorite] = useState<any[]>([]);
+    const [bookRating, setBookRating] = useState<any[]>([]);
+
     const [loading, setLoading] = useState(true);
 
     const [params] = useSearchParams();
@@ -24,18 +27,36 @@ export default function SachNoiBatPages() {
             } else if (type === "doc-nhieu-nhat") {
                 const readBook = await bookByType("doc-nhieu-nhat");
                 setBookRead(readBook);
+            } else if (type === "sach-duoc-yeu-thich-nhat") {
+                const favoriteBook = await bookByType("sach-duoc-yeu-thich-nhat");
+                setBookFavorite(favoriteBook);
+            } else if (type === "sach-duoc-danh-gia-cao-nhat") {
+                const ratingBook = await bookByType("sach-duoc-danh-gia-cao-nhat");
+                setBookRating(ratingBook);
             } else {
-                // navigate("/404");
+                navigate("/404");
             }
         } catch (error: any) {
-           console.log("sac-noi-bat", error.message);     
+            console.log("sach-noi-bat", error.message);
         } finally {
             setLoading(false);
         }
     };
 
-    const currentBooks = type === "doc-nhieu-nhat" ? bookRead : bookNew;
- 
+    let currentBooks;
+
+    if (type === "doc-nhieu-nhat") {
+        currentBooks = bookRead;
+    } else if (type === "sach-moi-nhat") {
+        currentBooks = bookNew;
+    } else if (type === "sach-duoc-yeu-thich-nhat") {
+        currentBooks = bookFavorite;
+    } else if (type === "sach-duoc-danh-gia-cao-nhat") {
+        currentBooks = bookRating;
+    } else {
+        currentBooks = [];  
+    }
+
 
     useEffect(() => {
         getBookByTypes();

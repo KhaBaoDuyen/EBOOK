@@ -1,4 +1,4 @@
- export async function bookByType(type: "sach-moi-nhat" | "doc-nhieu-nhat") {
+ export async function bookByType(type: "sach-moi-nhat" | "doc-nhieu-nhat" | "sach-duoc-yeu-thich-nhat" | "sach-duoc-danh-gia-cao-nhat") {
   try {
     const res = await fetch(`/api/isBooks?type=${type}`);
 

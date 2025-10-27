@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, BookOpen, Gift, Star } from "lucide-react";
+import { Sparkles, BookOpen, BookHeart, Star } from "lucide-react";
 import { Link } from "@remix-run/react";
+import { FaVectorSquare } from "react-icons/fa";
 
 export default function CategoryDropdown({ cat, currentPath }: any) {
   const ref = useRef<HTMLDivElement>(null);
@@ -58,21 +59,21 @@ export default function CategoryDropdown({ cat, currentPath }: any) {
             <span>Sách mới nhất</span>
           </Link>
 
-          <Link 
-             to={"/sach-noi-bat?type=doc-nhieu-nhat"} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
+          <Link
+            to={"/sach-noi-bat?type=doc-nhieu-nhat"} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
             <BookOpen size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
             <span>Sách đọc nhiều</span>
           </Link>
 
-          <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
-            <Gift size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
-            <span>Sách miễn phí</span>
-          </button>
+          <Link to={"/sach-noi-bat?type=sach-duoc-yeu-thich-nhat"} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
+            <BookHeart size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
+            <span>Sách yêu thích</span>
+          </Link>
 
-          <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
+          <Link to={"/sach-noi-bat?type=sach-duoc-danh-gia-cao-nhat"} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-[var(--primary)] text-white rounded-xl backdrop-blur-md transition-all border border-white/20">
             <Star size={18} className="text-[var(--primary)] group-hover:text-white transition-colors" />
-            <span>Sách đề cử</span>
-          </button>
+            <span>Sách đánh giá cao</span>
+          </Link>
         </span>
       </div>
     </div>

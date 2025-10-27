@@ -7,15 +7,15 @@ export default function Footer() {
             <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
                 <div>
                     <img src="public/Images/Main/logo-light.png" alt="" />
-                    <p className="mt-2">Công ty cổ phần sách điện tử Waka</p>
+                    <p className="mt-2">Công ty cổ phần sách điện tử Smartbook</p>
                     <div className="mt-4 flex flex-col gap-2 text-sm">
                         <div className="flex items-center gap-2">
                             <FaPhoneAlt className="text-emerald-500" />
-                            <span>0877736289</span>
+                            <span>0337019197</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <MdEmail className="text-emerald-500" />
-                            <span>Support@waka.vn</span>
+                            <span>Support@smartbook.vn</span>
                         </div>
                     </div>
                 </div>
@@ -24,13 +24,9 @@ export default function Footer() {
                     <h2 className="font-bold mb-3">Về chúng tôi</h2>
                     <ul className="space-y-2 text-sm">
                         <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Giới thiệu</a></li>
-                        <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Cơ cấu tổ chức</a></li>
-                        <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Lĩnh vực hoạt động</a></li>
-                        <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Cơ hội đầu tư</a></li>
                         <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Tuyển dụng</a></li>
                         <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Liên hệ</a></li>
-                        <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Dịch vụ xuất bản sách</a></li>
-                    </ul>
+                     </ul>
                 </div>
 
                 <div>
@@ -39,8 +35,6 @@ export default function Footer() {
                         <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Thỏa thuận sử dụng dịch vụ</a></li>
                         <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Quyền lợi</a></li>
                         <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Quy định riêng tư</a></li>
-                        <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Quy chế hoạt động sàn TMĐT</a></li>
-                        <li><a href="#" className="text-gray-300 hover:text-gray-800 transition">Câu hỏi thường gặp</a></li>
                     </ul>
                 </div>
 
