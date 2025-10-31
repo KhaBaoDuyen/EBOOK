@@ -42,7 +42,6 @@ export const sider = [
     { title: "Sách yêu thích", slug: "sach-yeu-thich", icon: "heart" },
     { title: "Thư viện của tôi", slug: "thu-vien-cua-toi", icon: "book" },
     { title: "Thành tích & Huy hiệu", slug: "thanh-tich", icon: "trophy" },
-    { title: "Cài đặt tài khoản", slug: "cai-dat", icon: "settings" },
     { title: "Đăng xuất", slug: "logout", icon: "log-out" },
 ];
 
@@ -103,7 +102,6 @@ export default function SidebarProfile({ user }: { user: any }) {
                             <span>{item.title}</span>
                         </Link>
                     );
-
                 })}
 
             </nav>
