@@ -5,7 +5,7 @@ import {
   Users,
   BookOpen,
   Tags,
-  FolderTree,
+  MonitorCog,
   ChevronDown,
   MoreHorizontal,
 } from "lucide-react";
@@ -24,10 +24,16 @@ const navItems: NavItem[] = [
   { icon: <Users size={20} />, name: "Tài khoản", path: "/admin/danh-sach-tai-khoan" },
   { icon: <BookOpen size={20} />, name: "Sách", path: "/admin/books" },
   { icon: <Tags size={20} />, name: "Loại sách", path: "/admin/categories" },
-  { icon: <FolderTree size={20} />, name: "Thư mục", path: "/admin/folders" },
 ];
 
-const othersItems: NavItem[] = [];
+const othersItems: NavItem[] = [
+  { 
+    icon: <MonitorCog size={20} />, 
+    name: "Cài đặt giao diện", 
+    path: "/admin/setting/theme" 
+  },
+];
+
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
